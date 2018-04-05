@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+  </head>
+  <body>
+    {{> header}}
+    <h3>Kronkorken hinzufügen</h3>
+    <form id="addForm" method="post" action="/add">
+      <label for="image">Bild: </label>
+      <input type="file" name="image" /><br>
+      <input type="text" name="name" placeholder="Name des Getränks" /><br>
+      <input type="text" name="brand" placeholder="Marke" /><br>
+      <input type="text" name="country" placeholder="Land" /><br>
+      <input type="text" name="typeOfDrink" placeholder="Art des Getränks (Bier, Softdrink, etc.)" /><br>
+      <input type="text" name="tags" placeholder="Tags" /><br>
+      <label for="tried">Selbst ausprobiert?</label>
+      <input type="checkbox" name="tried" /><br>
+      <label for="special">Spezial Kronkorken?</label>
+      <input type="checkbox" name="special" /><br>
+      <button>Zur Sammlung hinzufügen</button>
+    </form>
+    {{> footer}}
+  </body>
+</html>

@@ -10,6 +10,7 @@ const MongoStore = require('connect-mongo')(session);
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
+var {CrownCap} = require('./models/crowncap');
 var {requiresLogin} = require('./middleware/requiresLogin');
 
 //Setup express, hbs, bodyParser
@@ -44,10 +45,16 @@ app.get('/', (req, res) => {
 });
 
 //GET /sammlung
-app.get('/sammlung',requiresLogin, (req, res) => {
-  res.render('sammlung.hbs', {
-    pageTitle: 'Kronkorken Sammlung'
-  });
+app.get('/sammlung',requiresLogin, async (req, res) => {
+  try{
+    var crowncaps = await CrownCap.find({});
+    res.render('sammlung.hbs', {
+      pageTitle: 'Kronkorken Sammlung',
+      crowncaps
+    });
+  }catch(e){
+    res.status(400).send(e);
+  }
 });
 
 //GET /register
@@ -99,6 +106,31 @@ app.get('/logout', (req, res) => {
         res.redirect('/');
       }
     })
+  }
+});
+
+//GET /add
+app.get('/add', requiresLogin, (req, res) => {
+  res.render('add.hbs', {
+    pageTitle: 'Kronkorken Hinzufügen'
+  });
+});
+
+//POST /add
+app.post('/add', requiresLogin, async (req, res) => {
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','image']);
+  crownCapData['addedAt'] = new Date().getTime();
+  crownCapData['_addedBy'] = req.session.userId;
+  crownCapData['tried'] = (req.body.tried == 'on');
+  crownCapData['special'] = (req.body.special == 'on');
+  console.log(JSON.stringify(crownCapData));
+  var crownCap = new CrownCap(crownCapData);
+
+  try{
+    await crownCap.save();
+    res.redirect('/');
+  }catch(e){
+    res.status(400).send(e);
   }
 });
 
