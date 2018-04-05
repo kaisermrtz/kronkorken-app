@@ -7,6 +7,7 @@ const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
+const {ObjectID} = require('mongodb');
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
@@ -44,18 +45,9 @@ app.get('/', (req, res) => {
   });
 });
 
-//GET /sammlung
-app.get('/sammlung',requiresLogin, async (req, res) => {
-  try{
-    var crowncaps = await CrownCap.find({});
-    res.render('sammlung.hbs', {
-      pageTitle: 'Kronkorken Sammlung',
-      crowncaps
-    });
-  }catch(e){
-    res.status(400).send(e);
-  }
-});
+/*
+  Nutzerverwaltung
+*/
 
 //GET /register
 app.get('/register', (req, res) => {
@@ -106,6 +98,99 @@ app.get('/logout', (req, res) => {
         res.redirect('/');
       }
     })
+  }
+});
+
+/*
+  Kronkorken
+*/
+
+//GET /sammlung
+app.get('/sammlung',requiresLogin, async (req, res) => {
+  try{
+    var crowncaps = await CrownCap.find({});
+    res.render('sammlung.hbs', {
+      pageTitle: 'Kronkorken Sammlung',
+      crowncaps
+    });
+  }catch(e){
+    res.status(400).send(e);
+  }
+});
+
+//GET /sammlung/:id
+app.get('/sammlung/:id', async (req, res) => {
+  var id = req.params.id;
+
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  try{
+    var crowncap = await CrownCap.findById(id);
+
+    if(!crowncap){
+      return res.status(404).send();
+    }
+
+    res.send({crowncap});
+  }catch(e){
+    res.status(400).send();
+  }
+});
+
+//GET /sammlung/:id/edit
+app.get('/sammlung/:id/edit', async (req, res) => {
+  
+});
+
+//DELETE /sammlung/:id
+app.delete('/sammlung/:id', requiresLogin, async (req, res) => {
+  var id = req.params.id;
+
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  try{
+    var crowncap = await CrownCap.findOneAndRemove({_id: id});
+    if(!crowncap){
+      return res.status(404).send();
+    }
+    res.send({crowncap});
+  }catch(e){
+    res.status(400).send();
+  }
+});
+
+//PATCH /sammlung/:id -- noch nicht fertig
+app.patch('/sammlung/:id', async (req, res) => {
+  var id = req.params.id;
+
+  //hier noch nicht fertig
+  var body = _.pick(req.body, ['text', 'completed']);
+
+  if(!ObjectID.isValid(id)){
+    return res.status(404).send();
+  }
+
+  //weitere Lokale Updates falls nötig
+
+  //Updates in die Datenbank laden
+  try{
+    var crowncap = await CrownCap.findOneAndUpdate({
+      _id: id
+    }, {$set: body}, {new: true});
+
+    if(!crowncap){
+      return res.status(404).send();
+    }
+
+    res.send({crowncap});
+  }catch(e){
+    res.status(400).send();
   }
 });
 
