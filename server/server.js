@@ -83,7 +83,8 @@ app.post('/login', async (req, res) => {
     req.session.userId = user._id;
     res.redirect('/');
   }catch(e){
-    res.status(404).send(e);
+    //res.status(404).send(e);
+    res.redirect('/');
   }
 });
 
@@ -106,7 +107,7 @@ app.get('/logout', (req, res) => {
 */
 
 //GET /sammlung
-app.get('/sammlung',requiresLogin, async (req, res) => {
+app.get('/sammlung', async (req, res) => {
   try{
     var crowncaps = await CrownCap.find({});
     res.render('sammlung.hbs', {
@@ -142,7 +143,7 @@ app.get('/sammlung/:id', async (req, res) => {
 
 //GET /sammlung/:id/edit
 app.get('/sammlung/:id/edit', async (req, res) => {
-  
+
 });
 
 //DELETE /sammlung/:id

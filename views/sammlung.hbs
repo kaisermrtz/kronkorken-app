@@ -3,11 +3,18 @@
   <head>
     <meta charset="utf-8">
     <title>{{pageTitle}}</title>
+
+    {{> import}}
   </head>
   <body>
     {{> header}}
     <p>Das ist die Sammlung</p>
-    {{crowncaps}}
+    <div class="row">
+      <div class="col-xs-12">
+        {{crowncaps}}
+      </div>
+    </div>
+
     <br>
     <br>
     {{#each crowncaps}}
