@@ -10,6 +10,7 @@ const MongoStore = require('connect-mongo')(session);
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
+var {requiresLogin} = require('./middleware/requiresLogin');
 
 //Setup express, hbs, bodyParser
 var app = express();
@@ -28,16 +29,6 @@ app.use(session({
   saveUninitialized: false,
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
-
-function requiresLogin(req, res, next){
-  if (req.session && req.session.userId){
-    return next();
-  }else{
-    var err = new Error('You must be logged in to view this page.');
-    err.status = 401;
-    return next(err);
-  }
-};
 
 //Helferfunktion
 hbs.registerHelper('getCurrentYear', () => {
@@ -67,15 +58,16 @@ app.get('/register', (req, res) => {
 });
 
 //POST /register
-app.post('/register', (req, res) => {
+app.post('/register', async (req, res) => {
   var userData = _.pick(req.body, ['email', 'username', 'password']);
   var user = new User(userData);
 
-  user.save().then(() => {
+  try{
+    await user.save();
     res.redirect('/');
-  }).catch((e) => {
+  }catch(e){
     res.status(400).send(e);
-  })
+  }
 });
 
 //GET /login
@@ -86,16 +78,14 @@ app.get('/login', (req, res) => {
 });
 
 //POST /login
-app.post('/login', (req, res) => {
-  var userData = _.pick(req.body, ['email', 'password']);
-  var user = new User(userData);
-
-  User.authenticate(req.body.email, req.body.password).then((user) => {
+app.post('/login', async (req, res) => {
+  try{
+    var user = await User.authenticate(req.body.email, req.body.password);
     req.session.userId = user._id;
     res.redirect('/');
-  }).catch((e) => {
+  }catch(e){
     res.status(404).send(e);
-  })
+  }
 });
 
 //GET /logout

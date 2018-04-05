@@ -28,9 +28,9 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
-UserSchema.statics.authenticate = function (email, password) {
+UserSchema.statics.authenticate = async function (email, password) {
   var User = this;
-
+  
   return User.findOne({email}).then((user) => {
     if(!user || user === null){
       return Promise.reject('Ihre Benutzername Passwort Kombination ist falsch!');
