@@ -1,2 +1,3 @@
 node_modules
-konsolenbefehle.txt
+server/config/config.json
+server/db/konsolenbefehle.txt

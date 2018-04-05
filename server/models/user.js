@@ -28,6 +28,26 @@ var UserSchema = new mongoose.Schema({
   }
 });
 
+UserSchema.statics.authenticate = function (email, password) {
+  var User = this;
+
+  return User.findOne({email}).then((user) => {
+    if(!user || user === null){
+      return Promise.reject('Ihre Benutzername Passwort Kombination ist falsch!');
+    }
+
+    return new Promise((resolve, reject) => {
+      bcrypt.compare(password, user.password, (err, res) => {
+        if(res){
+          resolve(user);
+        }else{
+          reject('Ihre Benutzername Passwort Kombination ist falsch!');
+        }
+      });
+    });
+  });
+};
+
 //Middleware: Aufruf vor jedem save
 UserSchema.pre('save', function (next) {
   var user = this;

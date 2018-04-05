@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+  </head>
+  <body>
+    {{> header}}
+    <form id="loginForm" method="post" action="/login">
+      <input type="email" name="email" placeholder="Email Adresse" />
+      <input type="password" name="password" placeholder="Passwort" />
+      <button>Login</button>
+    </form>
+    {{> footer}}
+  </body>
+</html>
