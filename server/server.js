@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const {ObjectID} = require('mongodb');
-const sharp = require('sharp');
+const cloudinary = require('cloudinary');
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
@@ -232,6 +232,17 @@ app.get('/add', requiresLogin, (req, res) => {
   });
 });
 
+function cloudinaryAsync(file, options){
+  return new Promise((resolve,reject) => {
+    cloudinary.v2.uploader.upload(file, options, (error, result) => {
+      if(result){
+        resolve(result);
+      }
+      reject(error);
+    });
+  });
+}
+
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
@@ -241,7 +252,8 @@ app.post('/add', requiresLogin, async (req, res) => {
   crownCapData['tried'] = (req.body.tried == 'on');
   crownCapData['special'] = (req.body.special == 'on');
   var fileName = new Date().getTime() + req.session.userId;
-  crownCapData['image'] = fileName;
+  var fileNameImage = 'https://res.cloudinary.com/deewjrv8h/image/upload/v1523033257/' + fileName + '.jpg';
+  crownCapData['image'] = fileNameImage;
   console.log(JSON.stringify(crownCapData));
 
   var crownCap = new CrownCap(crownCapData);
@@ -252,13 +264,16 @@ app.post('/add', requiresLogin, async (req, res) => {
     }
     let file = req.files.image;
     await file.mv(`public/img/kronkorken/${fileName}.jpg`);
-    //Bild verkleinern
-    await sharp(`public/img/kronkorken/${fileName}.jpg`)
-     .resize(300,300)
-     .toFile(`public/img/kronkorken/${fileName}_resized.jpg`);
-    //große Version löschen
+
+    var result = await cloudinaryAsync(`public/img/kronkorken/${fileName}.jpg`,{
+      public_id: fileName,
+      crop: 'scale',
+      width: 300,
+      height: 300
+    });
+
     fs.unlink(`public/img/kronkorken/${fileName}.jpg`, (err) => {
-      return new Error();
+        return new Error();
     });
 
     //Speichern in der Datenbank
