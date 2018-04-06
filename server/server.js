@@ -3,14 +3,14 @@ require('./config/config.js');
 const _ = require('lodash');
 const fs = require('fs');
 const express = require('express');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const {ObjectID} = require('mongodb');
-const cloudinary = require('cloudinary');
+// const cloudinary = require('cloudinary');
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
@@ -28,7 +28,7 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(publicPath));
-app.use(fileUpload());
+// app.use(fileUpload());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -232,50 +232,29 @@ app.get('/add', requiresLogin, (req, res) => {
   });
 });
 
-function cloudinaryAsync(file, options){
-  return new Promise((resolve,reject) => {
-    cloudinary.v2.uploader.upload(file, options, (error, result) => {
-      if(result){
-        resolve(result);
-      }
-      reject(error);
-    });
-  });
-}
+// function cloudinaryAsync(file, options){
+//   return new Promise((resolve,reject) => {
+//     cloudinary.v2.uploader.upload(file, options, (error, result) => {
+//       if(result){
+//         resolve(result);
+//       }
+//       reject(error);
+//     });
+//   });
+// }
 
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
   crownCapData['special'] = (req.body.special == 'on');
-  var fileName = new Date().getTime() + req.session.userId;
-  var fileNameImage = 'https://res.cloudinary.com/deewjrv8h/image/upload/v1523033257/' + fileName + '.jpg';
-  crownCapData['image'] = fileNameImage;
   console.log(JSON.stringify(crownCapData));
 
   var crownCap = new CrownCap(crownCapData);
   try{
-    //Upload Image
-    if(!req.files){
-      return new Error();
-    }
-    let file = req.files.image;
-    await file.mv(`${__dirname}/../public/img/kronkorken/temp.jpg`);
-
-    var result = await cloudinaryAsync(`${__dirname}/../public/img/kronkorken/temp.jpg`,{
-      public_id: fileName,
-      crop: 'scale',
-      width: 300,
-      height: 300
-    });
-
-    // fs.unlink(`${__dirname}/../public/img/kronkorken/temp.jpg`, (err) => {
-    //     return new Error();
-    // });
-
     //Speichern in der Datenbank
     await crownCap.save();
     res.redirect('/add?success=true');

@@ -32,15 +32,39 @@
         <form id="addForm" method="post" action="/add" ref="addForm" encType="multipart/form-data">
           <div class="form-group">
             <label for="image">Bild *</label>
-            <input type="file" name="image" required class="file">
+            <input name="file" type="file" id="fileupload" class="cloudinary-fileupload btn" required>
+            <br>
+            <img src="https://www.hellmann24.de/itempics/2519/kk-gold-glaenzend-einzeln.jpg" width="100" height="100" class="thumbnail" />
+            <input type="text" name="image" id="imageurl" required hidden>
+          </div>
+          <script>
+            // $('.form').append($.cloudinary.unsigned_upload_tag("ur5prnpz", { cloud_name: 'deewjrv8h' }));
+
+            $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
+            .bind('cloudinarydone', function(e, data) {
+              console.log('done', data.result.url);
+              console.log(e);
+              $('.thumbnail').attr('src', data.result.url);
+              $('#fileupload').removeAttr('required');
+              $('#fileupload').hide();
+              $('#imageurl').val(data.result.url);
+
+              $('.thumbnails').append($.cloudinary.image(data.result.public_id,
+                { format: 'jpg', width: 150, height: 100,
+                  crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
+                }).bind('cloudinaryprogress', function(e, data) {
+                  $('.progress_bar').css('width',
+                  Math.round((data.loaded * 100.0) / data.total) + '%');
+              });
+
+          </script>
+          <div class="form-group">
+            <label for="brand">Marke *</label>
+            <input type="text" name="brand" placeholder="Marke" class="form-control" required autocomplete="off">
           </div>
           <div class="form-group">
             <label for="name">Name des Getränks *</label>
             <input type="text" name="name" placeholder="Name des Getränks" class="form-control" required autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label for="brand">Marke *</label>
-            <input type="text" name="brand" placeholder="Marke" class="form-control" required autocomplete="off">
           </div>
           <div class="form-group">
             <label for="country">Land *</label>
