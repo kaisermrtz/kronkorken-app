@@ -263,18 +263,18 @@ app.post('/add', requiresLogin, async (req, res) => {
       return new Error();
     }
     let file = req.files.image;
-    await file.mv(`${__dirname}/../public/img/kronkorken/${fileName}.jpg`);
+    await file.mv(`${__dirname}/../public/img/kronkorken/temp.jpg`);
 
-    var result = await cloudinaryAsync(`${__dirname}/../public/img/kronkorken/${fileName}.jpg`,{
+    var result = await cloudinaryAsync(`${__dirname}/../public/img/kronkorken/temp.jpg`,{
       public_id: fileName,
       crop: 'scale',
       width: 300,
       height: 300
     });
 
-    fs.unlink(`${__dirname}/../public/img/kronkorken/${fileName}.jpg`, (err) => {
-        return new Error();
-    });
+    // fs.unlink(`${__dirname}/../public/img/kronkorken/temp.jpg`, (err) => {
+    //     return new Error();
+    // });
 
     //Speichern in der Datenbank
     await crownCap.save();
