@@ -1,13 +1,16 @@
 require('./config/config.js');
 
 const _ = require('lodash');
+const fs = require('fs');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const {ObjectID} = require('mongodb');
+const sharp = require('sharp');
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
@@ -25,6 +28,7 @@ app.set('view engine', 'hbs');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(publicPath));
+app.use(fileUpload());
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: true,
@@ -39,9 +43,11 @@ hbs.registerHelper('getCurrentYear', () => {
 
 //GET /
 app.get('/', (req, res) => {
+  if(req.session.userId){
+    res.redirect('/dashboard');
+  }
   res.render('home.hbs',{
-    pageTitle: 'Kronkorken App',
-    welcomeMessage: 'Willkommen zur NodeJS Kronkorkenseite'
+    pageTitle: 'Kronkorken App'
   });
 });
 
@@ -52,7 +58,7 @@ app.get('/', (req, res) => {
 //GET /register
 app.get('/register', (req, res) => {
   res.render('register.hbs', {
-    pageTitle: 'Kronkorken Registrieren'
+    pageTitle: 'Registrieren'
   });
 });
 
@@ -63,9 +69,9 @@ app.post('/register', async (req, res) => {
 
   try{
     await user.save();
-    res.redirect('/');
+    res.redirect('/register?success=true');
   }catch(e){
-    res.status(400).send(e);
+    res.redirect('/register?success=' + e.message);
   }
 });
 
@@ -108,14 +114,17 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
+  if(req.session.userId){
+    res.redirect('/dashboard');
+  }
   try{
     if(Object.keys(req.query).length === 0 || req.query.q === ''){
       var crowncaps = await CrownCap.find({});
     }else{
       var crowncaps = await CrownCap.find().or(
         [
-          {brand: req.query.q},
-          {name: req.query.q},
+          {brand: new RegExp(req.query.q, 'i')},
+          {name: new RegExp(req.query.q, 'i')},
           {country: req.query.q},
           {typeOfDrink: req.query.q},
           {tags: new RegExp(req.query.q, 'i')}
@@ -133,6 +142,9 @@ app.get('/sammlung', async (req, res) => {
 
 //GET /sammlung/:id
 app.get('/sammlung/:id', async (req, res) => {
+  if(req.session.userId){
+    res.redirect('/dashboard');
+  }
   var id = req.params.id;
 
   //Validate Id using isValid
@@ -155,11 +167,6 @@ app.get('/sammlung/:id', async (req, res) => {
   }catch(e){
     res.status(400).send();
   }
-});
-
-//GET /sammlung/:id/edit
-app.get('/sammlung/:id/edit', async (req, res) => {
-
 });
 
 //DELETE /sammlung/:id
@@ -227,19 +234,39 @@ app.get('/add', requiresLogin, (req, res) => {
 
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','image']);
+  //Objekt zum speichern erzeugen
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
   crownCapData['special'] = (req.body.special == 'on');
+  var fileName = new Date().getTime() + req.session.userId;
+  crownCapData['image'] = fileName;
   console.log(JSON.stringify(crownCapData));
-  var crownCap = new CrownCap(crownCapData);
 
+  var crownCap = new CrownCap(crownCapData);
   try{
+    //Upload Image
+    if(!req.files){
+      return new Error();
+    }
+    let file = req.files.image;
+    await file.mv(`public/img/kronkorken/${fileName}.jpg`);
+    //Bild verkleinern
+    await sharp(`public/img/kronkorken/${fileName}.jpg`)
+     .resize(300,300)
+     .toFile(`public/img/kronkorken/${fileName}_resized.jpg`);
+    //große Version löschen
+    fs.unlink(`public/img/kronkorken/${fileName}.jpg`, (err) => {
+      return new Error();
+    });
+
+    //Speichern in der Datenbank
     await crownCap.save();
-    res.redirect('/');
+    res.redirect('/add?success=true');
   }catch(e){
-    res.status(400).send(e);
+    console.log(e);
+    res.redirect('/add?success=false');
   }
 });
 

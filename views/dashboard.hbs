@@ -4,13 +4,22 @@
     <meta charset="utf-8">
     <title>{{pageTitle}}</title>
     {{> import}}
+    <style>
+      #buttons{
+        margin-top: 20px;
+        margin-bottom: 50px;
+      }
+      #buttons a{
+        margin-right: 10px;
+      }
+    </style>
   </head>
   <body>
     {{> loggedinheader}}
     <p>Das ist das Dashboard</p>
-    <a href="/add">Add</a>
-    <a href="/logout">Logout</a>
-    <a href="/register">Neuen Nutzer registrieren</a>
-    {{> footer}}
+    <div id="buttons">
+      <a href="/add" class="btn btn-default">Neuen Kronkorken eintragen</a>
+      <a href="/register" class="btn btn-default">Neuen Nutzer registrieren</a>
+    </div>
   </body>
 </html>
