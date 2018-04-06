@@ -41,13 +41,18 @@ hbs.registerHelper('getCurrentYear', () => {
   return new Date().getFullYear();
 });
 
+function isLoggedIn(req){
+  if(req.session.userId){
+    return true;
+  }
+  return false;
+}
+
 //GET /
 app.get('/', (req, res) => {
-  if(req.session.userId){
-    res.redirect('/dashboard');
-  }
   res.render('home.hbs',{
-    pageTitle: 'Kronkorken App'
+    pageTitle: 'Kronkorken App',
+    loggedIn: isLoggedIn(req)
   });
 });
 
@@ -58,7 +63,8 @@ app.get('/', (req, res) => {
 //GET /register
 app.get('/register', (req, res) => {
   res.render('register.hbs', {
-    pageTitle: 'Registrieren'
+    pageTitle: 'Registrieren',
+    loggedIn: isLoggedIn(req)
   });
 });
 
@@ -73,13 +79,6 @@ app.post('/register', async (req, res) => {
   }catch(e){
     res.redirect('/register?success=' + e.message);
   }
-});
-
-//GET /login
-app.get('/login', (req, res) => {
-  res.render('login.hbs', {
-    pageTitle: 'Kronkorken Login'
-  });
 });
 
 //POST /login
@@ -114,9 +113,6 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
-  if(req.session.userId){
-    res.redirect('/dashboard');
-  }
   try{
     if(Object.keys(req.query).length === 0 || req.query.q === ''){
       var crowncaps = await CrownCap.find({});
@@ -133,7 +129,8 @@ app.get('/sammlung', async (req, res) => {
 
     res.render('sammlung.hbs', {
       pageTitle: 'Kronkorken Sammlung',
-      crowncaps
+      crowncaps,
+      loggedIn: isLoggedIn(req)
     });
   }catch(e){
     res.status(400).send(e);
@@ -142,9 +139,7 @@ app.get('/sammlung', async (req, res) => {
 
 //GET /sammlung/:id
 app.get('/sammlung/:id', async (req, res) => {
-  if(req.session.userId){
-    res.redirect('/dashboard');
-  }
+
   var id = req.params.id;
 
   //Validate Id using isValid
@@ -161,7 +156,8 @@ app.get('/sammlung/:id', async (req, res) => {
 
     res.render('einzelansicht.hbs', {
       pageTitle: 'Kronkorken',
-      crowncap
+      crowncap,
+      loggedIn: isLoggedIn(req)
     });
     //res.send({crowncap});
   }catch(e){
@@ -221,14 +217,16 @@ app.patch('/sammlung/:id', async (req, res) => {
 //GET /dashboard
 app.get('/dashboard', requiresLogin, (req, res) => {
   res.render('dashboard.hbs', {
-    pageTitle: 'Kronkorken Dashboard'
+    pageTitle: 'Kronkorken Dashboard',
+    loggedIn: isLoggedIn(req)
   });
 });
 
 //GET /add
 app.get('/add', requiresLogin, (req, res) => {
   res.render('add.hbs', {
-    pageTitle: 'Kronkorken Hinzufügen'
+    pageTitle: 'Kronkorken Hinzufügen',
+    loggedIn: isLoggedIn(req)
   });
 });
 

@@ -26,17 +26,32 @@
 
     <!-- Alle Navigationslinks, Formulare und anderer Inhalt werden hier zusammengefasst und können dann ein- und ausgeblendet werden -->
     <div class="collapse navbar-collapse">
-      <ul class="nav navbar-nav">
-        <li><a class="active" href="/">Home</a></li>
-        <li><a href="/sammlung" >Sammlung</a></li>
-      </ul>
+      <div class="login-group">
+        <ul class="nav navbar-nav">
+            <li><a class="active" href="/">Home</a></li>
+            <li><a href="/sammlung" >Sammlung</a></li>
+        </ul>
+      </div>
+      <div class="logout-group" hidden>
+        <ul class="nav navbar-nav">
+            <li><a class="active" href="/dashboard">Dashboard</a></li>
+            <li><a href="/sammlung" >Sammlung</a></li>
+        </ul>
+      </div>
       <ul class="nav navbar-nav navbar-right">
         <form id="login-form" method="post" action="/login" class="navbar-form navbar-left" role="search">
-          <div class="form-group">
-            <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control">
-            <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control">
+          <div class="login-group">
+            <div class="form-group">
+              <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control" required>
+              <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control" required>
+            </div>
+            <button type="submit" id="login-button" class="btn btn-success">Login</button>
           </div>
-          <button type="submit" id="login-button" class="btn btn-success">Login</button>
+          <div class="logout-group" hidden>
+            <div class="form-group">
+              <a href="/logout" class="btn btn-danger">Logout</a>
+            </div>
+          </div>
           <!--<a id="logginbutton" class="btn btn-success" onclick="loggin()">Login</a>-->
         </form>
       </ul>
@@ -45,14 +60,21 @@
 </nav>
 
 <script>
-  $('#login-button').click(function(e){
-      e.preventDefault();
-      if($('#emailLogin').val() == "" || $('#passwordLogin').val() == ""){
-        $('#login-form').addClass("has-error");
-      }else{
-        $("#login-form").unbind("submit").submit();
-      }
-  });
+  if({{loggedIn}}){
+    $('.login-group').hide();
+    $('.logout-group').show();
+  }else{
+    $('.login-group').show();
+    $('.logout-group').hide();
+  }
+  // $('#login-button').click(function(e){
+  //     e.preventDefault();
+  //     if($('#emailLogin').val() == "" || $('#passwordLogin').val() == ""){
+  //       $('#login-form').addClass("has-error");
+  //     }else{
+  //       $("#login-form").unbind("submit").submit();
+  //     }
+  // });
 </script>
 
 <h1>{{pageTitle}}</h1>
