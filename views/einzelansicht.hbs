@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+      body{
+          padding: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <div class="row">
+        <div class="col-xs-12 col-md-4">
+            <img src="/img/veltins.jpg" class="img-responsive">
+        </div>
+        <div class="col-md-8">
+            <h3>{{crowncap.brand}}</h3>
+            <h3>{{crowncap.name}}</h3>
+            <p>{{crowncap.country}}</p>
+            <p>{{crowncap.tags}}</p>
+            <p>{{crowncap.typeOfDrink}}</p>
+            <p>Special: {{crowncap.special}}</p>
+            <p>Ausprobiert: {{crowncap.tried}}</p>
+            <p>Hinzugefügt am: <span id="time"></span></p>
+        </div>
+    </div>
+    <script src="/js/lib/moment.js"></script>
+    <script>
+      var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
+      $('#time').html(formattedTime);
+    </script>
+
+    {{> footer}}
+  </body>
+</html>

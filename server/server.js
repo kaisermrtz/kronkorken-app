@@ -81,7 +81,7 @@ app.post('/login', async (req, res) => {
   try{
     var user = await User.authenticate(req.body.email, req.body.password);
     req.session.userId = user._id;
-    res.redirect('/');
+    res.redirect('/dashboard');
   }catch(e){
     //res.status(404).send(e);
     res.redirect('/');
@@ -109,7 +109,19 @@ app.get('/logout', (req, res) => {
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
   try{
-    var crowncaps = await CrownCap.find({});
+    if(Object.keys(req.query).length === 0 || req.query.q === ''){
+      var crowncaps = await CrownCap.find({});
+    }else{
+      var crowncaps = await CrownCap.find().or(
+        [
+          {brand: req.query.q},
+          {name: req.query.q},
+          {country: req.query.q},
+          {typeOfDrink: req.query.q},
+          {tags: new RegExp(req.query.q, 'i')}
+        ]);
+    }
+
     res.render('sammlung.hbs', {
       pageTitle: 'Kronkorken Sammlung',
       crowncaps
@@ -135,7 +147,11 @@ app.get('/sammlung/:id', async (req, res) => {
       return res.status(404).send();
     }
 
-    res.send({crowncap});
+    res.render('einzelansicht.hbs', {
+      pageTitle: 'Kronkorken',
+      crowncap
+    });
+    //res.send({crowncap});
   }catch(e){
     res.status(400).send();
   }
@@ -193,6 +209,13 @@ app.patch('/sammlung/:id', async (req, res) => {
   }catch(e){
     res.status(400).send();
   }
+});
+
+//GET /dashboard
+app.get('/dashboard', requiresLogin, (req, res) => {
+  res.render('dashboard.hbs', {
+    pageTitle: 'Kronkorken Dashboard'
+  });
 });
 
 //GET /add
