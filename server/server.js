@@ -100,7 +100,7 @@ app.get('/logout', (req, res) => {
     //Session Object entfernen
     req.session.destroy((e) => {
       if(e){
-        res.status(400).send(e);
+        res.redirect('/dashboard?success=error');
       }else{
         res.redirect('/');
       }
