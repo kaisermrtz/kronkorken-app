@@ -144,14 +144,14 @@ app.get('/sammlung/:id', async (req, res) => {
 
   //Validate Id using isValid
   if(!ObjectID.isValid(id)){
-    return res.status(404).send();
+    return res.redirect('/sammlung');;
   }
 
   try{
     var crowncap = await CrownCap.findById(id);
 
     if(!crowncap){
-      return res.status(404).send();
+      return res.redirect('/sammlung');
     }
 
     res.render('einzelansicht.hbs', {
@@ -161,7 +161,60 @@ app.get('/sammlung/:id', async (req, res) => {
     });
     //res.send({crowncap});
   }catch(e){
-    res.status(400).send();
+    res.redirect('/sammlung');
+  }
+});
+
+//GET /sammlung/:id/edit
+app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
+
+  var id = req.params.id;
+
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.redirect('/sammlung');
+  }
+
+  try{
+    var crowncap = await CrownCap.findById(id);
+
+    if(!crowncap){
+      return res.redirect('/sammlung');
+    }
+
+    res.render('einzelansichtedit.hbs', {
+      pageTitle: 'Kronkorken',
+      crowncap,
+      loggedIn: isLoggedIn(req)
+    });
+    //res.send({crowncap});
+  }catch(e){
+    res.redirect('/sammlung');
+  }
+});
+
+//POST /sammlung/:id/edit
+app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
+  //Objekt zum speichern erzeugen
+  console.log(req.body);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
+  crownCapData['tried'] = (req.body.tried == 'on');
+  crownCapData['special'] = (req.body.special == 'on');
+  console.log(crownCapData);
+
+  //Updates in die Datenbank laden
+  try{
+    var newCrownCap = await CrownCap.findOneAndUpdate({
+      _id: req.body.id
+    }, {$set: crownCapData}, {new: true});
+
+    if(!newCrownCap){
+      res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
+    }
+
+    res.redirect(`/sammlung/${req.body.id}/edit/?success=true`);
+  }catch(e){
+    res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
   }
 });
 
@@ -171,7 +224,7 @@ app.delete('/sammlung/:id', requiresLogin, async (req, res) => {
 
   //Validate Id using isValid
   if(!ObjectID.isValid(id)){
-    return res.status(404).send();
+    return res.redirect('/sammlung');
   }
 
   try{
@@ -181,36 +234,7 @@ app.delete('/sammlung/:id', requiresLogin, async (req, res) => {
     }
     res.send({crowncap});
   }catch(e){
-    res.status(400).send();
-  }
-});
-
-//PATCH /sammlung/:id -- noch nicht fertig
-app.patch('/sammlung/:id', async (req, res) => {
-  var id = req.params.id;
-
-  //hier noch nicht fertig
-  var body = _.pick(req.body, ['text', 'completed']);
-
-  if(!ObjectID.isValid(id)){
-    return res.status(404).send();
-  }
-
-  //weitere Lokale Updates falls nötig
-
-  //Updates in die Datenbank laden
-  try{
-    var crowncap = await CrownCap.findOneAndUpdate({
-      _id: id
-    }, {$set: body}, {new: true});
-
-    if(!crowncap){
-      return res.status(404).send();
-    }
-
-    res.send({crowncap});
-  }catch(e){
-    res.status(400).send();
+    res.redirect('/sammlung');
   }
 });
 

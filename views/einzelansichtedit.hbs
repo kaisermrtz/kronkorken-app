@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+      .icon{
+        width: 40px;
+        margin-right: 20px;
+        margin-bottom: 20px;
+      }
+
+      .row p {
+        font-size: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <form method="post" action="/sammlung/{{crowncap._id}}/edit">
+      <div class="form-group" hidden>
+        <label>Datenbank-ID</label>
+        <input type="text" name="id" value="{{crowncap._id}}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Marke</label>
+        <input type="text" name="brand" value="{{crowncap.brand}}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Name</label>
+        <input type="text" name="name" value="{{crowncap.name}}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Land</label>
+        <input type="text" name="country" value="{{crowncap.country}}" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="typeOfDrink">Art des Getränks</label>
+        <select class="form-control" name="typeOfDrink">
+          <option>Bier</option>
+          <option>Mixgetränk</option>
+          <option>Softdrink</option>
+          <option>Anderes</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tags</label>
+        <input type="text" name="tags" value="{{crowncap.tags}}" class="form-control">
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="tried" id="triedinput"> Selbst ausprobiert?
+        </label>
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" name="special" id="specialinput"> Spezial Kronkorken?
+        </label>
+      </div>
+      <button class="btn btn-default">Änderungen speichern</button>
+    </form>
+    <script src="/js/lib/moment.js"></script>
+    <script>
+      var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
+      $('#time').html(formattedTime);
+
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+
+      if({{crowncap.tried}} === true){
+        $('#triedinput').attr('checked', 'true');
+      }
+
+      if({{crowncap.special}} === true){
+        $('#specialinput').attr('checked', 'true');
+      }
+    </script>
+
+    {{> footer}}
+  </body>
+</html>

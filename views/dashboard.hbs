@@ -7,7 +7,7 @@
     <style>
       #buttons{
         margin-top: 20px;
-        margin-bottom: 50px;
+        margin-bottom: 20px;
       }
       #buttons a{
         margin-right: 10px;
@@ -38,7 +38,11 @@
   </head>
   <body>
     {{> header}}
-    <p>Das ist das Dashboard</p>
+    <h3>Operationen</h3>
+    <div id="buttons">
+      <a href="/add" class="btn btn-default">Neuen Kronkorken eintragen</a>
+      <a href="/register" class="btn btn-default">Neuen Nutzer registrieren</a>
+    </div>
     <div class="row">
       <div class="col-xs-12">
         <h3>Zuletzt hinzugefügt</h3>
@@ -55,9 +59,6 @@
         {{/each}}
       </div>
     </div>
-    <div id="buttons">
-      <a href="/add" class="btn btn-default">Neuen Kronkorken eintragen</a>
-      <a href="/register" class="btn btn-default">Neuen Nutzer registrieren</a>
-    </div>
+
   </body>
 </html>

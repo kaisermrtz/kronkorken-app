@@ -24,32 +24,7 @@
           <img src="{{crowncap.image}}" class="img-responsive img-thumbnail" alt="Kronkorken">
         </div>
         <div class="col-sm-8 col-lg-9 col-xs-12">
-          <h2>{{crowncap.brand}} {{crowncap.name}} <a href="#" onclick="editModeOn()"><img src="/img/icons/edit-64.png"height="25px"></a></h2>
-          <hr>
-          <h3>{{crowncap.country}}</h3>
-          <hr>
-          <a id="triedtrue" href="#" data-toggle="tooltip" data-placement="top" title="ausprobiert">
-            <img src="/img/icons/success-64.png" alt="Selbst getrunken" class="icon">
-          </a>
-          <a id="triedfalse" hidden href="#" data-toggle="tooltip" data-placement="top" title="noch nicht ausprobiert">
-            <img src="/img/icons/error-64.png" alt="Selbst getrunken" class="icon">
-          </a>
-          <a id="special" hidden href="#" data-toggle="tooltip" data-placement="top" title="spezial Kronkorken">
-            <img src="/img/icons/star-64.png" alt="special" class="icon">
-          </a>
-          <p>Typ: {{crowncap.typeOfDrink}}</p>
-        </div>
-        <div class="col-xs-12">
-            <p>Tags: {{crowncap.tags}}</p>
-            <p>Hinzugefügt am: <span id="time"></span></p>
-        </div>
-    </div>
-    <div class="row" id="rowEdit" hidden>
-        <div class="col-sm-4 col-lg-3 col-xs-12" style="margin-bottom: 20px;">
-          <img src="{{crowncap.image}}" class="img-responsive img-thumbnail" alt="Kronkorken">
-        </div>
-        <div class="col-sm-8 col-lg-9 col-xs-12">
-          <h2><input type="text" value="{{crowncap.brand}}" name="brand" class="form-control"> <input type="text" value="{{crowncap.name}}" name="name" class="form-control"></h2>
+          <h2>{{crowncap.brand}} {{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
           <hr>
           <h3>{{crowncap.country}}</h3>
           <hr>
@@ -90,11 +65,13 @@
       if({{crowncap.special}} === true){
         $('#special').show();
       }
-      function editModeOn(){
-        console.log("edit mode");
-        $('#rowNormal').hide();
-        $('#rowEdit').show();
+
+      if({{loggedIn}}){
+        $('#editbutton').show();
+      }else{
+        $('#editbutton').hide();
       }
+
     </script>
 
     {{> footer}}
