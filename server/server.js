@@ -61,7 +61,7 @@ app.get('/', (req, res) => {
 */
 
 //GET /register
-app.get('/register', (req, res) => {
+app.get('/register', requiresLogin, (req, res) => {
   res.render('register.hbs', {
     pageTitle: 'Registrieren',
     loggedIn: isLoggedIn(req)
@@ -195,12 +195,19 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 
 //POST /sammlung/:id/edit
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
-  crownCapData['tried'] = (req.body.tried == 'on');
-  crownCapData['special'] = (req.body.special == 'on');
-
-  //Updates in die Datenbank laden
   try{
+    if(req.body.oldCloudinaryImageId === req.body.cloudinaryImageId){
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
+      console.log("nix geändert");
+    }else{
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image', 'cloudinaryImageId']);
+      //Altes Bild löschen
+      var returnValue = await cloudinaryAsyncDelete(req.body.oldCloudinaryImageId);
+    }
+    crownCapData['tried'] = (req.body.tried == 'on');
+    crownCapData['special'] = (req.body.special == 'on');
+
+    //Updates in die Datenbank laden
     var newCrownCap = await CrownCap.findOneAndUpdate({
       _id: req.body.id
     }, {$set: crownCapData}, {new: true});
@@ -246,9 +253,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
     recentlyAdded = crowncaps.slice(0,6);
 
     var count = await CrownCap.count({});
-    console.log(count);
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
-    console.log(countryCountArray);
   }catch(e){
     console.log("Error", e);
   }
