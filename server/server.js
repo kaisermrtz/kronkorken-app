@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const {ObjectID} = require('mongodb');
-// const cloudinary = require('cloudinary');
+const cloudinary = require('cloudinary');
 
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
@@ -183,7 +183,7 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     }
 
     res.render('einzelansichtedit.hbs', {
-      pageTitle: 'Kronkorken',
+      pageTitle: 'Kronkorken Bearbeiten',
       crowncap,
       loggedIn: isLoggedIn(req)
     });
@@ -195,12 +195,9 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 
 //POST /sammlung/:id/edit
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
-  //Objekt zum speichern erzeugen
-  console.log(req.body);
   var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
   crownCapData['tried'] = (req.body.tried == 'on');
   crownCapData['special'] = (req.body.special == 'on');
-  console.log(crownCapData);
 
   //Updates in die Datenbank laden
   try{
@@ -215,6 +212,25 @@ app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     res.redirect(`/sammlung/${req.body.id}/edit/?success=true`);
   }catch(e){
     res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
+  }
+});
+
+//POST /sammlung/:id/edit/delete
+app.post('/sammlung/:id/delete', requiresLogin, async (req, res) => {
+  var id = req.body.id;
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
+  }
+
+  try{
+    var crowncap = await CrownCap.findOneAndRemove({_id: id});
+    if(!crowncap){
+      return res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
+    }
+    res.redirect('/sammlung');
+  }catch(e){
+    return res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
   }
 });
 

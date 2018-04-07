@@ -19,6 +19,19 @@
   </head>
   <body>
     {{> header}}
+    <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
+    <div id="erfolg" class="alert alert-success" role="alert" hidden>Änderungen gespeichert.</div>
+    <script>
+      var query = getUrlVars();
+
+      if(query.success == "true"){
+        $('#erfolg').show();
+        $('#error').hide();
+      }else if(query.success == "false"){
+        $('#erfolg').hide();
+        $('#error').show();
+      }
+    </script>
     <form method="post" action="/sammlung/{{crowncap._id}}/edit">
       <div class="form-group" hidden>
         <label>Datenbank-ID</label>
@@ -59,8 +72,28 @@
           <input type="checkbox" name="special" id="specialinput"> Spezial Kronkorken?
         </label>
       </div>
-      <button class="btn btn-default">Änderungen speichern</button>
+      <button class="btn btn-default">Änderungen speichern</button><a href="" style="margin-left: 15px" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal">Kronkorken löschen</a>
     </form>
+    <div class="modal fade" id="deletemodal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Kronkorken löschen?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Willst du diesen Kronkorken wirklich aus der Datenbank entfernen?</p>
+          </div>
+          <div class="modal-footer">
+            <form class="form-inline" method="post" action="/sammlung/{{crowncap._id}}/delete">
+              <input type="text" name="id" value="{{crowncap._id}}" hidden>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+              <button class="btn btn-danger">Kronkorken löschen</button>
+            </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <script src="/js/lib/moment.js"></script>
     <script>
       var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
