@@ -28,11 +28,6 @@
           margin-bottom: 5px;
       }
 
-      .row.fix {
-        display: flex;
-        flex-wrap: wrap;
-        width:100%; /*not always necessary*/
-      }
     </style>
   </head>
   <body>
@@ -42,13 +37,13 @@
       <form id="searchform">
         <input type="text" name="q" placeholder="Suchen" class="form-control">
       </form>
-      <div class="row fix" id="sammlungrow">
+      <div class="row" id="sammlungrow">
         {{#each crowncaps}}
         <a href="/sammlung/{{_id}}">
-          <div class="col-md-4 col-sm-6 col-xs-12">
+          <div class="col-md-4 col-sm-6 col-xs-12 equalize">
             <div class="sammlung">
               <div class="col-xs-6">
-                <img src="{{image}}" class="img-responsive">
+                <img src="{{image}}" class="img-responsive img-crowncap">
               </div>
               <div class="col-xs-6">
                   <h4>{{brand}}</h4>
@@ -61,7 +56,16 @@
         </a>
         {{/each}}
       </div>
-
+      <script>
+      $(document).ready(function() {
+        //$('.img-crowncap').first().height();
+        var maxHeight = 0;
+        $(".equalize").each(function(){
+          if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
+        });
+        $(".equalize").height(maxHeight);
+      });
+      </script>
     </div>
   </body>
 </html>
