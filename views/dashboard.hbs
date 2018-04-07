@@ -47,12 +47,79 @@
       <div class="col-xs-12">
         <h3>Statistiken</h3>
         <p>Es sind {{count}} verschiedene Kronkorken aus {{countryCountArray.length}} verschiedenen Ländern in der Datenbank eingetragen.</p>
+        <canvas id="chart"></canvas>
       </div>
+      <script>
+        //Farbe
+        var color = Chart.helpers.color;
+        function getRandomColor(){
+          var colorArray = [
+            color(window.chartColors.blue),
+            color(window.chartColors.red),
+            color(window.chartColors.orange),
+            color(window.chartColors.green),
+            color(window.chartColors.yellow),
+            color(window.chartColors.purple),
+            color(window.chartColors.grey)
+          ];
+          var randomVal = Math.floor(Math.random() * 7);
+          return colorArray[randomVal];
+        }
+
+        var countryCount = JSON.parse('{{{countryCountJSON}}}');
+        var myDatasets = new Array();
+        for(var i=0; i<countryCount.length; i++){
+          var dataset = {
+            label: 'A',
+            backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+                444
+            ]
+          }
+          dataset.label = countryCount[i]._id;
+          dataset.data[0] = countryCount[i].count;
+          myDatasets.push(dataset);
+        }
+
+        //Balkendiagramm
+        var barChartData = {
+            labels: ["Land"],
+            datasets: myDatasets
+        };
+        //Onload Funktion
+        window.onload = function() {
+          ctx = document.getElementById("chart").getContext("2d");
+          window.myBar = new Chart(ctx, {
+              type: 'bar',
+              data: barChartData,
+              options: {
+                  responsive: true,
+                  legend: {
+                      position: 'top',
+                  },
+                  title: {
+                      display: true,
+                      text: 'Länderübersicht'
+                  },
+                  scales: {
+                    yAxes: [{
+                      ticks: {
+                        beginAtZero: true
+                      }
+                    }]
+                  }
+              }
+          });
+        }
+
+      </script>
       <div class="col-xs-12">
         <h3>Zuletzt hinzugefügt</h3>
         {{#each recentlyAdded}}
         <a href="/sammlung/{{_id}}">
-          <div class="col-md-2 col-sm-4" class="zuletzt-container">
+          <div class="col-lg-2 col-md-3 col-sm-4" class="zuletzt-container">
             <div class="thumbnail">
               <img src="{{image}}" width="200px" height="200px" class="img-thumbnail">
               <p>{{brand}} {{name}}</p>
@@ -63,6 +130,5 @@
         {{/each}}
       </div>
     </div>
-
   </body>
 </html>

@@ -247,7 +247,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
 
     var count = await CrownCap.count({});
     console.log(count);
-    var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]);
+    var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     console.log(countryCountArray);
   }catch(e){
     console.log("Error", e);
@@ -258,9 +258,9 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
     loggedIn: isLoggedIn(req),
     recentlyAdded,
     count,
-    countryCountArray
+    countryCountArray,
+    countryCountJSON: JSON.stringify(countryCountArray)
   });
-
 });
 
 //GET /add
