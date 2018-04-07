@@ -56,7 +56,6 @@ app.get('/', async (req, res) => {
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     var countries = countryCountArray.length;
     countryCountArrayFirst5 = countryCountArray.slice(0,6);
-    console.log(countries);
   }catch(e){
     console.log("Error", e);
   }

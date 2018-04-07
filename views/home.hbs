@@ -5,12 +5,25 @@
     <title>{{pageTitle}}</title>
     {{> import}}
     <style>
-        .jumbotron{
-            background-image: url(/img/moritz700.jpg);
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: white;
-            height: 700px;
+
+        @media (max-width: 768px){
+          .jumbotron{
+              background-image: url(/img/moritz-xs.jpg);
+              background-repeat: no-repeat;
+              background-size: cover;
+              color: white;
+              height: 400px;
+          }
+        }
+
+        @media(min-width: 769px){
+          .jumbotron{
+              background-image: url(/img/moritz700.jpg);
+              background-repeat: no-repeat;
+              background-size: cover;
+              color: white;
+              height: 700px;
+          }
         }
 
     </style>
