@@ -20,6 +20,12 @@ var CrownCap = mongoose.model('CrownCap', {
     minlength: 1,
     trim: true
   },
+  cloudinaryImageId: {
+    type: String,
+    required: true,
+    minlength: 1,
+    trim: true
+  },
   country: {
     type: String,
     required: true,

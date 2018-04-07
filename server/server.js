@@ -215,7 +215,7 @@ app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
   }
 });
 
-//POST /sammlung/:id/edit/delete
+//POST /sammlung/:id/delete
 app.post('/sammlung/:id/delete', requiresLogin, async (req, res) => {
   var id = req.body.id;
   //Validate Id using isValid
@@ -224,6 +224,10 @@ app.post('/sammlung/:id/delete', requiresLogin, async (req, res) => {
   }
 
   try{
+    //hier Bild auf cloudinary löschen
+    var crowncapA = await CrownCap.findById(id);
+    var returnValue = await cloudinaryAsyncDelete(crowncapA.cloudinaryImageId);
+
     var crowncap = await CrownCap.findOneAndRemove({_id: id});
     if(!crowncap){
       return res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
@@ -231,26 +235,6 @@ app.post('/sammlung/:id/delete', requiresLogin, async (req, res) => {
     res.redirect('/sammlung');
   }catch(e){
     return res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
-  }
-});
-
-//DELETE /sammlung/:id
-app.delete('/sammlung/:id', requiresLogin, async (req, res) => {
-  var id = req.params.id;
-
-  //Validate Id using isValid
-  if(!ObjectID.isValid(id)){
-    return res.redirect('/sammlung');
-  }
-
-  try{
-    var crowncap = await CrownCap.findOneAndRemove({_id: id});
-    if(!crowncap){
-      return res.status(404).send();
-    }
-    res.send({crowncap});
-  }catch(e){
-    res.redirect('/sammlung');
   }
 });
 
@@ -280,21 +264,21 @@ app.get('/add', requiresLogin, (req, res) => {
   });
 });
 
-// function cloudinaryAsync(file, options){
-//   return new Promise((resolve,reject) => {
-//     cloudinary.v2.uploader.upload(file, options, (error, result) => {
-//       if(result){
-//         resolve(result);
-//       }
-//       reject(error);
-//     });
-//   });
-// }
+function cloudinaryAsyncDelete(imageid){
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(imageid, (result, error) => {
+      if(result){
+        resolve(result);
+      }
+      reject(error);
+    });
+  });
+}
 
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image', 'cloudinaryImageId']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');

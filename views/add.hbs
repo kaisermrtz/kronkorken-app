@@ -36,10 +36,9 @@
             <br>
             <img src="https://www.hellmann24.de/itempics/2519/kk-gold-glaenzend-einzeln.jpg" width="100" height="100" class="thumbnail" />
             <input type="text" name="image" id="imageurl" required hidden>
+            <input type="text" name="cloudinaryImageId" id="imageId" required hidden>
           </div>
           <script>
-            // $('.form').append($.cloudinary.unsigned_upload_tag("ur5prnpz", { cloud_name: 'deewjrv8h' }));
-
             $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
             .bind('cloudinarydone', function(e, data) {
               console.log('done', data.result.url);
@@ -48,6 +47,8 @@
               $('#fileupload').removeAttr('required');
               $('#fileupload').hide();
               $('#imageurl').val(data.result.url);
+              $('#imageId').val(data.result.public_id);
+
 
               $('.thumbnails').append($.cloudinary.image(data.result.public_id,
                 { format: 'jpg', width: 150, height: 100,
@@ -56,7 +57,6 @@
                   $('.progress_bar').css('width',
                   Math.round((data.loaded * 100.0) / data.total) + '%');
               });
-
           </script>
           <div class="form-group">
             <label for="brand">Marke *</label>
@@ -144,7 +144,7 @@
               <input type="checkbox" name="special"> Spezial Kronkorken?
             </label>
           </div>
-          <button class="btn btn-default">Zur Sammlung hinzufügen</button>
+          <button class="btn btn-default" onclick="turnformtrue()">Zur Sammlung hinzufügen</button>
         </form>
       </div>
     </div>
