@@ -215,11 +215,21 @@ app.patch('/sammlung/:id', async (req, res) => {
 });
 
 //GET /dashboard
-app.get('/dashboard', requiresLogin, (req, res) => {
+app.get('/dashboard', requiresLogin, async (req, res) => {
+  var recentlyAdded;
+  try{
+    var crowncaps = await CrownCap.find({}).sort({addedAt: -1});
+    recentlyAdded = crowncaps.slice(0,6);
+  }catch(e){
+    console.log("Error", e);
+  }
+
   res.render('dashboard.hbs', {
     pageTitle: 'Kronkorken Dashboard',
-    loggedIn: isLoggedIn(req)
+    loggedIn: isLoggedIn(req),
+    recentlyAdded
   });
+
 });
 
 //GET /add

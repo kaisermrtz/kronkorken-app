@@ -12,11 +12,49 @@
       #buttons a{
         margin-right: 10px;
       }
+
+      .zuletzt-container{
+        padding:10px;
+      }
+
+      .zuletzt-container p{
+        font-size: 20px;
+        font-weight: bold;
+      }
+
+      .thumbnail p{
+        font-size: 18px;
+        text-align: center;
+      }
+      .thumbnail{
+        padding: 15px;
+      }
+
+      a{
+        color: #000000;
+        text-decoration: none;
+      }
     </style>
   </head>
   <body>
     {{> header}}
     <p>Das ist das Dashboard</p>
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Zuletzt hinzugefügt</h3>
+        {{#each recentlyAdded}}
+        <a href="/sammlung/{{_id}}">
+          <div class="col-md-2 col-sm-4" class="zuletzt-container">
+            <div class="thumbnail">
+              <img src="{{image}}" width="200px" height="200px" class="img-thumbnail">
+              <p>{{brand}} {{name}}</p>
+              <p>{{country}}</p>
+            </div>
+          </div>
+        </a>
+        {{/each}}
+      </div>
+    </div>
     <div id="buttons">
       <a href="/add" class="btn btn-default">Neuen Kronkorken eintragen</a>
       <a href="/register" class="btn btn-default">Neuen Nutzer registrieren</a>
