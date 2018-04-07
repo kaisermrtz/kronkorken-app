@@ -244,6 +244,11 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
   try{
     var crowncaps = await CrownCap.find({}).sort({addedAt: -1});
     recentlyAdded = crowncaps.slice(0,6);
+
+    var count = await CrownCap.count({});
+    console.log(count);
+    var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]);
+    console.log(countryCountArray);
   }catch(e){
     console.log("Error", e);
   }
@@ -251,7 +256,9 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
   res.render('dashboard.hbs', {
     pageTitle: 'Kronkorken Dashboard',
     loggedIn: isLoggedIn(req),
-    recentlyAdded
+    recentlyAdded,
+    count,
+    countryCountArray
   });
 
 });
