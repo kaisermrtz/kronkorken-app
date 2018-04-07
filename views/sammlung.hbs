@@ -27,6 +27,12 @@
       #sammlungrow div{
           margin-bottom: 5px;
       }
+
+      .row.fix {
+        display: flex;
+        flex-wrap: wrap;
+        width:100%; /*not always necessary*/
+      }
     </style>
   </head>
   <body>
@@ -36,10 +42,10 @@
       <form id="searchform">
         <input type="text" name="q" placeholder="Suchen" class="form-control">
       </form>
-      <div class="row" id="sammlungrow">
+      <div class="row fix" id="sammlungrow">
         {{#each crowncaps}}
         <a href="/sammlung/{{_id}}">
-          <div class="col-md-4 col-sm-6 col-xs-12 clearfix">
+          <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="sammlung">
               <div class="col-xs-6">
                 <img src="{{image}}" class="img-responsive">
