@@ -49,10 +49,26 @@ function isLoggedIn(req){
 }
 
 //GET /
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
+  var countryCountArrayFirst5;
+  try{
+    var count = await CrownCap.count({});
+    var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
+    var countries = countryCountArray.length;
+    countryCountArrayFirst5 = countryCountArray.slice(0,6);
+    console.log(countries);
+  }catch(e){
+    console.log("Error", e);
+  }
+
+
+
   res.render('home.hbs',{
     pageTitle: 'Kronkorken App',
-    loggedIn: isLoggedIn(req)
+    loggedIn: isLoggedIn(req),
+    countryCount: JSON.stringify(countryCountArrayFirst5),
+    count,
+    countries
   });
 });
 

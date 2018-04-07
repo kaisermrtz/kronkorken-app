@@ -31,28 +31,31 @@
   </head>
   <body>
     {{> header}}
-    <form id="searchform">
-      <input type="text" name="q" placeholder="Suchen" class="form-control">
-    </form>
-    <div class="row" id="sammlungrow">
-      {{#each crowncaps}}
-      <a href="/sammlung/{{_id}}">
-        <div class="col-md-4 col-sm-6 col-xs-12">
-          <div class="sammlung">
-            <div class="col-xs-6">
-              <img src="{{image}}" class="img-responsive">
-            </div>
-            <div class="col-xs-6">
-                <h4>{{brand}}</h4>
-                <p>{{name}}</p>
-                <p>{{country}}</p>
-                <p>{{tags}}</p>
+    <div class="container">
+      <h1>{{pageTitle}}</h1>
+      <form id="searchform">
+        <input type="text" name="q" placeholder="Suchen" class="form-control">
+      </form>
+      <div class="row" id="sammlungrow">
+        {{#each crowncaps}}
+        <a href="/sammlung/{{_id}}">
+          <div class="col-md-4 col-sm-6 col-xs-12">
+            <div class="sammlung">
+              <div class="col-xs-6">
+                <img src="{{image}}" class="img-responsive">
+              </div>
+              <div class="col-xs-6">
+                  <h4>{{brand}}</h4>
+                  <p>{{name}}</p>
+                  <p>{{country}}</p>
+                  <p>{{tags}}</p>
+              </div>
             </div>
           </div>
-        </div>
-      </a>
-      {{/each}}
+        </a>
+        {{/each}}
+      </div>
+      {{> footer}}
     </div>
-    {{> footer}}
   </body>
 </html>

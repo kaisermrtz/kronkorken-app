@@ -4,10 +4,100 @@
     <meta charset="utf-8">
     <title>{{pageTitle}}</title>
     {{> import}}
+    <style>
+        .jumbotron{
+            background-image: url(/img/moritz700.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: white;
+            height: 700px;
+        }
+
+    </style>
   </head>
   <body>
     {{> header}}
-    <p>Willkommen zu meiner Kronkorken Sammlung</p>
-    {{> footer}}
+    <!-- JUMBOTRON -> Landing Page -->
+    <div class="jumbotron" id="jumbotron">
+        <div class="container">
+            <div id="logocontainer">
+                <!-- <img id="logoimg" class="img-responsive" src="img/logo_gross_hintergrund.png"> -->
+            </div>
+        </div>
+    </div>
+    <div class="container">
+      <h1>Statistiken</h1>
+      <p>Es sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
+      <canvas id="chart"></canvas>
+      <script>
+        //Farbe
+        var color = Chart.helpers.color;
+        function getRandomColor(){
+          var colorArray = [
+            color(window.chartColors.blue),
+            color(window.chartColors.red),
+            color(window.chartColors.orange),
+            color(window.chartColors.green),
+            color(window.chartColors.yellow),
+            color(window.chartColors.purple),
+            color(window.chartColors.grey)
+          ];
+          var randomVal = Math.floor(Math.random() * 7);
+          return colorArray[randomVal];
+        }
+
+        var countryCount = JSON.parse('{{{countryCount}}}');
+        var myDatasets = new Array();
+        for(var i=0; i<countryCount.length; i++){
+          var dataset = {
+            label: 'A',
+            backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+                444
+            ]
+          }
+          dataset.label = countryCount[i]._id;
+          dataset.data[0] = countryCount[i].count;
+          myDatasets.push(dataset);
+        }
+
+        //Balkendiagramm
+        var barChartData = {
+            labels: ["Land"],
+            datasets: myDatasets
+        };
+        //Onload Funktion
+        window.onload = function() {
+          ctx = document.getElementById("chart").getContext("2d");
+          window.myBar = new Chart(ctx, {
+              type: 'bar',
+              data: barChartData,
+              options: {
+                  responsive: true,
+                  legend: {
+                      position: 'top',
+                  },
+                  title: {
+                      display: true,
+                      text: 'Top 5 Länder'
+                  },
+                  scales: {
+                    yAxes: [{
+                      ticks: {
+                        beginAtZero: true
+                      }
+                    }]
+                  }
+              }
+          });
+        }
+
+      </script>
+      {{> footer}}
+    </div>
+
+
   </body>
 </html>

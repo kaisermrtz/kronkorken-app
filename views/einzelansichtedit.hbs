@@ -19,129 +19,133 @@
   </head>
   <body>
     {{> header}}
-    <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
-    <div id="erfolg" class="alert alert-success" role="alert" hidden>Änderungen gespeichert.</div>
-    <script>
-      var query = getUrlVars();
-
-      if(query.success == "true"){
-        $('#erfolg').show();
-        $('#error').hide();
-      }else if(query.success == "false"){
-        $('#erfolg').hide();
-        $('#error').show();
-      }
-    </script>
-    <form method="post" action="/sammlung/{{crowncap._id}}/edit">
-      <div class="form-group" hidden>
-        <label>Datenbank-ID</label>
-        <input type="text" name="id" value="{{crowncap._id}}" class="form-control" required>
-        <input type="text" name="oldCloudinaryImageId" value="{{crowncap.cloudinaryImageId}}" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="image">Bild *</label>
-        <input name="file" type="file" id="fileupload" class="cloudinary-fileupload btn" >
-        <br>
-        <img src="{{crowncap.image}}" width="100" height="100" class="thumbnail" />
-        <input type="text" name="image" id="imageurl" value="{{crowncap.image}}" hidden>
-        <input type="text" name="cloudinaryImageId" id="imageId" value="{{crowncap.cloudinaryImageId}}" hidden>
-      </div>
+    <div class="container">
+      <h1>{{pageTitle}}</h1>
+      <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
+      <div id="erfolg" class="alert alert-success" role="alert" hidden>Änderungen gespeichert.</div>
       <script>
-        $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
-        .bind('cloudinarydone', function(e, data) {
-          console.log('done', data.result.url);
-          console.log(e);
-          $('.thumbnail').attr('src', data.result.url);
-          $('#fileupload').removeAttr('required');
-          $('#fileupload').hide();
-          $('#imageurl').val(data.result.url);
-          $('#imageId').val(data.result.public_id);
+        var query = getUrlVars();
 
-
-          $('.thumbnails').append($.cloudinary.image(data.result.public_id,
-            { format: 'jpg', width: 150, height: 100,
-              crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
-            }).bind('cloudinaryprogress', function(e, data) {
-              $('.progress_bar').css('width',
-              Math.round((data.loaded * 100.0) / data.total) + '%');
-          });
+        if(query.success == "true"){
+          $('#erfolg').show();
+          $('#error').hide();
+        }else if(query.success == "false"){
+          $('#erfolg').hide();
+          $('#error').show();
+        }
       </script>
-      <div class="form-group">
-        <label>Marke</label>
-        <input type="text" name="brand" value="{{crowncap.brand}}" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" value="{{crowncap.name}}" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label>Land</label>
-        <input type="text" name="country" value="{{crowncap.country}}" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="typeOfDrink">Art des Getränks</label>
-        <select class="form-control" name="typeOfDrink">
-          <option>Bier</option>
-          <option>Mixgetränk</option>
-          <option>Softdrink</option>
-          <option>Anderes</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label>Tags</label>
-        <input type="text" name="tags" value="{{crowncap.tags}}" class="form-control">
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="tried" id="triedinput"> Selbst ausprobiert?
-        </label>
-      </div>
-      <div class="form-group">
-        <label>
-          <input type="checkbox" name="special" id="specialinput"> Spezial Kronkorken?
-        </label>
-      </div>
-      <button class="btn btn-default">Änderungen speichern</button><a href="" style="margin-left: 15px" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal">Kronkorken löschen</a>
-    </form>
-    <div class="modal fade" id="deletemodal">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
-            <h4 class="modal-title">Kronkorken löschen?</h4>
-          </div>
-          <div class="modal-body">
-            <p>Willst du diesen Kronkorken wirklich aus der Datenbank entfernen?</p>
-          </div>
-          <div class="modal-footer">
-            <form class="form-inline" method="post" action="/sammlung/{{crowncap._id}}/delete">
-              <input type="text" name="id" value="{{crowncap._id}}" hidden>
-              <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
-              <button class="btn btn-danger">Kronkorken löschen</button>
-            </form>
-          </div>
-        </div><!-- /.modal-content -->
-      </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <script src="/js/lib/moment.js"></script>
-    <script>
-      var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
-      $('#time').html(formattedTime);
+      <form method="post" action="/sammlung/{{crowncap._id}}/edit">
+        <div class="form-group" hidden>
+          <label>Datenbank-ID</label>
+          <input type="text" name="id" value="{{crowncap._id}}" class="form-control" required>
+          <input type="text" name="oldCloudinaryImageId" value="{{crowncap.cloudinaryImageId}}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="image">Bild *</label>
+          <input name="file" type="file" id="fileupload" class="cloudinary-fileupload btn" >
+          <br>
+          <img src="{{crowncap.image}}" width="100" height="100" class="thumbnail" />
+          <input type="text" name="image" id="imageurl" value="{{crowncap.image}}" hidden>
+          <input type="text" name="cloudinaryImageId" id="imageId" value="{{crowncap.cloudinaryImageId}}" hidden>
+        </div>
+        <script>
+          $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
+          .bind('cloudinarydone', function(e, data) {
+            console.log('done', data.result.url);
+            console.log(e);
+            $('.thumbnail').attr('src', data.result.url);
+            $('#fileupload').removeAttr('required');
+            $('#fileupload').hide();
+            $('#imageurl').val(data.result.url);
+            $('#imageId').val(data.result.public_id);
 
-      //Tooltips initialisieren
-      $(function () {
-        $('[data-toggle="tooltip"]').tooltip()
-      });
 
-      if({{crowncap.tried}} === true){
-        $('#triedinput').attr('checked', 'true');
-      }
+            $('.thumbnails').append($.cloudinary.image(data.result.public_id,
+              { format: 'jpg', width: 150, height: 100,
+                crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
+              }).bind('cloudinaryprogress', function(e, data) {
+                $('.progress_bar').css('width',
+                Math.round((data.loaded * 100.0) / data.total) + '%');
+            });
+        </script>
+        <div class="form-group">
+          <label>Marke</label>
+          <input type="text" name="brand" value="{{crowncap.brand}}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" value="{{crowncap.name}}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label>Land</label>
+          <input type="text" name="country" value="{{crowncap.country}}" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label for="typeOfDrink">Art des Getränks</label>
+          <select class="form-control" name="typeOfDrink">
+            <option>Bier</option>
+            <option>Mixgetränk</option>
+            <option>Softdrink</option>
+            <option>Anderes</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Tags</label>
+          <input type="text" name="tags" value="{{crowncap.tags}}" class="form-control">
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="tried" id="triedinput"> Selbst ausprobiert?
+          </label>
+        </div>
+        <div class="form-group">
+          <label>
+            <input type="checkbox" name="special" id="specialinput"> Spezial Kronkorken?
+          </label>
+        </div>
+        <button class="btn btn-default">Änderungen speichern</button><a href="" style="margin-left: 15px" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal">Kronkorken löschen</a>
+      </form>
+      <div class="modal fade" id="deletemodal">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title">Kronkorken löschen?</h4>
+            </div>
+            <div class="modal-body">
+              <p>Willst du diesen Kronkorken wirklich aus der Datenbank entfernen?</p>
+            </div>
+            <div class="modal-footer">
+              <form class="form-inline" method="post" action="/sammlung/{{crowncap._id}}/delete">
+                <input type="text" name="id" value="{{crowncap._id}}" hidden>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+                <button class="btn btn-danger">Kronkorken löschen</button>
+              </form>
+            </div>
+          </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+      </div><!-- /.modal -->
+      <script src="/js/lib/moment.js"></script>
+      <script>
+        var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
+        $('#time').html(formattedTime);
 
-      if({{crowncap.special}} === true){
-        $('#specialinput').attr('checked', 'true');
-      }
-    </script>
+        //Tooltips initialisieren
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
 
-    {{> footer}}
+        if({{crowncap.tried}} === true){
+          $('#triedinput').attr('checked', 'true');
+        }
+
+        if({{crowncap.special}} === true){
+          $('#specialinput').attr('checked', 'true');
+        }
+      </script>
+
+      {{> footer}}
+    </div>
+
   </body>
 </html>

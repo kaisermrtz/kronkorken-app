@@ -13,140 +13,144 @@
   </head>
   <body>
     {{> header}}
-    <p>Bitte das Formular ausfüllen</p>
-    <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
-    <div id="erfolg" class="alert alert-success" role="alert" hidden>Kronkorken gespeichert.</div>
-    <script>
-      var query = getUrlVars();
+    <div class="container">
+      <h1>{{pageTitle}}</h1>
+      <p>Bitte das Formular ausfüllen</p>
+      <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
+      <div id="erfolg" class="alert alert-success" role="alert" hidden>Kronkorken gespeichert.</div>
+      <script>
+        var query = getUrlVars();
 
-      if(query.success == "true"){
-        $('#erfolg').show();
-        $('#error').hide();
-      }else if(query.success == "false"){
-        $('#erfolg').hide();
-        $('#error').show();
-      }
-    </script>
-    <div class="row">
-      <div class="col-md-4">
-        <form id="addForm" method="post" action="/add">
-          <div class="form-group">
-            <label for="image">Bild *</label>
-            <input name="file" type="file" id="fileupload" class="cloudinary-fileupload btn" required>
-            <br>
-            <img src="https://www.hellmann24.de/itempics/2519/kk-gold-glaenzend-einzeln.jpg" width="100" height="100" class="thumbnail" />
-            <input type="text" name="image" id="imageurl" required hidden>
-            <input type="text" name="cloudinaryImageId" id="imageId" required hidden>
-          </div>
-          <script>
-            $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
-            .bind('cloudinarydone', function(e, data) {
-              console.log('done', data.result.url);
-              console.log(e);
-              $('.thumbnail').attr('src', data.result.url);
-              $('#fileupload').removeAttr('required');
-              $('#fileupload').hide();
-              $('#imageurl').val(data.result.url);
-              $('#imageId').val(data.result.public_id);
+        if(query.success == "true"){
+          $('#erfolg').show();
+          $('#error').hide();
+        }else if(query.success == "false"){
+          $('#erfolg').hide();
+          $('#error').show();
+        }
+      </script>
+      <div class="row">
+        <div class="col-md-4">
+          <form id="addForm" method="post" action="/add">
+            <div class="form-group">
+              <label for="image">Bild *</label>
+              <input name="file" type="file" id="fileupload" class="cloudinary-fileupload btn" required>
+              <br>
+              <img src="https://www.hellmann24.de/itempics/2519/kk-gold-glaenzend-einzeln.jpg" width="100" height="100" class="thumbnail" />
+              <input type="text" name="image" id="imageurl" required hidden>
+              <input type="text" name="cloudinaryImageId" id="imageId" required hidden>
+            </div>
+            <script>
+              $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
+              .bind('cloudinarydone', function(e, data) {
+                console.log('done', data.result.url);
+                console.log(e);
+                $('.thumbnail').attr('src', data.result.url);
+                $('#fileupload').removeAttr('required');
+                $('#fileupload').hide();
+                $('#imageurl').val(data.result.url);
+                $('#imageId').val(data.result.public_id);
 
 
-              $('.thumbnails').append($.cloudinary.image(data.result.public_id,
-                { format: 'jpg', width: 150, height: 100,
-                  crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
-                }).bind('cloudinaryprogress', function(e, data) {
-                  $('.progress_bar').css('width',
-                  Math.round((data.loaded * 100.0) / data.total) + '%');
-              });
-          </script>
-          <div class="form-group">
-            <label for="brand">Marke *</label>
-            <input type="text" name="brand" placeholder="Marke" class="form-control" required autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label for="name">Name des Getränks *</label>
-            <input type="text" name="name" placeholder="Name des Getränks" class="form-control" required autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label for="country">Land *</label>
-            <input type="text" name="country" placeholder="Wenn nicht bekannt: Unbekannt" class="form-control" required autocomplete="off" list="countries">
-            <datalist id="countries">
-              <option value="Armenien">
-              <option value="Australien">
-              <option value="Bulgarien">
-              <option value="Deutschland">
-              <option value="Indien">
-              <option value="Irland">
-              <option value="Jamaika">
-              <option value="Panama">
-              <option value="Schweiz">
-              <option value="Südkorea">
-              <option value="Chile">
-              <option value="Neuseeland">
-              <option value="Slowenien">
-              <option value="Kanada">
-              <option value="Weißrussland">
-              <option value="Rumänien">
-              <option value="Slowakei">
-              <option value="Bosnien und Herzegowina">
-              <option value="Norwegen">
-              <option value="Island">
-              <option value="Bermudas">
-              <option value="Großbritannien">
-              <option value="Thailand">
-              <option value="Mexiko">
-              <option value="Russland">
-              <option value="USA">
-              <option value="Kolumbien">
-              <option value="Namibia">
-              <option value="Österreich">
-              <option value="Niederlande">
-              <option value="Spanien">
-              <option value="Ukraine">
-              <option value="Brasilien">
-              <option value="Frankreich">
-              <option value="Belgien">
-              <option value="Litauen">
-              <option value="Tschechien">
-              <option value="Portugal">
-              <option value="China">
-              <option value="Dänemark">
-              <option value="Argentinien">
-              <option value="Kroatien">
-              <option value="Italien">
-              <option value="Polen">
-              <option value="Japan">
-              <option value="Luxemburg">
-              <option value="Reunion">
-              <option value="Mauritius">
-              <option value="Unbekannt">
-            </datalist>
-          </div>
-          <div class="form-group">
-            <label for="typeOfDrink">Art des Getränks</label>
-            <select class="form-control" name="typeOfDrink">
-              <option>Bier</option>
-              <option>Mixgetränk</option>
-              <option>Softdrink</option>
-              <option>Anderes</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="tags">Tags</label>
-            <input type="text" name="tags" placeholder="tag1, tag2, tag3" class="form-control" autocomplete="off">
-          </div>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" name="tried"> Selbst ausprobiert?
-            </label>
-          </div>
-          <div class="form-group">
-            <label>
-              <input type="checkbox" name="special"> Spezial Kronkorken?
-            </label>
-          </div>
-          <button class="btn btn-default" onclick="turnformtrue()">Zur Sammlung hinzufügen</button>
-        </form>
+                $('.thumbnails').append($.cloudinary.image(data.result.public_id,
+                  { format: 'jpg', width: 150, height: 100,
+                    crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
+                  }).bind('cloudinaryprogress', function(e, data) {
+                    $('.progress_bar').css('width',
+                    Math.round((data.loaded * 100.0) / data.total) + '%');
+                });
+            </script>
+            <div class="form-group">
+              <label for="brand">Marke *</label>
+              <input type="text" name="brand" placeholder="Marke" class="form-control" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="name">Name des Getränks *</label>
+              <input type="text" name="name" placeholder="Name des Getränks" class="form-control" required autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label for="country">Land *</label>
+              <input type="text" name="country" placeholder="Wenn nicht bekannt: Unbekannt" class="form-control" required autocomplete="off" list="countries">
+              <datalist id="countries">
+                <option value="Armenien">
+                <option value="Australien">
+                <option value="Bulgarien">
+                <option value="Deutschland">
+                <option value="Indien">
+                <option value="Irland">
+                <option value="Jamaika">
+                <option value="Panama">
+                <option value="Schweiz">
+                <option value="Südkorea">
+                <option value="Chile">
+                <option value="Neuseeland">
+                <option value="Slowenien">
+                <option value="Kanada">
+                <option value="Weißrussland">
+                <option value="Rumänien">
+                <option value="Slowakei">
+                <option value="Bosnien und Herzegowina">
+                <option value="Norwegen">
+                <option value="Island">
+                <option value="Bermudas">
+                <option value="Großbritannien">
+                <option value="Thailand">
+                <option value="Mexiko">
+                <option value="Russland">
+                <option value="USA">
+                <option value="Kolumbien">
+                <option value="Namibia">
+                <option value="Österreich">
+                <option value="Niederlande">
+                <option value="Spanien">
+                <option value="Ukraine">
+                <option value="Brasilien">
+                <option value="Frankreich">
+                <option value="Belgien">
+                <option value="Litauen">
+                <option value="Tschechien">
+                <option value="Portugal">
+                <option value="China">
+                <option value="Dänemark">
+                <option value="Argentinien">
+                <option value="Kroatien">
+                <option value="Italien">
+                <option value="Polen">
+                <option value="Japan">
+                <option value="Luxemburg">
+                <option value="Reunion">
+                <option value="Mauritius">
+                <option value="Unbekannt">
+              </datalist>
+            </div>
+            <div class="form-group">
+              <label for="typeOfDrink">Art des Getränks</label>
+              <select class="form-control" name="typeOfDrink">
+                <option>Bier</option>
+                <option>Mixgetränk</option>
+                <option>Softdrink</option>
+                <option>Anderes</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="tags">Tags</label>
+              <input type="text" name="tags" placeholder="tag1, tag2, tag3" class="form-control" autocomplete="off">
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" name="tried"> Selbst ausprobiert?
+              </label>
+            </div>
+            <div class="form-group">
+              <label>
+                <input type="checkbox" name="special"> Spezial Kronkorken?
+              </label>
+            </div>
+            <button class="btn btn-default" onclick="turnformtrue()">Zur Sammlung hinzufügen</button>
+          </form>
+        </div>
       </div>
     </div>
+
   </body>
 </html>
