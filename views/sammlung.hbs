@@ -57,14 +57,14 @@
         {{/each}}
       </div>
       <script>
-        // $(document).ready(function() {
-        //   var maxHeight = 0;
-        //   $(".equalize").each(function(){
-        //     if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
-        //   });
-        //   console.log(maxHeight);
-        //   $(".equalize").height(maxHeight);
-        // });
+        $(document).ready(function() {
+          var maxHeight = 0;
+          $(".equalize").each(function(){
+            if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
+          });
+          console.log(maxHeight);
+          $(".equalize").height(maxHeight);
+        });
       </script>
     </div>
   </body>
