@@ -50,21 +50,21 @@
                   <p>{{name}}</p>
                   <p>{{country}}</p>
               </div>
-              <div class="clearfix"></div>
+              <div class="clearfix visible-xs-block"></div>
             </div>
           </div>
         </a>
         {{/each}}
       </div>
       <script>
-        $(document).ready(function() {
-          var maxHeight = 0;
-          $(".equalize").each(function(){
-            if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
-          });
-          console.log(maxHeight);
-          $(".equalize").height(maxHeight);
-        });
+        // $(document).ready(function() {
+        //   var maxHeight = 0;
+        //   $(".equalize").each(function(){
+        //     if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
+        //   });
+        //   console.log(maxHeight);
+        //   $(".equalize").height(maxHeight);
+        // });
       </script>
     </div>
   </body>
