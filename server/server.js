@@ -36,7 +36,7 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
-//Helferfunktion 
+//Helferfunktion
 hbs.registerHelper('getCurrentYear', () => {
   return new Date().getFullYear();
 });
@@ -130,7 +130,7 @@ app.get('/logout', (req, res) => {
 app.get('/sammlung', async (req, res) => {
   try{
     if(Object.keys(req.query).length === 0 || req.query.q === ''){
-      var crowncaps = await CrownCap.find({});
+      var crowncaps = await CrownCap.find({}).sort({brand: 'asc'});
     }else{
       var crowncaps = await CrownCap.find().or(
         [
@@ -139,7 +139,7 @@ app.get('/sammlung', async (req, res) => {
           {country: req.query.q},
           {typeOfDrink: req.query.q},
           {tags: new RegExp(req.query.q, 'i')}
-        ]);
+        ]).sort({brand: 'asc'});
     }
 
     res.render('sammlung.hbs', {
