@@ -55,7 +55,7 @@ app.get('/', async (req, res) => {
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     var countries = countryCountArray.length;
-    countryCountArrayFirst5 = countryCountArray.slice(0,6); 
+    countryCountArrayFirst5 = countryCountArray.slice(0,6);
   }catch(e){
     console.log("Error", e);
   }
@@ -212,10 +212,9 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
   try{
     if(req.body.oldCloudinaryImageId === req.body.cloudinaryImageId){
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags']);
-      console.log("nix geändert");
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location']);
     }else{
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image', 'cloudinaryImageId']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'image', 'cloudinaryImageId']);
       //Altes Bild löschen
       var returnValue = await cloudinaryAsyncDelete(req.body.oldCloudinaryImageId);
     }
@@ -305,12 +304,11 @@ function cloudinaryAsyncDelete(imageid){
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'image', 'cloudinaryImageId']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'image', 'cloudinaryImageId']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
   crownCapData['special'] = (req.body.special == 'on');
-  console.log(JSON.stringify(crownCapData));
 
   var crownCap = new CrownCap(crownCapData);
   try{

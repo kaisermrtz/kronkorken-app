@@ -54,6 +54,11 @@ var CrownCap = mongoose.model('CrownCap', {
   },
   special: {
     type: Boolean
+  },
+  location: {
+    type: String,
+    minlength: 1,
+    trim: true
   }
 });
 
