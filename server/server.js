@@ -36,7 +36,7 @@ app.use(session({
   store: new MongoStore({mongooseConnection: mongoose.connection})
 }));
 
-//Helferfunktion
+//Helferfunktion 
 hbs.registerHelper('getCurrentYear', () => {
   return new Date().getFullYear();
 });
@@ -303,7 +303,7 @@ function cloudinaryAsyncDelete(imageid){
 
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
-  //Objekt zum speichern erzeugen   
+  //Objekt zum speichern erzeugen
   var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'image', 'cloudinaryImageId']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;

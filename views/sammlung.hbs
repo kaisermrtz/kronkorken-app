@@ -7,13 +7,15 @@
     {{> import}}
     <style>
       @media(min-width:992px){
-        .row.auto-clear .col-md-4:nth-child(3n+1){clear:left;}
+        .row.auto-clear a:nth-child(3n+1){clear:left;}
       }
-      @media(min-width:768px, max-width:991px){
-        .row.auto-clear .col-sm-6:nth-child(2n+1){clear:left;}
+
+      @media(max-width:991px){
+        .row.auto-clear a:nth-child(2n+1){clear:left;}
       }
+
       @media(max-width:767px){
-        .row.auto-clear .col-xs-12:nth-child(1n+1){clear:left;}
+        .row.auto-clear a:nth-child(1n+1){clear:left;}
       }
 
       .sammlung p{
