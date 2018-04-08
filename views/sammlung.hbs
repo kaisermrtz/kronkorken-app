@@ -6,7 +6,7 @@
 
     {{> import}}
     <style>
-      @media (min-width:992px){
+      @media(min-width:992px){
         .row.auto-clear .col-md-4:nth-child(3n+1){clear:left;}
       }
       @media(min-width:768px, max-width:991px){
@@ -15,8 +15,6 @@
       @media(max-width:767px){
         .row.auto-clear .col-xs-12:nth-child(1n+1){clear:left;}
       }
-
-
 
       .sammlung p{
           font-size: 16px;
@@ -49,7 +47,7 @@
       <form id="searchform">
         <input type="text" name="q" placeholder="Suchen" class="form-control">
       </form>
-      <div class="row" id="sammlungrow">
+      <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
         <a href="/sammlung/{{_id}}">
           <div class="col-md-4 col-sm-6 col-xs-12 equalize">
