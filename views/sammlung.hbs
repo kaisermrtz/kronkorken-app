@@ -6,12 +6,18 @@
 
     {{> import}}
     <style>
-
-      @media(max-width: 768px){
-        .clearfix{
-          display: none;
-        }
+      @media (min-width:992px){
+        .row.auto-clear .col-md-4:nth-child(3n+1){clear:left;}
       }
+      @media(min-width:768px, max-width:991px){
+        .row.auto-clear .col-sm-6:nth-child(2n+1){clear:left;}
+      }
+      @media(max-width:767px){
+        .row.auto-clear .col-xs-12:nth-child(1n+1){clear:left;}
+      }
+
+
+
       .sammlung p{
           font-size: 16px;
       }
@@ -56,21 +62,20 @@
                   <p>{{name}}</p>
                   <p>{{country}}</p>
               </div>
-              <div class="clearfix visible-xs-block"></div>
             </div>
           </div>
         </a>
         {{/each}}
       </div>
       <script>
-        $(document).ready(function() {
-          var maxHeight = 0;
-          $(".equalize").each(function(){
-            if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
-          });
-          console.log(maxHeight);
-          $(".equalize").height(maxHeight);
-        });
+        // $(document).ready(function() {
+        //   var maxHeight = 0;
+        //   $(".equalize").each(function(){
+        //     if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
+        //   });
+        //   console.log(maxHeight);
+        //   $(".equalize").height(maxHeight);
+        // });
       </script>
     </div>
   </body>
