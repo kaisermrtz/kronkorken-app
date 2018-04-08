@@ -60,6 +60,7 @@
         }
 
         var countryCount = JSON.parse('{{{countryCount}}}');
+        var countryCountFirst5 = countryCount.slice(0,6);
         var myDatasets = new Array();
         for(var i=0; i<countryCount.length; i++){
           var dataset = {
@@ -71,8 +72,8 @@
                 444
             ]
           }
-          dataset.label = countryCount[i]._id;
-          dataset.data[0] = countryCount[i].count;
+          dataset.label = countryCountFirst5[i]._id;
+          dataset.data[0] = countryCountFirst5[i].count;
           myDatasets.push(dataset);
         }
 
