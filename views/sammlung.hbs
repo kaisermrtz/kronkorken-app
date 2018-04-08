@@ -7,15 +7,15 @@
     {{> import}}
     <style>
       @media(min-width:992px){
-        .row.auto-clear a:nth-child(3n+1){clear:left;}
+        .row.auto-clear .col-md-4:nth-child(3n+1){clear:left;}
       }
 
       @media(max-width:991px){
-        .row.auto-clear a:nth-child(2n+1){clear:left;}
+        .row.auto-clear .col-sm-6:nth-child(2n+1){clear:left;}
       }
 
       @media(max-width:767px){
-        .row.auto-clear a:nth-child(1n+1){clear:left;}
+        .row.auto-clear .col-xs-12:nth-child(1n+1){clear:left;}
       }
 
       .sammlung p{
@@ -51,8 +51,9 @@
       </form>
       <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
-        <a href="/sammlung/{{_id}}">
-          <div class="col-md-4 col-sm-6 col-xs-12 equalize">
+
+        <div class="col-md-4 col-sm-6 col-xs-12 equalize">
+          <a href="/sammlung/{{_id}}">
             <div class="sammlung">
               <div class="col-xs-6">
                 <img src="{{image}}" class="img-responsive img-crowncap">
@@ -63,8 +64,8 @@
                   <p>{{country}}</p>
               </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
         {{/each}}
       </div>
       <script>
