@@ -1,5 +1,5 @@
 require('./config/config.js');
- 
+
 const _ = require('lodash');
 const fs = require('fs');
 const express = require('express');
@@ -16,6 +16,7 @@ var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {CrownCap} = require('./models/crowncap');
 var {requiresLogin} = require('./middleware/requiresLogin');
+var {countryCodeArray} = require('./util/countryCodeArray');
 
 //Setup express, hbs, bodyParser
 var app = express();
@@ -140,6 +141,13 @@ app.get('/sammlung', async (req, res) => {
           {tags: new RegExp(req.query.q, 'i')}
         ]).sort({brand: 'asc'});
     }
+    crowncaps.forEach((element) => {
+      for(var i=0; i<countryCodeArray.length; i++){
+        if(countryCodeArray[i].country == element.country){
+          element.countryCode = countryCodeArray[i].countryCode;
+        }
+      }
+    });
 
     res.render('sammlung.hbs', {
       pageTitle: 'Kronkorken Sammlung',
@@ -149,7 +157,7 @@ app.get('/sammlung', async (req, res) => {
   }catch(e){
     res.status(400).send(e);
   }
-});
+}); 
 
 //GET /sammlung/:id
 app.get('/sammlung/:id', async (req, res) => {

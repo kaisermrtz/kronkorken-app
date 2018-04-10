@@ -32,6 +32,10 @@ var CrownCap = mongoose.model('CrownCap', {
     minlength: 1,
     trim: true
   },
+  countryCode: {
+    type: String,
+    trim: true
+  },
   addedAt: {
     type: Number,
     required: true
