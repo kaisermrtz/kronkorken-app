@@ -69,16 +69,6 @@
         margin-bottom: 5px;
       }
 
-      .square{
-        position: relative;
-        width: 100%;
-      }
-
-      .square:after {
-        display: block;
-        padding-bottom: 100%;
-      }
-
       .ccbrand{
         font-weight: bold;
         font-size: 12px;
@@ -118,9 +108,7 @@
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <a href="/sammlung/{{_id}}">
             <div class="sammlung">
-              <div class="square">
-                <img src="{{image}}" class="img-responsive ccimage img-rounded">
-              </div>
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
               <p class="ccbrand ccdata">{{brand}}</p>
               <div class="col-xs-10">
                 <p class="ccname ccdata">{{name}}</p>
@@ -142,6 +130,12 @@
          by
         <a href="https://github.com/gosquared/flags">GoSquared</a>
       </p>
+      <script>
+        //Tooltips initialisieren
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+      </script>
     </div>
   </body>
 </html>
