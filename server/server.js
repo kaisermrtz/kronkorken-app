@@ -128,18 +128,45 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
+  const itemsPerPage = 50;
+
   try{
-    if(Object.keys(req.query).length === 0 || req.query.q === ''){
-      var crowncaps = await CrownCap.find({}).sort({brand: 'asc'});
+    if(req.query.q === '' || req.query.q == undefined){
+      if(req.query.page === '' || req.query.page == undefined || req.query.page < 1){
+        var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
+      }else{
+        var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+      }
+      var count = await CrownCap.find({}).count();
+
     }else{
-      var crowncaps = await CrownCap.find().or(
+      if(req.query.page === '' || req.query.page == undefined || req.query.page < 1){
+        var crowncaps = await CrownCap.find().or(
+          [
+            {brand: new RegExp(req.query.q, 'i')},
+            {name: new RegExp(req.query.q, 'i')},
+            {country: req.query.q},
+            {typeOfDrink: req.query.q},
+            {tags: new RegExp(req.query.q, 'i')}
+          ]).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
+      }else{
+        var crowncaps = await CrownCap.find().or(
+          [
+            {brand: new RegExp(req.query.q, 'i')},
+            {name: new RegExp(req.query.q, 'i')},
+            {country: req.query.q},
+            {typeOfDrink: req.query.q},
+            {tags: new RegExp(req.query.q, 'i')}
+          ]).sort({brand: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+      }
+      var count = await CrownCap.find().or(
         [
           {brand: new RegExp(req.query.q, 'i')},
           {name: new RegExp(req.query.q, 'i')},
           {country: req.query.q},
           {typeOfDrink: req.query.q},
           {tags: new RegExp(req.query.q, 'i')}
-        ]).sort({brand: 'asc'});
+        ]).sort({brand: 'asc'}).count();
     }
     crowncaps.forEach((element) => {
       for(var i=0; i<countryCodeArray.length; i++){
@@ -149,15 +176,19 @@ app.get('/sammlung', async (req, res) => {
       }
     });
 
+    var pages = count / 2;
+    var numberOfPages = Math.ceil(pages);
+
     res.render('sammlung.hbs', {
       pageTitle: 'Kronkorken Sammlung',
       crowncaps,
-      loggedIn: isLoggedIn(req)
+      loggedIn: isLoggedIn(req),
+      numberOfPages
     });
   }catch(e){
     res.status(400).send(e);
   }
-}); 
+});
 
 //GET /sammlung/:id
 app.get('/sammlung/:id', async (req, res) => {

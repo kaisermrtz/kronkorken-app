@@ -81,6 +81,15 @@
         right: 0px;
       }
 
+      #nextPage p{
+        text-align: center;
+        font-size: 12px;
+      }
+
+      #nextPage {
+        margin-top: 50px;
+      }
+
     </style>
   </head>
   <body>
@@ -107,22 +116,61 @@
                 <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
               </a>
               </div>
-
             </div>
           </a>
         </div>
         {{/each}}
       </div>
-      <p>Flags provided
-        <a href="https://github.com/gosquared/flags/blob/master/LICENSE.txt">under MIT licence</a>
-         by
-        <a href="https://github.com/gosquared/flags">GoSquared</a>
-      </p>
+      <div id="nextPage">
+        <p><a href="#">Zurück</a> Seite 1 von {{numberOfPages}} <a href="#">Weiter</a></p>
+      </div>
+
       <script>
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
         });
+        var numberOfPages = {{numberOfPages}};
+        var currentPage = getParameterByName('page');
+        var nextPage = parseInt(currentPage) + 1;
+
+        var url = window.location.href;
+        var splittedUrl = url.split('page=');
+        var splittedUrl1 = url.split('q=');
+
+        if(splittedUrl[1] == undefined){
+          if(splittedUrl1[1] == undefined){
+            //if no query
+            splittedUrl[0] += "?";
+            nextPage = 2;
+          }else{
+            //if query
+            splittedUrl[0] += "&";
+            nextPage = 2;
+          }
+
+        }
+
+        if(currentPage == 1 || currentPage == undefined){
+          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+        }else if(currentPage >= numberOfPages){
+          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
+        }else{
+          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+        }
+
+
+
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
       </script>
     </div>
   </body>
