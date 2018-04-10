@@ -44,6 +44,10 @@ var countryCodeArray = [
     countryCode: 'bg'
   },
   {
+    country: 'Bermudas',
+    countryCode: 'bm'
+  },
+  {
     country: 'Bolivien',
     countryCode: 'bo'
   },
@@ -202,6 +206,10 @@ var countryCodeArray = [
   {
     country: 'Lettland',
     countryCode: 'lv'
+  },
+  {
+    country: 'Luxemburg',
+    countryCode: 'lu'
   },
   {
     country: 'Marokko',
@@ -366,6 +374,14 @@ var countryCodeArray = [
   {
     country: 'Südafrika',
     countryCode: 'za'
+  },
+  {
+    country: 'Frankreich',
+    countryCode: 'fr'
+  },
+  {
+    country: 'Litauen',
+    countryCode: 'lt'
   }
 ];
 
