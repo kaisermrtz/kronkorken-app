@@ -69,6 +69,16 @@
         margin-bottom: 5px;
       }
 
+      .square{
+        position: relative;
+        width: 100%;
+      }
+
+      .square:after {
+        display: block;
+        padding-bottom: 100%;
+      }
+
       .ccbrand{
         font-weight: bold;
         font-size: 12px;
@@ -108,7 +118,9 @@
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <a href="/sammlung/{{_id}}">
             <div class="sammlung">
-              <img src="{{image}}" class="img-responsive ccimage img-rounded">
+              <div class="square">
+                <img src="{{image}}" class="img-responsive ccimage img-rounded">
+              </div>
               <p class="ccbrand ccdata">{{brand}}</p>
               <div class="col-xs-10">
                 <p class="ccname ccdata">{{name}}</p>
@@ -116,7 +128,7 @@
               <div class="col-xs-2" style="padding: 0px">
                 <!-- <p class="cccountry ccdata">{{country}}</p> -->
                 <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
-                <img class="img-responsive flags" src="">
+                <img class="img-responsive flags" src="http://www.countryflags.io/de/flat/24.png">
               </a>
               </div>
 
