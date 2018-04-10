@@ -6,7 +6,7 @@
 
     {{> import}}
     <style>
-      @media(min-width:992px){
+      /* @media(min-width:992px){
         .row.auto-clear .col-md-4:nth-child(3n+1){clear:left;}
       }
 
@@ -16,10 +16,22 @@
 
       @media(max-width:767px){
         .row.auto-clear .col-xs-12:nth-child(1n+1){clear:left;}
+      } */
+
+      @media (max-width: 767px){
+        .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
       }
 
-      .sammlung p{
-          font-size: 16px;
+      @media (min-width: 768px) and (max-width: 991px){
+        .row.auto-clear .col-sm-4:nth-child(3n+1){clear:left;}
+      }
+
+      @media (min-width: 992px) and (max-width: 1199px){
+        .row.auto-clear .col-md-3:nth-child(4n+1){clear:left;}
+      }
+
+      @media (min-width: 1200px){
+        .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
       }
 
       .sammlung{
@@ -40,6 +52,47 @@
           margin-bottom: 5px;
       }
 
+      .ccdata {
+
+        /* Automatische Silbentrennung */
+        -moz-hyphens: auto;
+        -o-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+      }
+
+      .ccimage{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+      }
+
+      .ccbrand{
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+
+      .ccname{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .cccountry{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: right;
+      }
+
+      .flag{
+        position: absolute;
+        right: 0px;
+      }
+
     </style>
   </head>
   <body>
@@ -52,32 +105,31 @@
       <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
 
-        <div class="col-md-4 col-sm-6 col-xs-12 equalize">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <a href="/sammlung/{{_id}}">
             <div class="sammlung">
-              <div class="col-xs-6">
-                <img src="{{image}}" class="img-responsive img-crowncap">
+              <img src="{{image}}" class="img-responsive ccimage img-rounded">
+              <p class="ccbrand ccdata">{{brand}}</p>
+              <div class="col-xs-10">
+                <p class="ccname ccdata">{{name}}</p>
               </div>
-              <div class="col-xs-6">
-                  <h4>{{brand}}</h4>
-                  <p>{{name}}</p>
-                  <p>{{country}}</p>
+              <div class="col-xs-2" style="padding: 0px">
+                <!-- <p class="cccountry ccdata">{{country}}</p> -->
+                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="">
+              </a>
               </div>
+
             </div>
           </a>
         </div>
         {{/each}}
       </div>
-      <script>
-        // $(document).ready(function() {
-        //   var maxHeight = 0;
-        //   $(".equalize").each(function(){
-        //     if ($(this).height() > maxHeight) { maxHeight = $(this).height(); }
-        //   });
-        //   console.log(maxHeight);
-        //   $(".equalize").height(maxHeight);
-        // });
-      </script>
+      <p>Flags provided
+        <a href="https://github.com/gosquared/flags/blob/master/LICENSE.txt">under MIT licence</a>
+         by
+        <a href="https://github.com/gosquared/flags">GoSquared</a>
+      </p>
     </div>
   </body>
 </html>
