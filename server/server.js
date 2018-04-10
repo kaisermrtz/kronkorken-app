@@ -128,7 +128,7 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
-  const itemsPerPage = 50;
+  const itemsPerPage = 60;
 
   try{
     if(req.query.q === '' || req.query.q == undefined){

@@ -97,8 +97,8 @@
     {{> header}}
     <div class="container">
       <h1>{{pageTitle}}</h1>
-      <form id="searchform">
-        <input type="text" name="q" placeholder="Suchen" class="form-control">
+      <form>
+          <input type="text" name="q" placeholder="Suchen" class="form-control">
       </form>
       <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
@@ -112,7 +112,6 @@
                 <p class="ccname ccdata">{{name}}</p>
               </div>
               <div class="col-xs-2" style="padding: 0px">
-                <!-- <p class="cccountry ccdata">{{country}}</p> -->
                 <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
                 <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
               </a>
