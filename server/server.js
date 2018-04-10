@@ -176,7 +176,7 @@ app.get('/sammlung', async (req, res) => {
       }
     });
 
-    var pages = count / 2;
+    var pages = count / itemsPerPage;
     var numberOfPages = Math.ceil(pages);
 
     res.render('sammlung.hbs', {
