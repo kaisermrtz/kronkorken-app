@@ -88,6 +88,7 @@
 
       #nextPage {
         margin-top: 50px;
+        margin-bottom: 50px;
       }
 
     </style>
@@ -151,7 +152,9 @@
 
         }
 
-        if(currentPage == 1 || currentPage == undefined){
+        if(numberOfPages == 1){
+          $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
+        }else if(currentPage == 1 || currentPage == undefined){
           $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
         }else if(currentPage >= numberOfPages){
           $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
