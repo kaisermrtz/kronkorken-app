@@ -6,22 +6,50 @@
     {{> import}}
     <style>
 
-        @media (max-width: 768px){
+        .jumbotron{
+            background-repeat: no-repeat;
+            background-size: cover;
+            color: white;
+        }
+
+        @media (max-width: 500px){
           .jumbotron{
-              background-image: url(/img/moritz-xs.jpg);
-              background-repeat: no-repeat;
-              background-size: cover;
-              color: white;
-              height: 400px;
+            background-image: url(/img/Logo-Square-Klein.png);
+            height: 400px;
           }
         }
 
-        @media(min-width: 769px){
+        @media (min-width: 501px) and (max-width: 600px){
           .jumbotron{
-              background-image: url(/img/moritz700.jpg);
-              background-repeat: no-repeat;
-              background-size: cover;
-              color: white;
+            background-image: url(/img/Logo-Rect1-Klein.png);
+            height: 400px;
+          }
+        }
+
+        @media (min-width: 601px) and (max-width: 800px){
+          .jumbotron{
+            background-image: url(/img/Logo-Rect2-Klein.png);
+            height: 400px;
+          }
+        }
+
+        @media(min-width: 801px) and (max-width: 850px){
+          .jumbotron{
+              background-image: url(/img/Logo-Square.png);
+              height: 700px;
+          }
+        }
+
+        @media(min-width: 851px) and (max-width: 1200px){
+          .jumbotron{
+              background-image: url(/img/Logo-Rect1.png);
+              height: 700px;
+          }
+        }
+
+        @media(min-width: 1201px){
+          .jumbotron{
+              background-image: url(/img/Logo-Rect2.png);
               height: 700px;
           }
         }
