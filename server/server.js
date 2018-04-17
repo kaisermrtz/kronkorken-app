@@ -1,4 +1,4 @@
-require('./config/config.js');   
+require('./config/config.js');
 
 const _ = require('lodash');
 const fs = require('fs');
@@ -129,45 +129,40 @@ app.get('/logout', (req, res) => {
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
   const itemsPerPage = 60;
+  var searchArray = [
+    {brand: new RegExp(req.query.q, 'i')},
+    {name: new RegExp(req.query.q, 'i')},
+    {country: new RegExp(req.query.q, 'i')},
+    {typeOfDrink: req.query.q},
+    {tags: new RegExp(req.query.q, 'i')}
+  ];
 
   try{
+    //Wenn kein Query angegeben, bzw. leerer Query
     if(req.query.q === '' || req.query.q == undefined){
-      if(req.query.page === '' || req.query.page == undefined || req.query.page < 1){
+      //Wenn keine Seite angegeben
+      if(req.query.page < 1){
         var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
         var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
       var count = await CrownCap.find({}).count();
-
     }else{
-      if(req.query.page === '' || req.query.page == undefined || req.query.page < 1){
-        var crowncaps = await CrownCap.find().or(
-          [
-            {brand: new RegExp(req.query.q, 'i')},
-            {name: new RegExp(req.query.q, 'i')},
-            {country: req.query.q},
-            {typeOfDrink: req.query.q},
-            {tags: new RegExp(req.query.q, 'i')}
-          ]).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
+      //Wenn keine Seite angegeben
+      if(req.query.page < 1){
+        var crowncaps = await CrownCap.find().or(searchArray).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
-        var crowncaps = await CrownCap.find().or(
-          [
-            {brand: new RegExp(req.query.q, 'i')},
-            {name: new RegExp(req.query.q, 'i')},
-            {country: req.query.q},
-            {typeOfDrink: req.query.q},
-            {tags: new RegExp(req.query.q, 'i')}
-          ]).sort({brand: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find()
+        .or(searchArray).sort({brand: 'asc'})
+        .skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
-      var count = await CrownCap.find().or(
-        [
-          {brand: new RegExp(req.query.q, 'i')},
-          {name: new RegExp(req.query.q, 'i')},
-          {country: req.query.q},
-          {typeOfDrink: req.query.q},
-          {tags: new RegExp(req.query.q, 'i')}
-        ]).sort({brand: 'asc'}).count();
+
+      var count = await CrownCap.find()
+      .or(searchArray)
+      .sort({brand: 'asc'})
+      .count();
     }
+    //Countrycodes hinzufügen
     crowncaps.forEach((element) => {
       for(var i=0; i<countryCodeArray.length; i++){
         if(countryCodeArray[i].country == element.country){
@@ -176,9 +171,11 @@ app.get('/sammlung', async (req, res) => {
       }
     });
 
+    //Seitenzahl ausrechnen
     var pages = count / itemsPerPage;
     var numberOfPages = Math.ceil(pages);
 
+    //rendern
     res.render('sammlung.hbs', {
       pageTitle: 'Kronkorken Sammlung',
       crowncaps,
