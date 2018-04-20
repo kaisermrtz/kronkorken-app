@@ -62,6 +62,9 @@ var CrownCap = mongoose.model('CrownCap', {
   location: {
     type: String,
     trim: true
+  },
+  quantity: {
+    type: Number
   }
 });
 

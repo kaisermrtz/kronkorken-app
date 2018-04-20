@@ -247,9 +247,9 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
   try{
     if(req.body.oldCloudinaryImageId === req.body.cloudinaryImageId){
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity']);
     }else{
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'image', 'cloudinaryImageId']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', 'image', 'cloudinaryImageId']);
       //Altes Bild löschen
       var returnValue = await cloudinaryAsyncDelete(req.body.oldCloudinaryImageId);
     }
@@ -336,10 +336,10 @@ function cloudinaryAsyncDelete(imageid){
   });
 }
 
-//POST /add
+//POST /add 
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'image', 'cloudinaryImageId']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
