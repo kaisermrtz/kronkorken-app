@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+      @media (max-width: 767px){
+        .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
+      }
+
+      @media (min-width: 768px) and (max-width: 991px){
+        .row.auto-clear .col-sm-4:nth-child(3n+1){clear:left;}
+      }
+
+      @media (min-width: 992px) and (max-width: 1199px){
+        .row.auto-clear .col-md-3:nth-child(4n+1){clear:left;}
+      }
+
+      @media (min-width: 1200px){
+        .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
+      }
+
+      .sammlung{
+          margin: 5px;
+          height: 100%;
+          padding-bottom: 5px;
+      }
+
+      #sammlungrow{
+          margin: 5px;
+      }
+      #sammlungrow a{
+        color: #000000;
+        text-decoration: none;
+      }
+
+      #sammlungrow div{
+          margin-bottom: 5px;
+      }
+
+      .ccdata {
+
+        /* Automatische Silbentrennung */
+        -moz-hyphens: auto;
+        -o-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+      }
+
+      .ccimage{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+      }
+
+      .ccbrand{
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+
+      .ccname{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .cccountry{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: right;
+      }
+
+      .flag{
+        position: absolute;
+        right: 0px;
+      }
+
+      #nextPage p{
+        text-align: center;
+        font-size: 12px;
+      }
+
+      #nextPage {
+        margin-top: 50px;
+        margin-bottom: 50px;
+      }
+
+      .dropdown-menu{
+        height:200px;overflow-y:scroll;
+      }
+
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <div class="container">
+      <h1>{{pageTitle}}</h1>
+      <!-- <form id="searchForm">
+          <input type="text" name="q" placeholder="Suchen" class="form-control">
+      </form> -->
+      <div class="row auto-clear" id="sammlungrow">
+        {{#each crowncaps}}
+
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <a href="/sammlung/{{_id}}">
+            <div class="sammlung">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+              <p class="ccbrand ccdata">{{brand}}</p>
+              <div class="col-xs-10">
+                <p class="ccname ccdata">{{name}}</p>
+              </div>
+              <div class="col-xs-2" style="padding: 0px">
+                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+      <!-- <div id="nextPage">
+        <p><a href="#">Zurück</a> Seite 1 von {{numberOfPages}} <a href="#">Weiter</a></p>
+      </div> -->
+
+      <script>
+        //Tooltips initialisieren
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+        var numberOfPages = {{numberOfPages}};
+        var currentPage = getParameterByName('page');
+        var nextPage = parseInt(currentPage) + 1;
+
+        var url = window.location.href;
+        var splittedUrl = url.split('page=');
+        var splittedUrl1 = url.split('q=');
+
+        if(splittedUrl[1] == undefined){
+          if(splittedUrl1[1] == undefined){
+            //if no query
+            splittedUrl[0] += "?";
+            nextPage = 2;
+          }else{
+            //if query
+            splittedUrl[0] += "&";
+            nextPage = 2;
+          }
+
+        }
+
+        if(numberOfPages == 1){
+          $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
+        }else if(currentPage == 1 || currentPage == undefined){
+          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+        }else if(currentPage >= numberOfPages){
+          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
+        }else{
+          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+        }
+
+        function getParameterByName(name, url) {
+            if (!url) url = window.location.href;
+            name = name.replace(/[\[\]]/g, "\\$&");
+            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                results = regex.exec(url);
+            if (!results) return null;
+            if (!results[2]) return '';
+            return decodeURIComponent(results[2].replace(/\+/g, " "));
+        }
+      </script>
+    </div>
+  </body>
+</html>

@@ -385,4 +385,16 @@ var countryCodeArray = [
   }
 ];
 
-module.exports = {countryCodeArray};
+//Utility Function
+function addCountryCode(crowncaps){
+  //Countrycodes hinzufügen
+  crowncaps.forEach((element) => {
+    for(var i=0; i<countryCodeArray.length; i++){
+      if(countryCodeArray[i].country == element.country){
+        element.countryCode = countryCodeArray[i].countryCode;
+      }
+    }
+  });
+}
+
+module.exports = {countryCodeArray, addCountryCode};

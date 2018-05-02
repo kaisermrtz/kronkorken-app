@@ -16,7 +16,7 @@ var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {CrownCap} = require('./models/crowncap');
 var {requiresLogin} = require('./middleware/requiresLogin');
-var {countryCodeArray} = require('./util/countryCodeArray');
+var {countryCodeArray, addCountryCode} = require('./util/countryCodeArray');
 
 //Setup express, hbs, bodyParser
 var app = express();
@@ -162,14 +162,8 @@ app.get('/sammlung', async (req, res) => {
       .sort({brand: 'asc'})
       .count();
     }
-    //Countrycodes hinzufügen
-    crowncaps.forEach((element) => {
-      for(var i=0; i<countryCodeArray.length; i++){
-        if(countryCodeArray[i].country == element.country){
-          element.countryCode = countryCodeArray[i].countryCode;
-        }
-      }
-    });
+
+    addCountryCode(crowncaps);
 
     //Seitenzahl ausrechnen
     var pages = count / itemsPerPage;
@@ -186,6 +180,27 @@ app.get('/sammlung', async (req, res) => {
     res.status(400).send(e);
   }
 });
+
+//GET /doppelte
+app.get('/doppelte', requiresLogin, async (req, res) => { 
+  try{
+    numberOfPages = 1;
+    var crowncaps = await CrownCap.find({quantity: {$gt: 1}}).sort({brand: 'asc'});
+    addCountryCode(crowncaps);
+
+    //rendern
+    res.render('doppelte.hbs', {
+      pageTitle: 'Kronkorken Doppelte',
+      crowncaps,
+      loggedIn: isLoggedIn(req),
+      numberOfPages
+    });
+  }catch(e){
+    res.status(400).send(e);
+  }
+});
+
+
 
 //GET /sammlung/:id
 app.get('/sammlung/:id', async (req, res) => {
@@ -336,7 +351,7 @@ function cloudinaryAsyncDelete(imageid){
   });
 }
 
-//POST /add 
+//POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
   var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId']);
