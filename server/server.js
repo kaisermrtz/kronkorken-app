@@ -182,7 +182,7 @@ app.get('/sammlung', async (req, res) => {
 });
 
 //GET /doppelte
-app.get('/doppelte', requiresLogin, async (req, res) => { 
+app.get('/doppelte', requiresLogin, async (req, res) => {
   try{
     numberOfPages = 1;
     var crowncaps = await CrownCap.find({quantity: {$gt: 1}}).sort({brand: 'asc'});

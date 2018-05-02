@@ -70,6 +70,11 @@
         text-align: left;
       }
 
+      .ccquantity{
+        font-size: 14px;
+        text-align: right;
+      }
+
       .cccountry{
         font-size: 12px;
         margin-bottom: 5px;
@@ -108,20 +113,27 @@
         {{#each crowncaps}}
 
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
-          <a href="/sammlung/{{_id}}">
-            <div class="sammlung">
+          <div class="sammlung">
+            <a href="/sammlung/{{_id}}">
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+            </a>
+            <div class="col-xs-9">
               <p class="ccbrand ccdata">{{brand}}</p>
-              <div class="col-xs-10">
-                <p class="ccname ccdata">{{name}}</p>
-              </div>
-              <div class="col-xs-2" style="padding: 0px">
-                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+            </div>
+            <div class="col-xs-1">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
+                <p class="ccquantity ccdata">{{quantity}}</p>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <p class="ccname ccdata">{{name}}</p>
+            </div>
+            <div class="col-xs-2" style="padding: 0px">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
                 <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
               </a>
-              </div>
             </div>
-          </a>
+          </div>
         </div>
         {{/each}}
       </div>
