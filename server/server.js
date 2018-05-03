@@ -148,26 +148,26 @@ app.get('/sammlung', async (req, res) => {
     if(req.query.q === '' || req.query.q == undefined){
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
-        var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find({}).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
-        var crowncaps = await CrownCap.find({}).sort({brand: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find({}).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
       var count = await CrownCap.find({}).count();
     }else{
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
-        var crowncaps = await CrownCap.find().or(searchArray).sort({brand: 'asc'}).skip(0).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().or(searchArray).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
         var crowncaps = await CrownCap.find()
-        .or(searchArray).sort({brand: 'asc'})
+        .or(searchArray).sort({brand: 'asc', name: 'asc'})
         .skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
 
       var count = await CrownCap.find()
       .or(searchArray)
-      .sort({brand: 'asc'})
+      .sort({brand: 'asc', name: 'asc'})
       .count();
-    }
+    } 
 
     addCountryCode(crowncaps);
 
