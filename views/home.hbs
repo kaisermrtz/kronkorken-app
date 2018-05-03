@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>{{pageTitle}}</title>
     {{> import}}
+    <link rel="stylesheet" href="/css/sammlung.css">
     <style>
 
         .jumbotron{
@@ -67,8 +68,14 @@
         </div>
     </div>
     <div class="container">
+      <h1>Willkommen</h1>
+      <p style="text-align: justify">
+        Kronkorken, das sind die lästigen kleinen Dinger, die zwischen dir und deinem Bier stehen.
+        Manche Leute entfernen sie mit einem Flaschenöffner, manche mit einer anderen Flache oder einem Feuerzeug und wieder andere mit den Zähnen. <br><br>
+        Es gibt allerdings auch noch ein paar Leute die in ihnen nicht nur eine lästige Hürde, sondern eine wunderbare Vielfalt an kleinen mit viel Mühe gestalteten Kunstwerken sehen. Da ich zu diesen Leuten zähle habe ich schon im Kindergarten angefangen die kleinen bunten Metallstücke zu sammeln. Über die Jahre entstand so eine recht vielfältige Sammlung, welche ich euch auf dieser Seite präsentieren möchte.
+      </p>
       <h1>Statistiken</h1>
-      <p>Es sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
+      <p>Aktuell sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
       <canvas id="chart"></canvas>
       <script>
         //Farbe
@@ -166,8 +173,30 @@
         }
       </script>
 
-
+      <br>
       <div id="regions_div" style="width: auto; height: auto"></div>
+      <h1>Zuletzt hinzugefügt</h1>
+      <div class="row auto-clear" id="sammlungrow">
+        {{#each recentlyAdded}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <a href="/sammlung/{{_id}}">
+            <div class="sammlung">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+              <p class="ccbrand ccdata">{{brand}}</p>
+              <div class="col-xs-10">
+                <p class="ccname ccdata">{{name}}</p>
+              </div>
+              <div class="col-xs-2" style="padding: 0px">
+                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+
       {{> footer}}
     </div>
 

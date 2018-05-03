@@ -52,7 +52,11 @@ function isLoggedIn(req){
 //GET /
 app.get('/', async (req, res) => {
   var countryCountArrayFirst5;
+  var recentlyAdded;
   try{
+    var crowncaps = await CrownCap.find({}).sort({addedAt: -1});
+    recentlyAdded = crowncaps.slice(0,6);
+
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     var countries = countryCountArray.length;
@@ -60,11 +64,13 @@ app.get('/', async (req, res) => {
     console.log("Error", e);
   }
 
+  addCountryCode(recentlyAdded);
 
 
   res.render('home.hbs',{
     pageTitle: 'Kronkorken App',
     loggedIn: isLoggedIn(req),
+    recentlyAdded,
     countryCount: JSON.stringify(countryCountArray),
     count,
     countries
@@ -321,6 +327,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
   }catch(e){
     console.log("Error", e);
   }
+  addCountryCode(recentlyAdded);
 
   res.render('dashboard.hbs', {
     pageTitle: 'Kronkorken Dashboard',

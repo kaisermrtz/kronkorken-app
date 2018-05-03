@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>{{pageTitle}}</title>
     {{> import}}
+    <link rel="stylesheet" href="/css/sammlung.css">
     <style>
       #buttons{
         margin-top: 20px;
@@ -12,28 +13,6 @@
       #buttons a{
         margin-right: 10px;
         margin-bottom: 10px;
-      }
-
-      .zuletzt-container{
-        padding:10px;
-      }
-
-      .zuletzt-container p{
-        font-size: 20px;
-        font-weight: bold;
-      }
-
-      .thumbnail p{
-        font-size: 18px;
-        text-align: center;
-      }
-      .thumbnail{
-        padding: 15px;
-      }
-
-      a{
-        color: #000000;
-        text-decoration: none;
       }
     </style>
   </head>
@@ -120,17 +99,26 @@
         </script>
         <div class="col-xs-12">
           <h3>Zuletzt hinzugefügt</h3>
-          {{#each recentlyAdded}}
-          <a href="/sammlung/{{_id}}">
-            <div class="col-lg-2 col-md-3 col-sm-4" class="zuletzt-container">
-              <div class="thumbnail">
-                <img src="{{image}}" width="200px" height="200px" class="img-thumbnail">
-                <p>{{brand}} {{name}}</p>
-                <p>{{country}}</p>
-              </div>
+          <div class="row auto-clear" id="sammlungrow">
+            {{#each recentlyAdded}}
+            <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+              <a href="/sammlung/{{_id}}">
+                <div class="sammlung">
+                  <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+                  <p class="ccbrand ccdata">{{brand}}</p>
+                  <div class="col-xs-10">
+                    <p class="ccname ccdata">{{name}}</p>
+                  </div>
+                  <div class="col-xs-2" style="padding: 0px">
+                    <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                    <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+                  </a>
+                  </div>
+                </div>
+              </a>
             </div>
-          </a>
-          {{/each}}
+            {{/each}}
+          </div>
         </div>
       </div>
     </div>
