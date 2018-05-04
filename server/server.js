@@ -59,6 +59,7 @@ app.get('/', async (req, res) => {
 
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
+    var brandCountArray = await CrownCap.aggregate([{ $group: { _id: '$brand', count: { $sum: 1}}}]).sort({count: -1});
     var countries = countryCountArray.length;
   }catch(e){
     console.log("Error", e);
@@ -73,7 +74,8 @@ app.get('/', async (req, res) => {
     recentlyAdded,
     countryCount: JSON.stringify(countryCountArray),
     count,
-    countries
+    countries,
+    brandCount: JSON.stringify(brandCountArray) 
   });
 });
 

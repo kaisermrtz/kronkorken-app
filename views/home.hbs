@@ -76,7 +76,8 @@
       </p>
       <h1>Statistiken</h1>
       <p>Aktuell sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
-      <canvas id="chart"></canvas>
+      <canvas id="chart"></canvas><br>
+      <canvas id="chartBrand"></canvas><br>
       <script>
         //Farbe
         var color = Chart.helpers.color;
@@ -94,6 +95,7 @@
           return colorArray[randomVal];
         }
 
+        //Top 5 Länder Balkendiagramm Daten vorbereiten
         var countryCount = JSON.parse('{{{countryCount}}}');
         var countryCountFirst5 = countryCount.slice(0,5);
         var myDatasets = new Array();
@@ -112,13 +114,39 @@
           myDatasets.push(dataset);
         }
 
-        //Balkendiagramm
+        //Top 5 Länder Balkendiagramm Daten einfügen
         var barChartData = {
             labels: ["Land"],
             datasets: myDatasets
         };
+
+        //Top 5 Marken Balkendiagramm Daten vorbereiten
+        var brandCount = JSON.parse('{{{brandCount}}}');
+        var brandCountFirst5 = brandCount.slice(0,5);
+        var myDatasetsBrandCount = new Array();
+        for(var i=0; i<brandCountFirst5.length; i++){
+          var dataset = {
+            label: 'A',
+            backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+            borderColor: window.chartColors.blue,
+            borderWidth: 1,
+            data: [
+                444
+            ]
+          }
+          dataset.label = brandCountFirst5[i]._id;
+          dataset.data[0] = brandCountFirst5[i].count;
+          myDatasetsBrandCount.push(dataset);
+        }
+
+        //Top 5 Marken Balkendiagramm Daten einfügen
+        var barChartDataBrandCount = {
+            labels: ["Marke"],
+            datasets: myDatasetsBrandCount
+        };
         //Onload Funktion
         window.onload = function() {
+          //Top 5 Länder
           ctx = document.getElementById("chart").getContext("2d");
           window.myBar = new Chart(ctx, {
               type: 'bar',
@@ -140,6 +168,29 @@
                     }]
                   }
               }
+            });
+            //Top 5 Marken
+            ctx1 = document.getElementById("chartBrand").getContext("2d");
+            window.myBar = new Chart(ctx1, {
+                type: 'bar',
+                data: barChartDataBrandCount,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top 5 Marken'
+                    },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: true
+                        }
+                      }]
+                    }
+                }
           });
         }
 
@@ -175,6 +226,7 @@
 
       <br>
       <div id="regions_div" style="width: auto; height: auto"></div>
+      <br>
       <h1>Zuletzt hinzugefügt</h1>
       <div class="row auto-clear" id="sammlungrow">
         {{#each recentlyAdded}}
