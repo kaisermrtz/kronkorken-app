@@ -134,7 +134,8 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
-  const itemsPerPage = 60;
+  const itemsPerPage = 6;
+
   var searchArray = [
     {brand: new RegExp(req.query.q, 'i')},
     {name: new RegExp(req.query.q, 'i')},
@@ -143,33 +144,50 @@ app.get('/sammlung', async (req, res) => {
     {tags: new RegExp(req.query.q, 'i')}
   ];
 
+  //Filter behandeln
+  var optionsArray = [{}];
+  if(req.query.country && req.query.country !== ''){
+    optionsArray.push({country: new RegExp(req.query.country, 'i')});
+  }
+  if(req.query.typeOfDrink && req.query.typeOfDrink !== ''){
+    optionsArray.push({typeOfDrink: new RegExp(req.query.typeOfDrink, 'i')});
+  }
+  if(req.query.special && req.query.special !== ''){
+    optionsArray.push({special: req.query.special});
+  }
+
   try{
     //Wenn kein Query angegeben, bzw. leerer Query
     if(req.query.q === '' || req.query.q == undefined){
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
-        var crowncaps = await CrownCap.find({}).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
-        var crowncaps = await CrownCap.find({}).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
       var count = await CrownCap.find({}).count();
     }else{
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
-        var crowncaps = await CrownCap.find().or(searchArray).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().or(searchArray).and(optionsArray)
+        .sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
-        var crowncaps = await CrownCap.find()
-        .or(searchArray).sort({brand: 'asc', name: 'asc'})
+        var crowncaps = await CrownCap.find().or(searchArray)
+        .and(optionsArray).sort({brand: 'asc', name: 'asc'})
         .skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
 
       var count = await CrownCap.find()
-      .or(searchArray)
+      .or(searchArray).and(optionsArray)
       .sort({brand: 'asc', name: 'asc'})
       .count();
-    } 
+    }
 
     addCountryCode(crowncaps);
+
+    //Alle aktuellen Länder bekommen
+    var countryArray = await CrownCap.find().distinct('country');
+    countryArray.sort();
 
     //Seitenzahl ausrechnen
     var pages = count / itemsPerPage;
@@ -180,7 +198,8 @@ app.get('/sammlung', async (req, res) => {
       pageTitle: 'Kronkorken Sammlung',
       crowncaps,
       loggedIn: isLoggedIn(req),
-      numberOfPages
+      numberOfPages,
+      countries: JSON.stringify(countryArray)
     });
   }catch(e){
     res.status(400).send(e);

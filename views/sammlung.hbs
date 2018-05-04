@@ -17,9 +17,9 @@
         margin-bottom: 50px;
       }
 
-      .dropdown-menu{
+      /* .dropdown-menu{
         height:200px;overflow-y:scroll;
-      }
+      } */
 
     </style>
   </head>
@@ -28,44 +28,39 @@
     <div class="container">
       <h1>{{pageTitle}}</h1>
       <form id="searchForm">
+        <div class="form-group col-xs-9">
           <input type="text" name="q" placeholder="Suchen" class="form-control" autocomplete="off">
-      </form>
-      <!-- <div class="row">
-       <div class="col-lg-12">
-         <div class="button-group">
-           <button type="button" class="btn btn-default btn-sm dropdown-toggle" data-toggle="dropdown">Länder <span class="caret"></span></button>
-            <ul class="dropdown-menu">
-              <li><a href="#" class="small" data-value="Deutschland" tabIndex="-1"><input type="checkbox"/>&nbsp;Deutschland</a></li>
-              <li><a href="#" class="small" data-value="Spanien" tabIndex="-1"><input type="checkbox"/>&nbsp;Spanien</a></li>
-              <li><a href="#" class="small" data-value="Russland" tabIndex="-1"><input type="checkbox"/>&nbsp;Russland</a></li>
-              <li><a href="#" class="small" data-value="Schweiz" tabIndex="-1"><input type="checkbox"/>&nbsp;Schweiz</a></li>
-              <li><a href="#" class="small" data-value="Portugal" tabIndex="-1"><input type="checkbox"/>&nbsp;Portugal</a></li>
-              <li><a href="#" class="small" data-value="Litauen" tabIndex="-1"><input type="checkbox"/>&nbsp;Litauen</a></li>
-              <li><a href="#" class="small" data-value="Deutschland" tabIndex="-1"><input type="checkbox"/>&nbsp;Deutschland</a></li>
-              <li><a href="#" class="small" data-value="Spanien" tabIndex="-1"><input type="checkbox"/>&nbsp;Spanien</a></li>
-              <li><a href="#" class="small" data-value="Russland" tabIndex="-1"><input type="checkbox"/>&nbsp;Russland</a></li>
-              <li><a href="#" class="small" data-value="Schweiz" tabIndex="-1"><input type="checkbox"/>&nbsp;Schweiz</a></li>
-              <li><a href="#" class="small" data-value="Portugal" tabIndex="-1"><input type="checkbox"/>&nbsp;Portugal</a></li>
-              <li><a href="#" class="small" data-value="Litauen" tabIndex="-1"><input type="checkbox"/>&nbsp;Litauen</a></li>
-              <li><a href="#" class="small" data-value="Deutschland" tabIndex="-1"><input type="checkbox"/>&nbsp;Deutschland</a></li>
-              <li><a href="#" class="small" data-value="Spanien" tabIndex="-1"><input type="checkbox"/>&nbsp;Spanien</a></li>
-              <li><a href="#" class="small" data-value="Russland" tabIndex="-1"><input type="checkbox"/>&nbsp;Russland</a></li>
-              <li><a href="#" class="small" data-value="Schweiz" tabIndex="-1"><input type="checkbox"/>&nbsp;Schweiz</a></li>
-              <li><a href="#" class="small" data-value="Portugal" tabIndex="-1"><input type="checkbox"/>&nbsp;Portugal</a></li>
-              <li><a href="#" class="small" data-value="Litauen" tabIndex="-1"><input type="checkbox"/>&nbsp;Litauen</a></li>
-              <li><a href="#" class="small" data-value="Deutschland" tabIndex="-1"><input type="checkbox"/>&nbsp;Deutschland</a></li>
-              <li><a href="#" class="small" data-value="Spanien" tabIndex="-1"><input type="checkbox"/>&nbsp;Spanien</a></li>
-              <li><a href="#" class="small" data-value="Russland" tabIndex="-1"><input type="checkbox"/>&nbsp;Russland</a></li>
-              <li><a href="#" class="small" data-value="Schweiz" tabIndex="-1"><input type="checkbox"/>&nbsp;Schweiz</a></li>
-              <li><a href="#" class="small" data-value="Portugal" tabIndex="-1"><input type="checkbox"/>&nbsp;Portugal</a></li>
-              <li><a href="#" class="small" data-value="Litauen" tabIndex="-1"><input type="checkbox"/>&nbsp;Litauen</a></li>
-            </ul>
-          </div>
         </div>
-      </div> -->
+        <div class="form-group col-xs-3">
+          <button type="submit" class="form-control btn btn-primary"><img src="/img/icons/lupe-64.png" height="20px"></button>
+        </div>
+      </form>
+      <form>
+        <input type="text" name="q" hidden id="hiddenQuery">
+        <div class="form-group col-sm-3 col-xs-6">
+          <select class="form-control filter" name="country" id="countrySelect">
+            <option value="">Alle Länder</option>
+			    </select>
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+          <select class="form-control filter" name="typeOfDrink" id="typeOfDrinkSelect">
+            <option value="">Alle Getränkesorten</option>
+            <option value="Bier">Bier</option>
+            <option value="Mixgetränk">Mixgetränk</option>
+            <option value="Softdrink">Softdrink</option>
+            <option value="Anderes">Anderes</option>
+			    </select>
+        </div>
+        <div class="form-group col-sm-3 col-xs-6">
+          <select class="form-control filter" name="special" id="specialSelect">
+            <option value="">Alle Kronkorken</option>
+            <option value="true">Spezial</option>
+            <option value="false">Normal</option>
+			    </select>
+        </div>
+      </form>
       <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
-
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <a href="/sammlung/{{_id}}">
             <div class="sammlung">
@@ -89,64 +84,67 @@
       </div>
 
       <script>
-        //dropdown
-        var options = [];
-
-        $( '.dropdown-menu a' ).on( 'click', function( event ) {
-
-           var $target = $( event.currentTarget ),
-               val = $target.attr( 'data-value' ),
-               $inp = $target.find( 'input' ),
-               idx;
-
-           if ( ( idx = options.indexOf( val ) ) > -1 ) {
-              options.splice( idx, 1 );
-              setTimeout( function() { $inp.prop( 'checked', false ) }, 0);
-           } else {
-              options.push( val );
-              setTimeout( function() { $inp.prop( 'checked', true ) }, 0);
-           }
-
-           $( event.target ).blur();
-
-           console.log( options );
-           return false;
-        });
-        console.log(options);
-
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
         });
+
+        //Select bestücken
+        var countries = JSON.parse('{{{countries}}}');
+        for(var i=0; i < countries.length; i++){
+          var o = new Option(countries[i], countries[i]);
+          $(o).html(countries[i]);
+          $('#countrySelect').append(o);
+        }
+
+        //Suche mit in das Filter Formular übernehmen
+        $(".filter").on("change",function() {
+          $('#hiddenQuery').val(getParameterByName('q'));
+          this.form.submit();
+        });
+
+        //Filter auf Query Werte setzen
+        $('#countrySelect').val(getParameterByName('country'));
+        $('#typeOfDrinkSelect').val(getParameterByName('typeOfDrink'));
+        $('#specialSelect').val(getParameterByName('special'));
+
+        //Pages
         var numberOfPages = {{numberOfPages}};
         var currentPage = getParameterByName('page');
         var nextPage = parseInt(currentPage) + 1;
 
         var url = window.location.href;
-        var splittedUrl = url.split('page=');
-        var splittedUrl1 = url.split('q=');
+        var splittedUrl = url.split('page=' + getParameterByName('page'));
+        var urlPrePage = splittedUrl[0];
+        var urlPostPage = splittedUrl[1];
 
+        var splittedUrlAtQuestionmark = url.split('?');
+        if(!urlPostPage){
+          urlPostPage = '';
+        }
+
+        //Wenn keine Page im Query steht
         if(splittedUrl[1] == undefined){
-          if(splittedUrl1[1] == undefined){
+          nextPage = 2;
+          if(splittedUrlAtQuestionmark[1] == undefined){
             //if no query
-            splittedUrl[0] += "?";
-            nextPage = 2;
+            urlPrePage += "?";
           }else{
             //if query
-            splittedUrl[0] += "&";
-            nextPage = 2;
+            urlPrePage += "&";
           }
-
         }
 
         if(numberOfPages == 1){
           $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
+        }else if(numberOfPages == 0){
+          $('#nextPage').html('<p>Keinen Kronkorken gefunden</p>');
         }else if(currentPage == 1 || currentPage == undefined){
-          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
         }else if(currentPage >= numberOfPages){
-          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
+          $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
         }else{
-          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
+          $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
         }
 
         function getParameterByName(name, url) {
