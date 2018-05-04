@@ -75,7 +75,7 @@ app.get('/', async (req, res) => {
     countryCount: JSON.stringify(countryCountArray),
     count,
     countries,
-    brandCount: JSON.stringify(brandCountArray) 
+    brandCount: JSON.stringify(brandCountArray.slice(0,5)) 
   });
 });
 

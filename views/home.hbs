@@ -122,9 +122,8 @@
 
         //Top 5 Marken Balkendiagramm Daten vorbereiten
         var brandCount = JSON.parse('{{{brandCount}}}');
-        var brandCountFirst5 = brandCount.slice(0,5);
         var myDatasetsBrandCount = new Array();
-        for(var i=0; i<brandCountFirst5.length; i++){
+        for(var i=0; i<brandCount.length; i++){
           var dataset = {
             label: 'A',
             backgroundColor: getRandomColor().alpha(0.5).rgbString(),
@@ -134,8 +133,8 @@
                 444
             ]
           }
-          dataset.label = brandCountFirst5[i]._id;
-          dataset.data[0] = brandCountFirst5[i].count;
+          dataset.label = brandCount[i]._id;
+          dataset.data[0] = brandCount[i].count;
           myDatasetsBrandCount.push(dataset);
         }
 
@@ -226,7 +225,6 @@
 
       <br>
       <div id="regions_div" style="width: auto; height: auto"></div>
-      <br>
       <h1>Zuletzt hinzugefügt</h1>
       <div class="row auto-clear" id="sammlungrow">
         {{#each recentlyAdded}}
