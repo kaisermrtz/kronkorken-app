@@ -168,7 +168,7 @@ app.get('/sammlung', async (req, res) => {
       }else{
         var crowncaps = await CrownCap.find().and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
-      var count = await CrownCap.find({}).count();
+      var count = await CrownCap.find().and(optionsArray).count();
     }else{
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
