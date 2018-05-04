@@ -134,7 +134,7 @@ app.get('/logout', (req, res) => {
 
 //GET /sammlung
 app.get('/sammlung', async (req, res) => {
-  const itemsPerPage = 6;
+  var itemsPerPage = 60;
 
   var searchArray = [
     {brand: new RegExp(req.query.q, 'i')},
@@ -154,6 +154,9 @@ app.get('/sammlung', async (req, res) => {
   }
   if(req.query.special && req.query.special !== ''){
     optionsArray.push({special: req.query.special});
+  }
+  if(req.query.itemsPerPage && req.query.itemsPerPage !== ''){
+    itemsPerPage = parseInt(req.query.itemsPerPage);
   }
 
   try{

@@ -58,6 +58,13 @@
             <option value="false">Normal</option>
 			    </select>
         </div>
+        <div class="form-group col-sm-3 col-xs-6">
+          <select class="form-control filter" name="itemsPerPage" id="itemsPerPageSelect">
+            <option value="">60 pro Seite</option>
+            <option value="120">120 pro Seite</option>
+            <option value="180">180 pro Seite</option>
+			    </select>
+        </div>
       </form>
       <div class="row auto-clear" id="sammlungrow">
         {{#each crowncaps}}
@@ -107,6 +114,7 @@
         $('#countrySelect').val(getParameterByName('country'));
         $('#typeOfDrinkSelect').val(getParameterByName('typeOfDrink'));
         $('#specialSelect').val(getParameterByName('special'));
+        $('#itemsPerPageSelect').val(getParameterByName('itemsPerPage'));
 
         //Pages
         var numberOfPages = {{numberOfPages}};
