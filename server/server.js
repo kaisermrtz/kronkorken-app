@@ -3,7 +3,6 @@ require('./config/config.js');
 const _ = require('lodash');
 const fs = require('fs');
 const express = require('express');
-// const fileUpload = require('express-fileupload');
 const path = require('path');
 const hbs = require('hbs');
 const bodyParser = require('body-parser');
@@ -75,7 +74,7 @@ app.get('/', async (req, res) => {
     countryCount: JSON.stringify(countryCountArray),
     count,
     countries,
-    brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), '') 
+    brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), '')
   });
 });
 
@@ -249,6 +248,8 @@ app.get('/sammlung/:id', async (req, res) => {
       return res.redirect('/sammlung');
     }
 
+    addCountryCode([crowncap]);
+    
     res.render('einzelansicht.hbs', {
       pageTitle: 'Kronkorken',
       crowncap,

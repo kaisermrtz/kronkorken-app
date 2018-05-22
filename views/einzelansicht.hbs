@@ -10,26 +10,45 @@
         width: 40px;
         margin-right: 20px;
         margin-bottom: 20px;
+        display: inline-block;
       }
 
       .row p {
         font-size: 20px;
       }
+
+      h2{
+        margin-top: 0px;
+      }
+
+      .brand{
+        margin-top:50px;
+        margin-bottom: 5px;
+      }
+
+      @media (max-width: 767px){
+        .brand{
+          margin-top: 5px;
+        }
+      }
+
     </style>
   </head>
   <body>
     {{> header}}
     <div class="container">
-      <h1>{{pageTitle}}</h1>
+      <br>
       <div class="row" id="rowNormal">
           <div class="col-sm-4 col-lg-3 col-xs-12" style="margin-bottom: 20px;">
-            <img src="{{crowncap.image}}" class="img-responsive img-thumbnail" alt="Kronkorken">
+            <img src="{{crowncap.image}}" class="img-responsive img-rounded" alt="Kronkorken">
           </div>
           <div class="col-sm-8 col-lg-9 col-xs-12">
-            <h2>{{crowncap.brand}} {{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
+            <p class="brand">{{crowncap.brand}}</p>
+            <h2>{{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
             <hr>
-            <h3>{{crowncap.country}}</h3>
-            <hr>
+            <a href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.country}}">
+              <img class="img-responsive flags icon" src="http://www.countryflags.io/{{crowncap.countryCode}}/flat/48.png">
+            </a>
             <a id="triedtrue" href="#" data-toggle="tooltip" data-placement="top" title="ausprobiert">
               <img src="/img/icons/success-64.png" alt="Selbst getrunken" class="icon">
             </a>
@@ -39,10 +58,21 @@
             <a id="special" hidden href="#" data-toggle="tooltip" data-placement="top" title="spezial Kronkorken">
               <img src="/img/icons/star-64.png" alt="special" class="icon">
             </a>
-            <p>Typ: {{crowncap.typeOfDrink}}</p>
+            <a id="typeOfDrinkBeer" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+              <img src="/img/icons/beer-64.png" alt="Bier" class="icon">
+            </a>
+            <a id="typeOfDrinkMix" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+              <img src="/img/icons/mixdrink-64.png" alt="Mixgetränk" class="icon">
+            </a>
+            <a id="typeOfDrinkSoftdrink" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+              <img src="/img/icons/softdrink-64.png" alt="Softdrink" class="icon">
+            </a>
+            <a id="typeOfDrinkAnderes" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+              <img src="/img/icons/anderes-64.png" alt="Anderes" class="icon">
+            </a>
           </div>
           <div class="col-xs-12">
-              <p>Tags: {{crowncap.tags}}</p>
+              <p id="tags">Tags: </p>
               <p>Aufbewahrungsort: {{crowncap.location}}</p>
               <p>Anzahl der Doppelten: {{crowncap.quantity}}</p>
               <p>Hinzugefügt am: <span id="time"></span></p>
@@ -69,6 +99,26 @@
         if({{crowncap.special}} === true){
           $('#special').show();
         }
+
+        if('{{crowncap.typeOfDrink}}' == "Bier"){
+          $('#typeOfDrinkBeer').show();
+        }else if('{{crowncap.typeOfDrink}}' == "Mixgetränk"){
+          $('#typeOfDrinkMix').show();
+        }else if('{{crowncap.typeOfDrink}}' == "Softdrink"){
+          $('#typeOfDrinkSoftdrink').show();
+        }else if('{{crowncap.typeOfDrink}}' == "Anderes"){
+          $('#typeOfDrinkAnderes').show();
+        }
+
+        var tags = '{{crowncap.tags}}'
+        var splittedString = tags.split(",");
+        for(var i=0; i<splittedString.length; i++){
+          var element = splittedString[i].trim();
+          console.log(element);
+          $('#tags').append('<span class="label label-primary" style="font-weight: normal">' + element + '</span> ')
+        }
+
+
 
         if({{loggedIn}}){
           $('#editbutton').show();
