@@ -82,7 +82,7 @@ app.get('/', async (req, res) => {
           count : { $sum : 1 }
       }
     };
-    var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6}}]);
+    var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6}}]); 
     var historyCountArray = await CrownCap.aggregate([historyGroup]).sort({"_id.year": 1, "_id.month": 1});
     var countries = countryCountArray.length;
   }catch(e){

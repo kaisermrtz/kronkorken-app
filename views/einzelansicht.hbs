@@ -32,6 +32,11 @@
         }
       }
 
+      .nolink a:hover, .nolink a:link, .nolink a:visited, .nolink a:active{
+        color: #000000;
+        text-decoration: none;
+      }
+
     </style>
   </head>
   <body>
@@ -42,8 +47,8 @@
           <div class="col-sm-4 col-lg-3 col-xs-12" style="margin-bottom: 20px;">
             <img src="{{crowncap.image}}" class="img-responsive img-rounded" alt="Kronkorken">
           </div>
-          <div class="col-sm-8 col-lg-9 col-xs-12">
-            <p class="brand">{{crowncap.brand}}</p>
+          <div class="col-sm-8 col-lg-9 col-xs-12 nolink">
+            <a href="/sammlung?q={{crowncap.brand}}"><p class="brand">{{crowncap.brand}}</p></a>
             <h2>{{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
             <hr>
             <a href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.country}}">
