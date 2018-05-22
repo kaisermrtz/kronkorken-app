@@ -329,7 +329,7 @@ var countryCodeArray = [
   },
   {
     country: 'Slowenien',
-    countryCode: 'sl'
+    countryCode: 'si'
   },
   {
     country: 'Slowakei',
