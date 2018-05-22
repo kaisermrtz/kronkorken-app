@@ -281,8 +281,30 @@
       <br>
       <div id="regions_div" style="width: auto; height: auto"></div>
       <h1>Zuletzt hinzugefügt</h1>
-      <div class="row auto-clear" id="sammlungrow">
+      <div class="row auto-clear sammlungrow">
         {{#each recentlyAdded}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <a href="/sammlung/{{_id}}">
+            <div class="sammlung">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+              <p class="ccbrand ccdata">{{brand}}</p>
+              <div class="col-xs-10">
+                <p class="ccname ccdata">{{name}}</p>
+              </div>
+              <div class="col-xs-2" style="padding: 0px">
+                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+
+      <h1>Zufällige Kronkorken</h1>
+      <div class="row auto-clear sammlungrow">
+        {{#each randomCrownCaps}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <a href="/sammlung/{{_id}}">
             <div class="sammlung">

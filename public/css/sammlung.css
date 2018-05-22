@@ -20,15 +20,15 @@
     padding-bottom: 5px;
 }
 
-#sammlungrow{
+.sammlungrow{
     margin: 5px;
 }
-#sammlungrow a{
+.sammlungrow a:link, .sammlungrow a:visited, .sammlungrow a:hover, .sammlungrow a:active{
   color: #000000;
   text-decoration: none;
 }
 
-#sammlungrow div{
+.sammlungrow div{
     margin-bottom: 5px;
 }
 
