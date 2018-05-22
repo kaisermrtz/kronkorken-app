@@ -51,7 +51,7 @@
             <a href="/sammlung?q={{crowncap.brand}}"><p class="brand">{{crowncap.brand}}</p></a>
             <h2>{{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
             <hr>
-            <a href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.country}}">
+            <a href="/sammlung?country={{crowncap.country}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.country}}">
               <img class="img-responsive flags icon" src="http://www.countryflags.io/{{crowncap.countryCode}}/flat/48.png">
             </a>
             <a id="triedtrue" href="#" data-toggle="tooltip" data-placement="top" title="ausprobiert">
@@ -60,26 +60,26 @@
             <a id="triedfalse" hidden href="#" data-toggle="tooltip" data-placement="top" title="noch nicht ausprobiert">
               <img src="/img/icons/error-64.png" alt="Selbst getrunken" class="icon">
             </a>
-            <a id="special" hidden href="#" data-toggle="tooltip" data-placement="top" title="spezial Kronkorken">
+            <a id="special" hidden href="/sammlung?special=true" data-toggle="tooltip" data-placement="top" title="spezial Kronkorken">
               <img src="/img/icons/star-64.png" alt="special" class="icon">
             </a>
-            <a id="typeOfDrinkBeer" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+            <a id="typeOfDrinkBeer" hidden href="/sammlung?typeOfDrink={{crowncap.typeOfDrink}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
               <img src="/img/icons/beer-64.png" alt="Bier" class="icon">
             </a>
-            <a id="typeOfDrinkMix" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+            <a id="typeOfDrinkMix" hidden href="/sammlung?typeOfDrink={{crowncap.typeOfDrink}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
               <img src="/img/icons/mixdrink-64.png" alt="Mixgetränk" class="icon">
             </a>
-            <a id="typeOfDrinkSoftdrink" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+            <a id="typeOfDrinkSoftdrink" hidden href="/sammlung?typeOfDrink={{crowncap.typeOfDrink}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
               <img src="/img/icons/softdrink-64.png" alt="Softdrink" class="icon">
             </a>
-            <a id="typeOfDrinkAnderes" hidden href="#" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
+            <a id="typeOfDrinkAnderes" hidden href="/sammlung?typeOfDrink={{crowncap.typeOfDrink}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.typeOfDrink}}">
               <img src="/img/icons/anderes-64.png" alt="Anderes" class="icon">
             </a>
           </div>
           <div class="col-xs-12">
               <p id="tags">Tags: </p>
-              <p>Aufbewahrungsort: {{crowncap.location}}</p>
-              <p>Anzahl der Doppelten: {{crowncap.quantity}}</p>
+              <p id="aufbewahrungsort" hidden>Aufbewahrungsort: {{crowncap.location}}</p>
+              <p id="doppelte" hidden>Anzahl der Doppelten: {{crowncap.quantity}}</p>
               <p>Hinzugefügt am: <span id="time"></span></p>
           </div>
       </div>
@@ -119,15 +119,13 @@
         var splittedString = tags.split(",");
         for(var i=0; i<splittedString.length; i++){
           var element = splittedString[i].trim();
-          $('#tags').append('<span class="label label-primary" style="font-weight: normal">' + element + '</span> ')
+          $('#tags').append('<a href="/sammlung?q=' + element + '"><span class="label label-primary" style="font-weight: normal">' + element + '</span></a> ')
         }
-
-
 
         if({{loggedIn}}){
           $('#editbutton').show();
-        }else{
-          $('#editbutton').hide();
+          $('#aufbewahrungsort').show();
+          $('#doppelte').show();
         }
 
       </script>
