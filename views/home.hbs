@@ -262,7 +262,7 @@
         //eigene Daten umwandeln
         var myArray = [['Land', 'Kronkorken']];
         for(var i=0; i<countryCount.length;i++){
-          myArray.push([countryCount[i]._id, countryCount[i].count]);
+          myArray.push([{v: countryCount[i].countryCode, f: countryCount[i]._id}, countryCount[i].count]);
         }
 
         function drawRegionsMap() {

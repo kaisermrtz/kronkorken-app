@@ -390,8 +390,14 @@ function addCountryCode(crowncaps){
   //Countrycodes hinzufügen
   crowncaps.forEach((element) => {
     for(var i=0; i<countryCodeArray.length; i++){
-      if(countryCodeArray[i].country == element.country){
-        element.countryCode = countryCodeArray[i].countryCode;
+      if(element.country){
+        if(countryCodeArray[i].country == element.country){
+          element.countryCode = countryCodeArray[i].countryCode;
+        }
+      }else if(element._id){
+        if(countryCodeArray[i].country == element._id){
+          element.countryCode = countryCodeArray[i].countryCode;
+        }
       }
     }
   });

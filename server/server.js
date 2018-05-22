@@ -89,6 +89,7 @@ app.get('/', async (req, res) => {
   }
 
   addCountryCode(recentlyAdded);
+  addCountryCode(countryCountArray);
 
   res.render('home.hbs',{
     pageTitle: 'Kronkorken App',
