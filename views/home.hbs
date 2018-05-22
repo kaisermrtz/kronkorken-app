@@ -78,6 +78,7 @@
       <p>Aktuell sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
       <canvas id="chart"></canvas><br>
       <canvas id="chartBrand"></canvas><br>
+      <canvas id="chartHistory"></canvas><br>
       <script>
         //Farbe
         var color = Chart.helpers.color;
@@ -119,6 +120,35 @@
             labels: ["Land"],
             datasets: myDatasets
         };
+
+        //Entwicklung letzte Monate vorbereiten
+        var historyCountArray = JSON.parse('{{{historyCountArray}}}');
+        var myDatasetsHistory = [{
+          label: 'Bestand im Monat',
+          backgroundColor: 'transparent',
+          borderColor: window.chartColors.red,
+          data: [
+              12
+          ]
+        }];
+        for(var i=0; i<historyCountArray.length; i++){
+          if(i == 0){
+            myDatasetsHistory[0].data[i] = historyCountArray[i].count
+          }else{
+            myDatasetsHistory[0].data[i] = historyCountArray[i-1].count + historyCountArray[i].count
+          }
+        }
+
+        //Entwicklung letzte Monate einfügen
+        var lineChartData = {
+            labels: ["Monat"],
+            fill: false,
+            datasets: myDatasetsHistory
+        };
+
+        for(var i=0; i<historyCountArray.length; i++){
+          lineChartData.labels[i] = historyCountArray[i]._id.month + "." + historyCountArray[i]._id.year
+        }
 
         //Top 5 Marken Balkendiagramm Daten vorbereiten
         var brandCount = JSON.parse('{{{brandCount}}}');
@@ -168,9 +198,32 @@
                   }
               }
             });
-            //Top 5 Marken
-            ctx1 = document.getElementById("chartBrand").getContext("2d");
+            //Letzte Monate
+            ctx1 = document.getElementById("chartHistory").getContext("2d");
             window.myBar = new Chart(ctx1, {
+                type: 'line',
+                data: lineChartData,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Entwicklung der letzten Monate'
+                    },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: true
+                        }
+                      }]
+                    }
+                }
+              });
+            //Top 5 Marken
+            ctx2 = document.getElementById("chartBrand").getContext("2d");
+            window.myBar = new Chart(ctx2, {
                 type: 'bar',
                 data: barChartDataBrandCount,
                 options: {

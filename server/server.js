@@ -59,6 +59,31 @@ app.get('/', async (req, res) => {
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     var brandCountArray = await CrownCap.aggregate([{ $group: { _id: '$brand', count: { $sum: 1}}}]).sort({count: -1});
+    var historyGroup = {
+      $group: {
+          _id: {
+              "year": {
+                  "$year": {
+                      "$add": [
+                          new Date(0),
+                          "$addedAt"
+                      ]
+                  }
+              },
+              "month": {
+                  "$month": {
+                      "$add": [
+                          new Date(0),
+                          "$addedAt"
+                      ]
+                  }
+              }
+          },
+          count : { $sum : 1 }
+      }
+  };
+    var historyCountArray = await CrownCap.aggregate([historyGroup]).sort({"_id.year": 1, "_id.month": 1});
+    console.log(JSON.stringify(historyCountArray));
     var countries = countryCountArray.length;
   }catch(e){
     console.log("Error", e);
@@ -66,17 +91,17 @@ app.get('/', async (req, res) => {
 
   addCountryCode(recentlyAdded);
 
-
   res.render('home.hbs',{
     pageTitle: 'Kronkorken App',
     loggedIn: isLoggedIn(req),
     recentlyAdded,
     countryCount: JSON.stringify(countryCountArray),
+    historyCountArray: JSON.stringify(historyCountArray.slice(-3)),
     count,
     countries,
     brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), '')
   });
-});
+});  
 
 /*
   Nutzerverwaltung
@@ -249,7 +274,7 @@ app.get('/sammlung/:id', async (req, res) => {
     }
 
     addCountryCode([crowncap]);
-    
+
     res.render('einzelansicht.hbs', {
       pageTitle: 'Kronkorken',
       crowncap,
