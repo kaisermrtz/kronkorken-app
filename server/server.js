@@ -82,7 +82,7 @@ app.get('/', async (req, res) => {
           count : { $sum : 1 }
       }
     };
-    var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6}}]); 
+    var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6}}]);
     var historyCountArray = await CrownCap.aggregate([historyGroup]).sort({"_id.year": 1, "_id.month": 1});
     var countries = countryCountArray.length;
   }catch(e){
@@ -136,7 +136,7 @@ app.post('/login', async (req, res) => {
   try{
     var user = await User.authenticate(req.body.email, req.body.password);
     req.session.userId = user._id;
-    res.redirect('/dashboard');
+    res.redirect(req.headers.referer);
   }catch(e){
     //res.status(404).send(e);
     res.redirect('/');
@@ -338,8 +338,7 @@ app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     if(!newCrownCap){
       res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
     }
-
-    res.redirect(`/sammlung/${req.body.id}/edit/?success=true`);
+    res.redirect(`/sammlung?q=${newCrownCap.brand}`);
   }catch(e){
     res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
   }
