@@ -124,9 +124,10 @@
         //Entwicklung letzte Monate vorbereiten
         var historyCountArray = JSON.parse('{{{historyCountArray}}}');
         var myDatasetsHistory = [{
-          label: 'Bestand im Monat',
           backgroundColor: 'transparent',
-          borderColor: window.chartColors.red,
+          borderColor: window.chartColors.blue,
+          pointRadius: 8,
+          pointBackgroundColor: window.chartColors.blue,
           data: [
               12
           ]
@@ -206,7 +207,7 @@
                 options: {
                     responsive: true,
                     legend: {
-                        position: 'top',
+                        display: false
                     },
                     title: {
                         display: true,

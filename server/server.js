@@ -83,7 +83,6 @@ app.get('/', async (req, res) => {
       }
   };
     var historyCountArray = await CrownCap.aggregate([historyGroup]).sort({"_id.year": 1, "_id.month": 1});
-    console.log(JSON.stringify(historyCountArray));
     var countries = countryCountArray.length;
   }catch(e){
     console.log("Error", e);
@@ -96,12 +95,12 @@ app.get('/', async (req, res) => {
     loggedIn: isLoggedIn(req),
     recentlyAdded,
     countryCount: JSON.stringify(countryCountArray),
-    historyCountArray: JSON.stringify(historyCountArray.slice(-3)),
+    historyCountArray: JSON.stringify(historyCountArray.slice(-6)),
     count,
     countries,
     brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), '')
   });
-});  
+});
 
 /*
   Nutzerverwaltung
