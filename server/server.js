@@ -51,7 +51,6 @@ function isLoggedIn(req){
 
 //GET /
 app.get('/', async (req, res) => {
-  trainModel();
 
   var countryCountArrayFirst5;
   var recentlyAdded;
@@ -460,4 +459,6 @@ app.post('/add', requiresLogin, async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Gestartet auf Port ${port}`);
+  trainModel();
+  setInterval(trainModel, 120 * 60000);
 });
