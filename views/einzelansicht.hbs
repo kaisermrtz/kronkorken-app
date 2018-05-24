@@ -5,6 +5,7 @@
     <title>{{pageTitle}}</title>
 
     {{> import}}
+    <link rel="stylesheet" href="/css/sammlung.css">
     <style>
       .icon{
         width: 40px;
@@ -13,7 +14,7 @@
         display: inline-block;
       }
 
-      .row p {
+      #rowNormal p {
         font-size: 20px;
       }
 
@@ -52,7 +53,7 @@
             <h2>{{crowncap.name}} <a href="/sammlung/{{crowncap._id}}/edit" id="editbutton" hidden><img src="/img/icons/edit-64.png"height="25px"></a></h2>
             <hr>
             <a href="/sammlung?country={{crowncap.country}}" data-toggle="tooltip" data-placement="top" title="{{crowncap.country}}">
-              <img class="img-responsive flags icon" src="http://www.countryflags.io/{{crowncap.countryCode}}/flat/48.png">
+              <img class="img-responsive icon" src="http://www.countryflags.io/{{crowncap.countryCode}}/flat/48.png">
             </a>
             <a id="triedtrue" href="#" data-toggle="tooltip" data-placement="top" title="ausprobiert">
               <img src="/img/icons/success-64.png" alt="Selbst getrunken" class="icon">
@@ -83,6 +84,29 @@
               <p>Hinzugefügt am: <span id="time"></span></p>
           </div>
       </div>
+      <br><br><br><br>
+      <h3>Ähnliche Kronkorken</h3>
+      <div class="row auto-clear sammlungrow">
+        {{#each similarCrownCaps}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <a href="/sammlung/{{_id}}">
+            <div class="sammlung">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+              <p class="ccbrand ccdata">{{brand}}</p>
+              <div class="col-xs-10">
+                <p class="ccname ccdata">{{name}}</p>
+              </div>
+              <div class="col-xs-2" style="padding: 0px">
+                <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+              </div>
+            </div>
+          </a>
+        </div>
+        {{/each}}
+      </div>
+
       <script src="/js/lib/moment.js"></script>
       <script>
         var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');

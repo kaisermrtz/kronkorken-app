@@ -16,6 +16,7 @@ var {User} = require('./models/user');
 var {CrownCap} = require('./models/crowncap');
 var {requiresLogin} = require('./middleware/requiresLogin');
 var {countryCodeArray, addCountryCode} = require('./util/countryCodeArray');
+var {trainModel, getSimilarDocuments} = require('./util/contentBasedRecommender');
 
 //Setup express, hbs, bodyParser
 var app = express();
@@ -50,6 +51,8 @@ function isLoggedIn(req){
 
 //GET /
 app.get('/', async (req, res) => {
+  trainModel();
+
   var countryCountArrayFirst5;
   var recentlyAdded;
   try{
@@ -270,6 +273,29 @@ app.get('/sammlung/:id', async (req, res) => {
   }
 
   try{
+
+    //Ähnliche Kronkorken raussuchen (TF-IDF basiert)
+    var similarDocuments = getSimilarDocuments(id, 6);
+    var similarCrownCaps = [];
+    if(similarDocuments.length == 0){
+      //Wenn es keine 6 ähnlichen gibt -> Zufällige nehmen
+      var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6}}]);
+      similarCrownCaps = randomCrownCaps;
+    }else{
+      for(var i=0; i<similarDocuments.length; i++){
+        var cc = await CrownCap.findById(similarDocuments[i].id);
+        similarCrownCaps.push(cc);
+      }
+
+      //Wenn weniger als 6 -> den Rest auffüllen
+      if(similarCrownCaps.length < 6){
+        var randomCrownCaps = await CrownCap.aggregate([{'$sample': {'size': 6 - similarCrownCaps.length}}]);
+        randomCrownCaps.forEach((cc) => {
+          similarCrownCaps.push(cc);
+        });
+      }
+    }
+
     var crowncap = await CrownCap.findById(id);
 
     if(!crowncap){
@@ -277,11 +303,13 @@ app.get('/sammlung/:id', async (req, res) => {
     }
 
     addCountryCode([crowncap]);
+    addCountryCode(similarCrownCaps);
 
     res.render('einzelansicht.hbs', {
       pageTitle: 'Kronkorken',
       crowncap,
-      loggedIn: isLoggedIn(req)
+      loggedIn: isLoggedIn(req),
+      similarCrownCaps
     });
     //res.send({crowncap});
   }catch(e){
