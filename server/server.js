@@ -172,7 +172,8 @@ app.get('/sammlung', async (req, res) => {
     {name: new RegExp(req.query.q, 'i')},
     {country: new RegExp(req.query.q, 'i')},
     {typeOfDrink: req.query.q},
-    {tags: new RegExp(req.query.q, 'i')}
+    {tags: new RegExp(req.query.q, 'i')},
+    {location: new RegExp(req.query.q, 'i')}
   ];
 
   //Filter behandeln
