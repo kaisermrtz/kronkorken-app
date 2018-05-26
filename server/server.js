@@ -461,6 +461,5 @@ app.post('/add', requiresLogin, async (req, res) => {
 app.listen(port, () => {
   console.log(`Gestartet auf Port ${port}`);
   importModel();
-  // trainModel();
-  setInterval(trainModel, 120 * 60000);
+  setInterval(trainModel, 60 * 60000);
 });
