@@ -400,7 +400,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
   var recentlyAdded;
   try{
     var crowncaps = await CrownCap.find({}).sort({addedAt: -1});
-    recentlyAdded = crowncaps.slice(0,6);
+    recentlyAdded = crowncaps.slice(0,18);
 
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
@@ -460,6 +460,6 @@ app.post('/add', requiresLogin, async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Gestartet auf Port ${port}`);
-  trainModel();
+  // trainModel();
   setInterval(trainModel, 120 * 60000);
 });
