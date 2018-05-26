@@ -1,5 +1,6 @@
 var {mongoose} = require('./../db/mongoose');
 var {CrownCap} = require('./../models/crowncap');
+var {RecommenderModel} = require('./../models/recommender-model');
 const ContentBasedRecommender = require('content-based-recommender');
 const recommender = new ContentBasedRecommender({
   minScore: 0.1,
@@ -15,8 +16,27 @@ async function trainModel(){
   });
   recommender.train(documents);
   const object = recommender.export();
-  //Könnte man jetzt hier speichern
-  console.log("Fertig trainiert");
+
+  //In der Datenbank speichern
+  try{
+    const oldModel = await RecommenderModel.findOne({});
+    if(!oldModel){
+      var model = new RecommenderModel({model: JSON.stringify(object)});
+      model.save();
+    }else{
+      const newModel = await RecommenderModel.findOneAndUpdate({_id: oldModel._id});
+    }
+    console.log("Fertig trainiert und gespeichert");
+  }catch(e){
+    console.log("Es ist ein Fehler beim speichern des Models aufgetreten");
+  }
+}
+
+async function importModel(){
+  const model = await RecommenderModel.findOne({});
+  if(model){
+    recommender.import(JSON.parse(model.model));
+  }
 }
 
 function getSimilarDocuments(id, howMuch){
@@ -24,4 +44,4 @@ function getSimilarDocuments(id, howMuch){
   return similarDocuments;
 }
 
-module.exports = {trainModel, getSimilarDocuments};
+module.exports = {trainModel, getSimilarDocuments, importModel};

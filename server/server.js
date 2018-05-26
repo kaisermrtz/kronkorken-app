@@ -16,7 +16,7 @@ var {User} = require('./models/user');
 var {CrownCap} = require('./models/crowncap');
 var {requiresLogin} = require('./middleware/requiresLogin');
 var {countryCodeArray, addCountryCode} = require('./util/countryCodeArray');
-var {trainModel, getSimilarDocuments} = require('./util/contentBasedRecommender');
+var {trainModel, getSimilarDocuments, importModel} = require('./util/contentBasedRecommender');
 
 //Setup express, hbs, bodyParser
 var app = express();
@@ -460,6 +460,7 @@ app.post('/add', requiresLogin, async (req, res) => {
 
 app.listen(port, () => {
   console.log(`Gestartet auf Port ${port}`);
-  // trainModel();
+  // importModel();
+  trainModel();
   setInterval(trainModel, 120 * 60000);
 });
