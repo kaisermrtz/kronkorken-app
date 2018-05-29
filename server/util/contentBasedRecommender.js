@@ -24,11 +24,11 @@ async function trainModel(){
       var model = new RecommenderModel({model: JSON.stringify(object)});
       model.save();
     }else{
-      const newModel = await RecommenderModel.findOneAndUpdate({_id: oldModel._id});
+      const newModel = await RecommenderModel.findOneAndUpdate({_id: oldModel._id}, {$set: {model: JSON.stringify(object)}});
     }
     console.log("Fertig trainiert und gespeichert");
   }catch(e){
-    console.log("Es ist ein Fehler beim speichern des Models aufgetreten");
+    console.log("Es ist ein Fehler beim Speichern des Models aufgetreten");
   }
 }
 
