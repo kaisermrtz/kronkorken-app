@@ -203,7 +203,7 @@ app.get('/sammlung', async (req, res) => {
   if(req.query.itemsPerPage && req.query.itemsPerPage !== ''){
     itemsPerPage = parseInt(req.query.itemsPerPage);
   }
- 
+
   try{
     //Wenn kein Query angegeben, bzw. leerer Query
     if(req.query.q === '' || req.query.q == undefined){
@@ -411,12 +411,14 @@ app.post('/sammlung/:id/delete', requiresLogin, async (req, res) => {
 //GET /dashboard
 app.get('/dashboard', requiresLogin, async (req, res) => {
   var recentlyAdded;
+  var brandCountArrayTop20;
   try{
     var crowncaps = await CrownCap.find({}).sort({addedAt: -1});
     recentlyAdded = crowncaps.slice(0,18);
 
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
+    var brandCountArray = await CrownCap.aggregate([{ $group: { _id: '$brand', count: { $sum: 1}}}]).sort({count: -1});
   }catch(e){
     console.log("Error", e);
   }
@@ -428,7 +430,8 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
     recentlyAdded,
     count,
     countryCountArray,
-    countryCountJSON: JSON.stringify(countryCountArray)
+    countryCountJSON: JSON.stringify(countryCountArray),
+    brandCountArray: JSON.stringify(brandCountArray.slice(0,20)).replace(new RegExp("'", 'g'), '')
   });
 });
 

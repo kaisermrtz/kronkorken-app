@@ -40,6 +40,7 @@
           <h3>Statistiken</h3>
           <p>Es sind {{count}} verschiedene Kronkorken aus {{countryCountArray.length}} verschiedenen Ländern in der Datenbank eingetragen.</p>
           <canvas id="chart"></canvas>
+          <canvas id="brandChart"></canvas>
         </div>
         <script>
           //Farbe
@@ -58,6 +59,7 @@
             return colorArray[randomVal];
           }
 
+          //Länder Diagramm
           var countryCount = JSON.parse('{{{countryCountJSON}}}');
           var myDatasets = new Array();
           for(var i=0; i<countryCount.length; i++){
@@ -75,11 +77,35 @@
             myDatasets.push(dataset);
           }
 
-          //Balkendiagramm
           var barChartData = {
               labels: ["Land"],
               datasets: myDatasets
           };
+
+          //Marken Diagramm
+          var brandCountArray = JSON.parse('{{{brandCountArray}}}');
+          var myBrandDatasets = new Array();
+          for(var i=0; i<brandCountArray.length; i++){
+            var dataset = {
+              label: 'A',
+              backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+              borderColor: window.chartColors.blue,
+              borderWidth: 1,
+              data: [
+                  444
+              ]
+            }
+            dataset.label = brandCountArray[i]._id;
+            dataset.data[0] = brandCountArray[i].count;
+            myBrandDatasets.push(dataset);
+          }
+
+          var barChartDataBrand = {
+              labels: ["Marke"],
+              datasets: myBrandDatasets
+          };
+
+
           //Onload Funktion
           window.onload = function() {
             ctx = document.getElementById("chart").getContext("2d");
@@ -94,6 +120,29 @@
                     title: {
                         display: true,
                         text: 'Länderübersicht'
+                    },
+                    scales: {
+                      yAxes: [{
+                        ticks: {
+                          beginAtZero: true
+                        }
+                      }]
+                    }
+                }
+            });
+
+            var ctx1 = document.getElementById("brandChart").getContext("2d");
+            window.myBar = new Chart(ctx1, {
+                type: 'bar',
+                data: barChartDataBrand,
+                options: {
+                    responsive: true,
+                    legend: {
+                        position: 'top',
+                    },
+                    title: {
+                        display: true,
+                        text: 'Top 20 Marken'
                     },
                     scales: {
                       yAxes: [{
