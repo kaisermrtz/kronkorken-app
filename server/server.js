@@ -460,8 +460,8 @@ app.post('/add', requiresLogin, async (req, res) => {
 
 //GET /train
 app.get('/train', requiresLogin, async (req, res) => {
-  trainModel();
   res.redirect('/dashboard?success=true');
+  trainModel();
 });
 
 app.listen(port, () => {
