@@ -176,6 +176,16 @@ app.get('/sammlung', async (req, res) => {
     {location: new RegExp(req.query.q, 'i')}
   ];
 
+  //spezielle Filtermöglichkeiten für Pro User
+  if(req.query.q && req.query.q.includes('brandname=')){
+    var brandname = req.query.q.substring(10);
+    searchArray = [{brand: brandname}];
+  }
+  if(req.query.q && req.query.q.includes('location=')){
+    var location = req.query.q.substring(9);
+    searchArray = [{location}];
+  }
+
   //Filter behandeln
   var optionsArray = [{}];
   if(req.query.country && req.query.country !== ''){
@@ -366,7 +376,7 @@ app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     if(!newCrownCap){
       res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
     }
-    res.redirect(`/sammlung?q=${newCrownCap.brand}`);
+    res.redirect(`/sammlung?q=brandname%3D${newCrownCap.brand}`);
   }catch(e){
     res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
   }
