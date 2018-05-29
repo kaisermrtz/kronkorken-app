@@ -185,6 +185,9 @@ app.get('/sammlung', async (req, res) => {
     var location = req.query.q.substring(9);
     searchArray = [{location}];
   }
+  if(req.query.location){
+    searchArray = [{location: req.query.location}];
+  }
 
   //Filter behandeln
   var optionsArray = [{}];
@@ -200,15 +203,15 @@ app.get('/sammlung', async (req, res) => {
   if(req.query.itemsPerPage && req.query.itemsPerPage !== ''){
     itemsPerPage = parseInt(req.query.itemsPerPage);
   }
-
+ 
   try{
     //Wenn kein Query angegeben, bzw. leerer Query
     if(req.query.q === '' || req.query.q == undefined){
       //Wenn keine Seite angegeben
       if(req.query.page < 1){
-        var crowncaps = await CrownCap.find().and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().or(searchArray).and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip(0).limit(itemsPerPage);
       }else{
-        var crowncaps = await CrownCap.find().and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
+        var crowncaps = await CrownCap.find().or(searchArray).and(optionsArray).sort({brand: 'asc', name: 'asc'}).skip((req.query.page-1)*itemsPerPage).limit(itemsPerPage);
       }
       var count = await CrownCap.find().and(optionsArray).count();
     }else{
