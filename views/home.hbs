@@ -80,6 +80,11 @@
       <canvas id="chartBrand"></canvas><br>
       <canvas id="chartHistory"></canvas><br>
       <script>
+        //Tooltips initialisieren
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+        
         //Farbe
         var color = Chart.helpers.color;
         function getRandomColor(){
