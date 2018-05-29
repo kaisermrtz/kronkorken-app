@@ -61,6 +61,7 @@ app.get('/', async (req, res) => {
     var count = await CrownCap.count({});
     var countryCountArray = await CrownCap.aggregate([{ $group: { _id: '$country', count: { $sum: 1}}}]).sort({count: -1});
     var brandCountArray = await CrownCap.aggregate([{ $group: { _id: '$brand', count: { $sum: 1}}}]).sort({count: -1});
+    var typeCountArray = await CrownCap.aggregate([{ $group: { _id: '$typeOfDrink', count: { $sum: 1}}}]).sort({count: -1});
     var historyGroup = {
       $group: {
           _id: {
@@ -94,7 +95,6 @@ app.get('/', async (req, res) => {
   addCountryCode(recentlyAdded);
   addCountryCode(countryCountArray);
   addCountryCode(randomCrownCaps);
-
   res.render('home.hbs',{
     pageTitle: 'Kronkorken App',
     loggedIn: isLoggedIn(req),
@@ -104,7 +104,8 @@ app.get('/', async (req, res) => {
     randomCrownCaps,
     count,
     countries,
-    brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), '')
+    brandCount: JSON.stringify(brandCountArray.slice(0,5)).replace(new RegExp("'", 'g'), ''),
+    typeCount: JSON.stringify(typeCountArray)
   });
 });
 
@@ -431,7 +432,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
     count,
     countryCountArray,
     countryCountJSON: JSON.stringify(countryCountArray),
-    brandCountArray: JSON.stringify(brandCountArray.slice(0,20)).replace(new RegExp("'", 'g'), '')
+    brandCountArray: JSON.stringify(brandCountArray.slice(0,30)).replace(new RegExp("'", 'g'), '')
   });
 });
 

@@ -78,13 +78,14 @@
       <p>Aktuell sind {{count}} verschiedene Kronkorken aus {{countries}} verschiedenen Ländern in der Datenbank eingetragen.</p>
       <canvas id="chart"></canvas><br>
       <canvas id="chartBrand"></canvas><br>
+      <canvas id="typeOfDrinkChart"></canvas><br>
       <canvas id="chartHistory"></canvas><br>
       <script>
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
         });
-        
+
         //Farbe
         var color = Chart.helpers.color;
         function getRandomColor(){
@@ -180,6 +181,26 @@
             labels: ["Marke"],
             datasets: myDatasetsBrandCount
         };
+
+        //Kuchendiagramm typeOfDrink
+        var typeCount = JSON.parse('{{{typeCount}}}');
+        var typePieChartData = {
+          datasets: [{
+            backgroundColor: [],
+            borderColor: [],
+            hoverBackgroundColor: [],
+            data: []
+          }],
+          labels: []
+        };
+        for(var i=0; i<typeCount.length; i++){
+          typePieChartData.datasets[0].data[i] = typeCount[i].count;
+          var myColor = getRandomColor().alpha(0.5).rgbString();
+          typePieChartData.datasets[0].backgroundColor[i] = myColor;
+          typePieChartData.datasets[0].borderColor[i] = myColor;
+          typePieChartData.labels[i] = typeCount[i]._id;
+        }
+
         //Onload Funktion
         window.onload = function() {
           //Top 5 Länder
@@ -250,6 +271,18 @@
                       }]
                     }
                 }
+          });
+          var ctx3 = document.getElementById("typeOfDrinkChart").getContext("2d");
+          var typeOfDrinkPieChart = new Chart(ctx3, {
+            type: 'pie',
+            data: typePieChartData,
+            options: {
+              responsive: true,
+              title: {
+                display: true,
+                text: 'Getränkesorten'
+              }
+            }
           });
         }
 
