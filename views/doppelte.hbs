@@ -28,15 +28,15 @@
           padding-bottom: 5px;
       }
 
-      #sammlungrow{
+      .sammlungrow{
           margin: 5px;
       }
-      #sammlungrow a{
+      .sammlungrow a{
         color: #000000;
         text-decoration: none;
       }
 
-      #sammlungrow div{
+      .sammlungrow div{
           margin-bottom: 5px;
       }
 
@@ -105,13 +105,11 @@
   <body>
     {{> header}}
     <div class="container">
-      <h1>{{pageTitle}}</h1>
-      <!-- <form id="searchForm">
-          <input type="text" name="q" placeholder="Suchen" class="form-control">
-      </form> -->
+      <h1>Doppelte Kronkorken</h1>
+      <p>This page shows my crowncaps for trading. The pictures show the crowncaps in my collection and not the ones for trading. Still the overall quality of the caps is very good. Just select as many as you want and send me an email with your selection</p>
+      <h2>Deutschland</h2>
       <div class="row auto-clear sammlungrow">
-        {{#each crowncaps}}
-
+        {{#each crowncapsDE}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <div class="sammlung">
             <a href="/sammlung/{{_id}}">
@@ -137,55 +135,69 @@
         </div>
         {{/each}}
       </div>
-      <!-- <div id="nextPage">
-        <p><a href="#">Zurück</a> Seite 1 von {{numberOfPages}} <a href="#">Weiter</a></p>
-      </div> -->
+      <h2>International</h2>
+      <div class="row auto-clear sammlungrow">
+        {{#each crowncapsNotDE}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <div class="sammlung">
+            <a href="/sammlung/{{_id}}">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+            </a>
+            <div class="col-xs-9">
+              <p class="ccbrand ccdata">{{brand}}</p>
+            </div>
+            <div class="col-xs-1">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
+                <p class="ccquantity ccdata">{{quantity}}</p>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <p class="ccname ccdata">{{name}}</p>
+            </div>
+            <div class="col-xs-2" style="padding: 0px">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      <h2>Spezialkronkorken</h2>
+      <p>Trading only for other special crowncaps!</p>
+      <div class="row auto-clear sammlungrow">
+        {{#each crowncapsSpecial}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+          <div class="sammlung">
+            <a href="/sammlung/{{_id}}">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
+            </a>
+            <div class="col-xs-9">
+              <p class="ccbrand ccdata">{{brand}}</p>
+            </div>
+            <div class="col-xs-1">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
+                <p class="ccquantity ccdata">{{quantity}}</p>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <p class="ccname ccdata">{{name}}</p>
+            </div>
+            <div class="col-xs-2" style="padding: 0px">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
 
       <script>
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
         });
-        var numberOfPages = {{numberOfPages}};
-        var currentPage = getParameterByName('page');
-        var nextPage = parseInt(currentPage) + 1;
-
-        var url = window.location.href;
-        var splittedUrl = url.split('page=');
-        var splittedUrl1 = url.split('q=');
-
-        if(splittedUrl[1] == undefined){
-          if(splittedUrl1[1] == undefined){
-            //if no query
-            splittedUrl[0] += "?";
-            nextPage = 2;
-          }else{
-            //if query
-            splittedUrl[0] += "&";
-            nextPage = 2;
-          }
-
-        }
-
-        if(numberOfPages == 1){
-          $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
-        }else if(currentPage == 1 || currentPage == undefined){
-          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
-        }else if(currentPage >= numberOfPages){
-          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
-        }else{
-          $('#nextPage').html('<p><a href="' + splittedUrl[0] + 'page=' + (currentPage - 1) + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + splittedUrl[0] + 'page=' + nextPage + '"><img src="/img/icons/next.png"></a></p>');
-        }
-
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
       </script>
     </div>
   </body>

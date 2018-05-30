@@ -258,16 +258,19 @@ app.get('/sammlung', async (req, res) => {
 //GET /doppelte
 app.get('/doppelte', requiresLogin, async (req, res) => {
   try{
-    numberOfPages = 1;
-    var crowncaps = await CrownCap.find({quantity: {$gt: 1}}).sort({brand: 'asc'});
-    addCountryCode(crowncaps);
+    var crowncapsDE = await CrownCap.find({quantity: {$gt: 0}, country: 'Deutschland', special: false}).sort({brand: 'asc', name: 'asc'});
+    var crowncapsNotDE = await CrownCap.find({quantity: {$gt: 0}, country: {$not: /Deutschland/}, special: false}).sort({brand: 'asc', name: 'asc'});
+    var crowncapsSpecial = await CrownCap.find({quantity: {$gt: 0}, special: true}).sort({brand: 'asc', name: 'asc'});
+    addCountryCode(crowncapsDE);
+    addCountryCode(crowncapsNotDE);
+    addCountryCode(crowncapsSpecial);
 
     //rendern
     res.render('doppelte.hbs', {
       pageTitle: 'Kronkorken Doppelte',
-      crowncaps,
-      loggedIn: isLoggedIn(req),
-      numberOfPages
+      crowncapsDE,
+      crowncapsNotDE,
+      crowncapsSpecial
     });
   }catch(e){
     res.status(400).send(e);
