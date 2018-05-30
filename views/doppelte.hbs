@@ -110,9 +110,9 @@
       <h2>Deutschland</h2>
       <div class="row auto-clear sammlungrow">
         {{#each crowncapsDE}}
-        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize" >
           <div class="sammlung">
-            <a href="/sammlung/{{_id}}">
+            <a href="#!" data-id="{{_id}}" data-imageid="{{cloudinaryImageId}}" class="selectable">
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
@@ -140,7 +140,7 @@
         {{#each crowncapsNotDE}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <div class="sammlung">
-            <a href="/sammlung/{{_id}}">
+            <a href="#!" data-id="{{_id}}" data-imageid="{{cloudinaryImageId}}" class="selectable">
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
@@ -169,7 +169,7 @@
         {{#each crowncapsSpecial}}
         <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize">
           <div class="sammlung">
-            <a href="/sammlung/{{_id}}">
+            <a href="#!" data-id="{{_id}}" data-imageid="{{cloudinaryImageId}}" class="selectable">
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
@@ -192,11 +192,35 @@
         </div>
         {{/each}}
       </div>
-
+      <h2>selected crowncaps</h2>
+      <p id="selectedCount">You selected 0 crowncaps.</p>
+      <div class="selectedcc row auto-clear sammlungrow">
+      </div>
       <script>
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        var selectedCC = [];
+        $('.selectable').click(function() {
+          var id = $(this).data('id');
+          var imageId = $(this).data('imageid');
+          if(!selectedCC.includes(id)){
+            $('.selectedcc').append('<div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 deselectable" data-id="'+id+'"><img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_150,w_150/v1523299669/' + imageId + '" class="img-responsive img-rounded"></div>');
+            selectedCC.push(id);
+            $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
+          }
+        });
+
+        $('body').on('click', '.deselectable', function(){
+          var id = $(this).data('id');
+          var index = selectedCC.indexOf(id);
+          if(index > -1){
+            selectedCC.splice(index, 1);
+            $(this).remove();
+          }
+          $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
         });
       </script>
     </div>

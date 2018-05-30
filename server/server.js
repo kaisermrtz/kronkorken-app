@@ -255,7 +255,7 @@ app.get('/sammlung', async (req, res) => {
   }
 });
 
-//GET /doppelte
+//GET /doppelte 
 app.get('/doppelte', requiresLogin, async (req, res) => {
   try{
     var crowncapsDE = await CrownCap.find({quantity: {$gt: 0}, country: 'Deutschland', special: false}).sort({brand: 'asc', name: 'asc'});
@@ -270,7 +270,8 @@ app.get('/doppelte', requiresLogin, async (req, res) => {
       pageTitle: 'Kronkorken Doppelte',
       crowncapsDE,
       crowncapsNotDE,
-      crowncapsSpecial
+      crowncapsSpecial,
+      loggedIn: isLoggedIn(req)
     });
   }catch(e){
     res.status(400).send(e);
