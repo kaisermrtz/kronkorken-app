@@ -5,6 +5,7 @@
     <title>{{pageTitle}}</title>
 
     {{> import}}
+    <script src="/js/lib/clipboard.min.js"></script>
     <style>
       @media (max-width: 767px){
         .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
@@ -20,6 +21,10 @@
 
       @media (min-width: 1200px){
         .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
+      }
+
+      textarea {
+        resize: none;
       }
 
       .sammlung{
@@ -196,7 +201,14 @@
       <p id="selectedCount">You selected 0 crowncaps.</p>
       <div class="selectedcc row auto-clear sammlungrow">
       </div>
+      <h2>Trading</h2>
+      <p>Please copy the following and send it with your trading request:</p>
+      <textarea readonly class="form-control" rows="5" id="selectedids"></textarea>
+      <button class="btn btn-primary btn-clipboard" data-clipboard-target="#selectedids" style="margin-top: 10px; margin-bottom: 20px;">Copy to clipboard</button>
       <script>
+        //Copy to Clipboard initialisieren
+        new ClipboardJS('.btn-clipboard');
+
         //Tooltips initialisieren
         $(function () {
           $('[data-toggle="tooltip"]').tooltip()
@@ -210,6 +222,7 @@
             $('.selectedcc').append('<div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 deselectable" data-id="'+id+'"><img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_150,w_150/v1523299669/' + imageId + '" class="img-responsive img-rounded"></div>');
             selectedCC.push(id);
             $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
+            $('#selectedids').val(JSON.stringify(selectedCC));
           }
         });
 
@@ -221,6 +234,7 @@
             $(this).remove();
           }
           $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
+          $('#selectedids').val(JSON.stringify(selectedCC));
         });
       </script>
     </div>
