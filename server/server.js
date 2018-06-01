@@ -255,8 +255,8 @@ app.get('/sammlung', async (req, res) => {
   }
 });
 
-//GET /doppelte 
-app.get('/doppelte', requiresLogin, async (req, res) => {
+//GET /doppelte
+app.get('/doppelte', async (req, res) => {
   try{
     var crowncapsDE = await CrownCap.find({quantity: {$gt: 0}, country: 'Deutschland', special: false}).sort({brand: 'asc', name: 'asc'});
     var crowncapsNotDE = await CrownCap.find({quantity: {$gt: 0}, country: {$not: /Deutschland/}, special: false}).sort({brand: 'asc', name: 'asc'});
