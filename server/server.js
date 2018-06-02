@@ -479,6 +479,26 @@ app.post('/add', requiresLogin, async (req, res) => {
   }
 });
 
+//GET /trade
+app.get('/trade', requiresLogin, async (req, res) => {
+  var query = JSON.parse(req.query.tradecc);
+  var objectIDArray = [];
+  query.forEach((element) => {
+    objectIDArray.push(mongoose.Types.ObjectId(element));
+  });
+  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }});
+  addCountryCode(crowncaps);
+
+  //rendern
+  res.render('sammlung.hbs', {
+    pageTitle: 'Tauschanfrage',
+    crowncaps,
+    loggedIn: isLoggedIn(req),
+    numberOfPages: 1,
+    countries: JSON.stringify(['Keine Länder'])
+  });
+});
+
 //GET /train
 app.get('/train', requiresLogin, async (req, res) => {
   res.redirect('/dashboard?success=true');
