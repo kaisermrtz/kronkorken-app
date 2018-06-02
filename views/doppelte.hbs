@@ -124,7 +124,7 @@
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
-              <p class="ccbrand ccdata">{{brand}}</p>
+              <p class="ccbrand ccdata {{_id}}">{{brand}}</p>
             </div>
             <div class="col-xs-1">
               <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
@@ -152,7 +152,7 @@
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
-              <p class="ccbrand ccdata">{{brand}}</p>
+              <p class="ccbrand ccdata {{_id}}">{{brand}}</p>
             </div>
             <div class="col-xs-1">
               <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
@@ -181,7 +181,7 @@
               <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded">
             </a>
             <div class="col-xs-9">
-              <p class="ccbrand ccdata">{{brand}}</p>
+              <p class="ccbrand ccdata {{_id}}">{{brand}}</p>
             </div>
             <div class="col-xs-1">
               <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
@@ -227,6 +227,7 @@
             selectedCC.push(id);
             $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
             $('#selectedids').val(JSON.stringify(selectedCC));
+            $('.' + id).css('color', 'green');
           }
         });
 
@@ -239,6 +240,7 @@
           }
           $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
           $('#selectedids').val(JSON.stringify(selectedCC));
+          $('.' + id).css('color', 'black');
         });
       </script>
     </div>
