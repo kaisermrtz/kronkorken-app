@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <script src="/js/lib/clipboard.min.js"></script>
+    <style>
+      @media (max-width: 767px){
+        .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
+      }
+
+      @media (min-width: 768px) and (max-width: 991px){
+        .row.auto-clear .col-sm-4:nth-child(3n+1){clear:left;}
+      }
+
+      @media (min-width: 992px) and (max-width: 1199px){
+        .row.auto-clear .col-md-3:nth-child(4n+1){clear:left;}
+      }
+
+      @media (min-width: 1200px){
+        .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
+      }
+
+      textarea {
+        resize: none;
+      }
+
+      .sammlung{
+          margin: 5px;
+          height: 100%;
+          padding-bottom: 5px;
+      }
+
+      .sammlungrow{
+          margin: 5px;
+      }
+      .sammlungrow a{
+        color: #000000;
+        text-decoration: none;
+      }
+
+      .sammlungrow div{
+          margin-bottom: 5px;
+      }
+
+      .ccdata {
+
+        /* Automatische Silbentrennung */
+        -moz-hyphens: auto;
+        -o-hyphens: auto;
+        -webkit-hyphens: auto;
+        -ms-hyphens: auto;
+        hyphens: auto;
+      }
+
+      .ccimage{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 5px;
+      }
+
+      .ccbrand{
+        font-weight: bold;
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: center;
+      }
+
+      .ccname{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: left;
+      }
+
+      .ccquantity{
+        font-size: 14px;
+        text-align: right;
+      }
+
+      .cccountry{
+        font-size: 12px;
+        margin-bottom: 5px;
+        text-align: right;
+      }
+
+      .flag{
+        position: absolute;
+        right: 0px;
+      }
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <div class="container">
+      <h1>Tauschanfrage</h1>
+      <div class="row auto-clear sammlungrow">
+        {{#each crowncaps}}
+        <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 equalize" >
+          <div class="sammlung">
+            <a href="#!" data-id="{{_id}}" data-imageid="{{cloudinaryImageId}}" class="selectable">
+              <img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_250,w_250/v1523299669/{{cloudinaryImageId}}" class="img-responsive ccimage img-rounded {{_id}}">
+            </a>
+            <div class="col-xs-9">
+              <p class="ccbrand ccdata">{{brand}}</p>
+            </div>
+            <div class="col-xs-1">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="Anzahl">
+                <p class="ccquantity ccdata">{{quantity}}</p>
+              </a>
+            </div>
+            <div class="col-xs-10">
+              <p class="ccname ccdata">{{name}}</p>
+            </div>
+            <div class="col-xs-2" style="padding: 0px">
+              <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+            </div>
+          </div>
+        </div>
+        {{/each}}
+      </div>
+      <h2>Auswahlwerkzeuge</h2>
+        <p>Es wurden <span id="selectedCount">0</span> Kronkorken ausgewählt.</p>
+        <button class="btn btn-default" id="selectAll">Alle auswählen</button>
+        <button class="btn btn-default" id="deselectAll">Auswahl aufheben</button>
+      <h2>Aktionen</h2>
+        <button class="btn btn-success" id="add">Doppelte +1</button>
+        <button class="btn btn-danger" id="sub">Doppelte -1</button>
+      <h2>Auswahl</h2>
+        <textarea readonly class="form-control" rows="5" id="selectedids"></textarea>
+        <button class="btn btn-primary btn-clipboard" data-clipboard-target="#selectedids" style="margin-top: 10px; margin-bottom: 20px;">Copy to clipboard</button>
+      <script>
+        //Copy to Clipboard initialisieren
+        new ClipboardJS('.btn-clipboard');
+
+        //Tooltips initialisieren
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        });
+
+        //Global Variables
+        var allCrownCaps = JSON.parse('{{{crowncapIds}}}');
+        var selectedCC = [];
+
+        //Eventhandler
+        $('.selectable').click(function() {
+          var id = $(this).data('id');
+          var imageId = $(this).data('imageid');
+          if(!selectedCC.includes(id)){
+            select(id);
+          }else{
+            deselect(id);
+          }
+          updateFeedback();
+        });
+
+        $('#selectAll').click(function() {
+          for(var i=0; i<allCrownCaps.length; i++){
+            var id = allCrownCaps[i];
+            if(!selectedCC.includes(id)){
+              select(id);
+            }
+          }
+          updateFeedback();
+        });
+
+        $('#deselectAll').click(function() {
+          for(var i=0; i<allCrownCaps.length; i++){
+            var id = allCrownCaps[i];
+            if(selectedCC.includes(id)){
+              deselect(id);
+            }
+          }
+          updateFeedback();
+        });
+
+        $('#add').click(function() {
+          $.ajax({
+            type: "POST",
+            url: '/trade/add',
+            data: {idarray: JSON.stringify(selectedCC)},
+            success: success()
+          });
+        });
+
+        $('#sub').click(function() {
+          $.ajax({
+            type: "POST",
+            url: '/trade/sub',
+            data: {idarray: JSON.stringify(selectedCC)},
+            success: success()
+          });
+        });
+
+        function success(){
+          location.reload();
+        }
+
+        //Utility functions
+        function deselect(id){
+          var index = selectedCC.indexOf(id);
+          if(index > -1){
+            selectedCC.splice(index, 1);
+            $('.' + id).css('-webkit-filter', 'opacity(1)');
+            $('.' + id).css('filter', 'opacity(1)');
+          }
+        }
+
+        function select(id){
+          selectedCC.push(id);
+          $('.' + id).css('-webkit-filter', 'opacity(.2)');
+          $('.' + id).css('filter', 'opacity(.2)');
+        }
+
+        function updateFeedback(){
+          $('#selectedCount').html(selectedCC.length);
+          $('#selectedids').val(JSON.stringify(selectedCC));
+        }
+
+
+      </script>
+    </div>
+  </body>
+</html>

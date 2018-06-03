@@ -490,13 +490,42 @@ app.get('/trade', requiresLogin, async (req, res) => {
   addCountryCode(crowncaps);
 
   //rendern
-  res.render('sammlung.hbs', {
+  res.render('tausch.hbs', {
     pageTitle: 'Tauschanfrage',
     crowncaps,
-    loggedIn: isLoggedIn(req),
-    numberOfPages: 1,
-    countries: JSON.stringify(['Keine Länder'])
+    crowncapIds: JSON.stringify(query),
+    loggedIn: isLoggedIn(req)
   });
+});
+
+//POST /trade/add
+app.post('/trade/add', requiresLogin, async (req, res) => {
+  var body = JSON.parse(req.body.idarray);
+  if(body.length > 0){
+    var oldArray = [];
+    for(var i=0; i<body.length; i++){
+      var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: 1}});
+      oldArray.push(old);
+    }
+    // if(oldArray.length == body.length){
+    //   console.log("Erfolgreich");
+    // }
+  }
+});
+
+//POST /trade/sub
+app.post('/trade/sub', requiresLogin, async (req, res) => {
+  var body = JSON.parse(req.body.idarray);
+  if(body.length > 0){
+    var oldArray = [];
+    for(var i=0; i<body.length; i++){
+      var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: -1}});
+      oldArray.push(old);
+    }
+    // if(oldArray.length == body.length){
+    //   console.log("Erfolgreich");
+    // }
+  }
 });
 
 //GET /train
