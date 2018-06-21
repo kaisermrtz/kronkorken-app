@@ -54,13 +54,13 @@
               <a href="/logout" class="btn btn-danger">Logout</a>
             </div>
           </div>
-          <!--<a id="logginbutton" class="btn btn-success" onclick="loggin()">Login</a>-->
         </form>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
 </nav>
 
+<script src="/js/lib/jquery.min.js" ></script>
 <script>
   if({{loggedIn}}){
     $('.login-group').hide();
@@ -69,12 +69,4 @@
     $('.login-group').show();
     $('.logout-group').hide();
   }
-  // $('#login-button').click(function(e){
-  //     e.preventDefault();
-  //     if($('#emailLogin').val() == "" || $('#passwordLogin').val() == ""){
-  //       $('#login-form').addClass("has-error");
-  //     }else{
-  //       $("#login-form").unbind("submit").submit();
-  //     }
-  // });
 </script>
