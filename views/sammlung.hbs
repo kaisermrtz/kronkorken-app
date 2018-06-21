@@ -89,82 +89,82 @@
       <div id="nextPage">
         <p><a href="#">Zurück</a> Seite 1 von {{numberOfPages}} <a href="#">Weiter</a></p>
       </div>
-
-      <script>
-        //Tooltips initialisieren
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        });
-
-        //Select bestücken
-        var countries = JSON.parse('{{{countries}}}');
-        for(var i=0; i < countries.length; i++){
-          var o = new Option(countries[i], countries[i]);
-          $(o).html(countries[i]);
-          $('#countrySelect').append(o);
-        }
-
-        //Suche mit in das Filter Formular übernehmen
-        $(".filter").on("change",function() {
-          $('#hiddenQuery').val(getParameterByName('q'));
-          this.form.submit();
-        });
-
-        //Filter auf Query Werte setzen
-        $('#countrySelect').val(getParameterByName('country'));
-        $('#typeOfDrinkSelect').val(getParameterByName('typeOfDrink'));
-        $('#specialSelect').val(getParameterByName('special'));
-        $('#itemsPerPageSelect').val(getParameterByName('itemsPerPage'));
-
-        //Pages
-        var numberOfPages = {{numberOfPages}};
-        var currentPage = getParameterByName('page');
-        var nextPage = parseInt(currentPage) + 1;
-
-        var url = window.location.href;
-        var splittedUrl = url.split('page=' + getParameterByName('page'));
-        var urlPrePage = splittedUrl[0];
-        var urlPostPage = splittedUrl[1];
-
-        var splittedUrlAtQuestionmark = url.split('?');
-        if(!urlPostPage){
-          urlPostPage = '';
-        }
-
-        //Wenn keine Page im Query steht
-        if(splittedUrl[1] == undefined){
-          nextPage = 2;
-          if(splittedUrlAtQuestionmark[1] == undefined){
-            //if no query
-            urlPrePage += "?";
-          }else{
-            //if query
-            urlPrePage += "&";
-          }
-        }
-
-        if(numberOfPages == 1){
-          $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
-        }else if(numberOfPages == 0){
-          $('#nextPage').html('<p>Keinen Kronkorken gefunden</p>');
-        }else if(currentPage == 1 || currentPage == undefined){
-          $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
-        }else if(currentPage >= numberOfPages){
-          $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
-        }else{
-          $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
-        }
-
-        function getParameterByName(name, url) {
-            if (!url) url = window.location.href;
-            name = name.replace(/[\[\]]/g, "\\$&");
-            var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
-                results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, " "));
-        }
-      </script>
     </div>
+    {{> importscript}}
+    <script>
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+
+      //Select bestücken
+      var countries = JSON.parse('{{{countries}}}');
+      for(var i=0; i < countries.length; i++){
+        var o = new Option(countries[i], countries[i]);
+        $(o).html(countries[i]);
+        $('#countrySelect').append(o);
+      }
+
+      //Suche mit in das Filter Formular übernehmen
+      $(".filter").on("change",function() {
+        $('#hiddenQuery').val(getParameterByName('q'));
+        this.form.submit();
+      });
+
+      //Filter auf Query Werte setzen
+      $('#countrySelect').val(getParameterByName('country'));
+      $('#typeOfDrinkSelect').val(getParameterByName('typeOfDrink'));
+      $('#specialSelect').val(getParameterByName('special'));
+      $('#itemsPerPageSelect').val(getParameterByName('itemsPerPage'));
+
+      //Pages
+      var numberOfPages = {{numberOfPages}};
+      var currentPage = getParameterByName('page');
+      var nextPage = parseInt(currentPage) + 1;
+
+      var url = window.location.href;
+      var splittedUrl = url.split('page=' + getParameterByName('page'));
+      var urlPrePage = splittedUrl[0];
+      var urlPostPage = splittedUrl[1];
+
+      var splittedUrlAtQuestionmark = url.split('?');
+      if(!urlPostPage){
+        urlPostPage = '';
+      }
+
+      //Wenn keine Page im Query steht
+      if(splittedUrl[1] == undefined){
+        nextPage = 2;
+        if(splittedUrlAtQuestionmark[1] == undefined){
+          //if no query
+          urlPrePage += "?";
+        }else{
+          //if query
+          urlPrePage += "&";
+        }
+      }
+
+      if(numberOfPages == 1){
+        $('#nextPage').html('<p><img src="/img/icons/back-g.png"></a> Seite 1 von 1 <img src="/img/icons/next-g.png"></p>');
+      }else if(numberOfPages == 0){
+        $('#nextPage').html('<p>Keinen Kronkorken gefunden</p>');
+      }else if(currentPage == 1 || currentPage == undefined){
+        $('#nextPage').html('<p><img src="/img/icons/back-g.png"> Seite 1 von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
+      }else if(currentPage >= numberOfPages){
+        $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <img src="/img/icons/next-g.png"></p>');
+      }else{
+        $('#nextPage').html('<p><a href="' + urlPrePage + 'page=' + (currentPage - 1) + urlPostPage + '"><img src="/img/icons/back.png"></a></a> Seite ' + currentPage + ' von ' + numberOfPages + ' <a href="' + urlPrePage + 'page=' + nextPage + urlPostPage + '"><img src="/img/icons/next.png"></a></p>');
+      }
+
+      function getParameterByName(name, url) {
+          if (!url) url = window.location.href;
+          name = name.replace(/[\[\]]/g, "\\$&");
+          var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+              results = regex.exec(url);
+          if (!results) return null;
+          if (!results[2]) return '';
+          return decodeURIComponent(results[2].replace(/\+/g, " "));
+      }
+    </script>
   </body>
 </html>

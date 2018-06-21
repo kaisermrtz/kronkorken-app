@@ -50,120 +50,7 @@
           <canvas id="chart"></canvas>
           <canvas id="brandChart"></canvas>
         </div>
-        <script>
-          //Farbe
-          var color = Chart.helpers.color;
-          function getRandomColor(){
-            var colorArray = [
-              color(window.chartColors.blue),
-              color(window.chartColors.red),
-              color(window.chartColors.orange),
-              color(window.chartColors.green),
-              color(window.chartColors.yellow),
-              color(window.chartColors.purple),
-              color(window.chartColors.grey)
-            ];
-            var randomVal = Math.floor(Math.random() * 7);
-            return colorArray[randomVal];
-          }
 
-          //Länder Diagramm
-          var countryCount = JSON.parse('{{{countryCountJSON}}}');
-          var myDatasets = new Array();
-          for(var i=0; i<countryCount.length; i++){
-            var dataset = {
-              label: 'A',
-              backgroundColor: getRandomColor().alpha(0.5).rgbString(),
-              borderColor: window.chartColors.blue,
-              borderWidth: 1,
-              data: [
-                  444
-              ]
-            }
-            dataset.label = countryCount[i]._id;
-            dataset.data[0] = countryCount[i].count;
-            myDatasets.push(dataset);
-          }
-
-          var barChartData = {
-              labels: ["Land"],
-              datasets: myDatasets
-          };
-
-          //Marken Diagramm
-          var brandCountArray = JSON.parse('{{{brandCountArray}}}');
-          var myBrandDatasets = new Array();
-          for(var i=0; i<brandCountArray.length; i++){
-            var dataset = {
-              label: 'A',
-              backgroundColor: getRandomColor().alpha(0.5).rgbString(),
-              borderColor: window.chartColors.blue,
-              borderWidth: 1,
-              data: [
-                  444
-              ]
-            }
-            dataset.label = brandCountArray[i]._id;
-            dataset.data[0] = brandCountArray[i].count;
-            myBrandDatasets.push(dataset);
-          }
-
-          var barChartDataBrand = {
-              labels: ["Marke"],
-              datasets: myBrandDatasets
-          };
-
-
-          //Onload Funktion
-          window.onload = function() {
-            ctx = document.getElementById("chart").getContext("2d");
-            window.myBar = new Chart(ctx, {
-                type: 'bar',
-                data: barChartData,
-                options: {
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Länderübersicht'
-                    },
-                    scales: {
-                      yAxes: [{
-                        ticks: {
-                          beginAtZero: true
-                        }
-                      }]
-                    }
-                }
-            });
-
-            var ctx1 = document.getElementById("brandChart").getContext("2d");
-            window.myBar = new Chart(ctx1, {
-                type: 'bar',
-                data: barChartDataBrand,
-                options: {
-                    responsive: true,
-                    legend: {
-                        position: 'top',
-                    },
-                    title: {
-                        display: true,
-                        text: 'Top 30 Marken'
-                    },
-                    scales: {
-                      yAxes: [{
-                        ticks: {
-                          beginAtZero: true
-                        }
-                      }]
-                    }
-                }
-            });
-          }
-
-        </script>
         <div class="col-xs-12">
           <h3>Zuletzt hinzugefügt</h3>
           <div class="row auto-clear sammlungrow">
@@ -189,6 +76,120 @@
         </div>
       </div>
     </div>
+    {{> importscript}}
+    <script>
+      //Farbe
+      var color = Chart.helpers.color;
+      function getRandomColor(){
+        var colorArray = [
+          color(window.chartColors.blue),
+          color(window.chartColors.red),
+          color(window.chartColors.orange),
+          color(window.chartColors.green),
+          color(window.chartColors.yellow),
+          color(window.chartColors.purple),
+          color(window.chartColors.grey)
+        ];
+        var randomVal = Math.floor(Math.random() * 7);
+        return colorArray[randomVal];
+      }
 
+      //Länder Diagramm
+      var countryCount = JSON.parse('{{{countryCountJSON}}}');
+      var myDatasets = new Array();
+      for(var i=0; i<countryCount.length; i++){
+        var dataset = {
+          label: 'A',
+          backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+          borderColor: window.chartColors.blue,
+          borderWidth: 1,
+          data: [
+              444
+          ]
+        }
+        dataset.label = countryCount[i]._id;
+        dataset.data[0] = countryCount[i].count;
+        myDatasets.push(dataset);
+      }
+
+      var barChartData = {
+          labels: ["Land"],
+          datasets: myDatasets
+      };
+
+      //Marken Diagramm
+      var brandCountArray = JSON.parse('{{{brandCountArray}}}');
+      var myBrandDatasets = new Array();
+      for(var i=0; i<brandCountArray.length; i++){
+        var dataset = {
+          label: 'A',
+          backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+          borderColor: window.chartColors.blue,
+          borderWidth: 1,
+          data: [
+              444
+          ]
+        }
+        dataset.label = brandCountArray[i]._id;
+        dataset.data[0] = brandCountArray[i].count;
+        myBrandDatasets.push(dataset);
+      }
+
+      var barChartDataBrand = {
+          labels: ["Marke"],
+          datasets: myBrandDatasets
+      };
+
+
+      //Onload Funktion
+      window.onload = function() {
+        ctx = document.getElementById("chart").getContext("2d");
+        window.myBar = new Chart(ctx, {
+            type: 'bar',
+            data: barChartData,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Länderübersicht'
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }]
+                }
+            }
+        });
+
+        var ctx1 = document.getElementById("brandChart").getContext("2d");
+        window.myBar = new Chart(ctx1, {
+            type: 'bar',
+            data: barChartDataBrand,
+            options: {
+                responsive: true,
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Top 30 Marken'
+                },
+                scales: {
+                  yAxes: [{
+                    ticks: {
+                      beginAtZero: true
+                    }
+                  }]
+                }
+            }
+        });
+      }
+
+    </script>
   </body>
 </html>

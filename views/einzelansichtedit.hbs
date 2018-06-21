@@ -23,17 +23,7 @@
       <h1>{{pageTitle}}</h1>
       <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
       <div id="erfolg" class="alert alert-success" role="alert" hidden>Änderungen gespeichert.</div>
-      <script>
-        var query = getUrlVars();
 
-        if(query.success == "true"){
-          $('#erfolg').show();
-          $('#error').hide();
-        }else if(query.success == "false"){
-          $('#erfolg').hide();
-          $('#error').show();
-        }
-      </script>
       <form method="post" action="/sammlung/{{crowncap._id}}/edit">
         <div class="form-group" hidden>
           <label>Datenbank-ID</label>
@@ -48,26 +38,7 @@
           <input type="text" name="image" id="imageurl" value="{{crowncap.image}}" hidden>
           <input type="text" name="cloudinaryImageId" id="imageId" value="{{crowncap.cloudinaryImageId}}" hidden>
         </div>
-        <script>
-          $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
-          .bind('cloudinarydone', function(e, data) {
-            console.log('done', data.result.url);
-            console.log(e);
-            $('.thumbnail').attr('src', data.result.url);
-            $('#fileupload').removeAttr('required');
-            $('#fileupload').hide();
-            $('#imageurl').val(data.result.url);
-            $('#imageId').val(data.result.public_id);
 
-
-            $('.thumbnails').append($.cloudinary.image(data.result.public_id,
-              { format: 'jpg', width: 150, height: 100,
-                crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
-              }).bind('cloudinaryprogress', function(e, data) {
-                $('.progress_bar').css('width',
-                Math.round((data.loaded * 100.0) / data.total) + '%');
-            });
-        </script>
         <div class="form-group">
           <label>Marke</label>
           <input type="text" name="brand" value="{{crowncap.brand}}" class="form-control" required>
@@ -128,26 +99,56 @@
           </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
       </div><!-- /.modal -->
-      <script src="/js/lib/moment.js"></script>
-      <script>
-        var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
-        $('#time').html(formattedTime);
-
-        //Tooltips initialisieren
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        });
-
-        if({{crowncap.tried}} === true){
-          $('#triedinput').attr('checked', 'true');
-        }
-
-        if({{crowncap.special}} === true){
-          $('#specialinput').attr('checked', 'true');
-        }
-      </script>
-
     </div>
+    {{> importscript}}
+    <script>
+      var query = getUrlVars();
 
+      if(query.success == "true"){
+        $('#erfolg').show();
+        $('#error').hide();
+      }else if(query.success == "false"){
+        $('#erfolg').hide();
+        $('#error').show();
+      }
+    </script>
+    <script>
+      $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })
+      .bind('cloudinarydone', function(e, data) {
+        console.log('done', data.result.url);
+        console.log(e);
+        $('.thumbnail').attr('src', data.result.url);
+        $('#fileupload').removeAttr('required');
+        $('#fileupload').hide();
+        $('#imageurl').val(data.result.url);
+        $('#imageId').val(data.result.public_id);
+
+
+        $('.thumbnails').append($.cloudinary.image(data.result.public_id,
+          { format: 'jpg', width: 150, height: 100,
+            crop: 'thumb', gravity: 'face', effect: 'saturation:50' } ))
+          }).bind('cloudinaryprogress', function(e, data) {
+            $('.progress_bar').css('width',
+            Math.round((data.loaded * 100.0) / data.total) + '%');
+        });
+    </script>
+    <script src="/js/lib/moment.js"></script>
+    <script>
+      var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
+      $('#time').html(formattedTime);
+
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+
+      if({{crowncap.tried}} === true){
+        $('#triedinput').attr('checked', 'true');
+      }
+
+      if({{crowncap.special}} === true){
+        $('#specialinput').attr('checked', 'true');
+      }
+    </script>
   </body>
 </html>

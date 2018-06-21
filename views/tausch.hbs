@@ -133,96 +133,97 @@
       <h2>Auswahl</h2>
         <textarea readonly class="form-control" rows="5" id="selectedids"></textarea>
         <button class="btn btn-primary btn-clipboard" data-clipboard-target="#selectedids" style="margin-top: 10px; margin-bottom: 20px;">Copy to clipboard</button>
-      <script>
-        //Copy to Clipboard initialisieren
-        new ClipboardJS('.btn-clipboard');
+    </div>
+    {{> importscript}}
+    <script>
+      //Copy to Clipboard initialisieren
+      new ClipboardJS('.btn-clipboard');
 
-        //Tooltips initialisieren
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        });
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
 
-        //Global Variables
-        var allCrownCaps = JSON.parse('{{{crowncapIds}}}');
-        var selectedCC = [];
+      //Global Variables
+      var allCrownCaps = JSON.parse('{{{crowncapIds}}}');
+      var selectedCC = [];
 
-        //Eventhandler
-        $('.selectable').click(function() {
-          var id = $(this).data('id');
-          var imageId = $(this).data('imageid');
+      //Eventhandler
+      $('.selectable').click(function() {
+        var id = $(this).data('id');
+        var imageId = $(this).data('imageid');
+        if(!selectedCC.includes(id)){
+          select(id);
+        }else{
+          deselect(id);
+        }
+        updateFeedback();
+      });
+
+      $('#selectAll').click(function() {
+        for(var i=0; i<allCrownCaps.length; i++){
+          var id = allCrownCaps[i];
           if(!selectedCC.includes(id)){
             select(id);
-          }else{
+          }
+        }
+        updateFeedback();
+      });
+
+      $('#deselectAll').click(function() {
+        for(var i=0; i<allCrownCaps.length; i++){
+          var id = allCrownCaps[i];
+          if(selectedCC.includes(id)){
             deselect(id);
           }
-          updateFeedback();
-        });
-
-        $('#selectAll').click(function() {
-          for(var i=0; i<allCrownCaps.length; i++){
-            var id = allCrownCaps[i];
-            if(!selectedCC.includes(id)){
-              select(id);
-            }
-          }
-          updateFeedback();
-        });
-
-        $('#deselectAll').click(function() {
-          for(var i=0; i<allCrownCaps.length; i++){
-            var id = allCrownCaps[i];
-            if(selectedCC.includes(id)){
-              deselect(id);
-            }
-          }
-          updateFeedback();
-        });
-
-        $('#add').click(function() {
-          $.ajax({
-            type: "POST",
-            url: '/trade/add',
-            data: {idarray: JSON.stringify(selectedCC)},
-            success: success()
-          });
-        });
-
-        $('#sub').click(function() {
-          $.ajax({
-            type: "POST",
-            url: '/trade/sub',
-            data: {idarray: JSON.stringify(selectedCC)},
-            success: success()
-          });
-        });
-
-        function success(){
-          location.reload();
         }
+        updateFeedback();
+      });
 
-        //Utility functions
-        function deselect(id){
-          var index = selectedCC.indexOf(id);
-          if(index > -1){
-            selectedCC.splice(index, 1);
-            $('.' + id).css('-webkit-filter', 'opacity(1)');
-            $('.' + id).css('filter', 'opacity(1)');
-          }
+      $('#add').click(function() {
+        $.ajax({
+          type: "POST",
+          url: '/trade/add',
+          data: {idarray: JSON.stringify(selectedCC)},
+          success: success()
+        });
+      });
+
+      $('#sub').click(function() {
+        $.ajax({
+          type: "POST",
+          url: '/trade/sub',
+          data: {idarray: JSON.stringify(selectedCC)},
+          success: success()
+        });
+      });
+
+      function success(){
+        location.reload();
+      }
+
+      //Utility functions
+      function deselect(id){
+        var index = selectedCC.indexOf(id);
+        if(index > -1){
+          selectedCC.splice(index, 1);
+          $('.' + id).css('-webkit-filter', 'opacity(1)');
+          $('.' + id).css('filter', 'opacity(1)');
         }
+      }
 
-        function select(id){
-          selectedCC.push(id);
-          $('.' + id).css('-webkit-filter', 'opacity(.2)');
-          $('.' + id).css('filter', 'opacity(.2)');
-        }
+      function select(id){
+        selectedCC.push(id);
+        $('.' + id).css('-webkit-filter', 'opacity(.2)');
+        $('.' + id).css('filter', 'opacity(.2)');
+      }
 
-        function updateFeedback(){
-          $('#selectedCount').html(selectedCC.length);
-          $('#selectedids').val(JSON.stringify(selectedCC));
-        }
+      function updateFeedback(){
+        $('#selectedCount').html(selectedCC.length);
+        $('#selectedids').val(JSON.stringify(selectedCC));
+      }
 
 
-      </script>
-    </div>
+    </script>
   </body>
 </html>

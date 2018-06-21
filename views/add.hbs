@@ -18,17 +18,6 @@
       <p>Bitte das Formular ausfüllen</p>
       <div id="error" class="alert alert-danger" role="alert" hidden>Beim Speichervorgang ist ein Fehler aufgetreten.</div>
       <div id="erfolg" class="alert alert-success" role="alert" hidden>Kronkorken gespeichert.</div>
-      <script>
-        var query = getUrlVars();
-
-        if(query.success == "true"){
-          $('#erfolg').show();
-          $('#error').hide();
-        }else if(query.success == "false"){
-          $('#erfolg').hide();
-          $('#error').show();
-        }
-      </script>
       <div class="row">
         <div class="col-md-4">
           <form id="addForm" method="post" action="/add">
@@ -159,6 +148,17 @@
         </div>
       </div>
     </div>
+    {{> importscript}}
+    <script>
+      var query = getUrlVars();
 
+      if(query.success == "true"){
+        $('#erfolg').show();
+        $('#error').hide();
+      }else if(query.success == "false"){
+        $('#erfolg').hide();
+        $('#error').show();
+      }
+    </script>
   </body>
 </html>

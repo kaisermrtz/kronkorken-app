@@ -17,20 +17,6 @@
       <h1>{{pageTitle}}</h1>
       <div id="error" class="alert alert-danger" role="alert" hidden>Fehler im Formular</div>
       <div id="erfolg" class="alert alert-success" role="alert" hidden>Nutzer registriert</div>
-      <script>
-        var query = getUrlVars();
-
-        if(query.success == "true"){
-          $('#erfolg').show();
-          $('#error').hide();
-        }else if(query.success){
-          $('#erfolg').hide();
-          $('#error').show();
-          var str = query.success;
-          str = str.replace(/%20/g, " ");
-          $('#error').html(str);
-        }
-      </script>
       <div class="row">
         <div class="col-md-4">
           <form id="registerForm" method="post" action="/register">
@@ -51,5 +37,20 @@
         </div>
       </div>
     </div>
+    {{> importscript}}
+    <script>
+      var query = getUrlVars();
+
+      if(query.success == "true"){
+        $('#erfolg').show();
+        $('#error').hide();
+      }else if(query.success){
+        $('#erfolg').hide();
+        $('#error').show();
+        var str = query.success;
+        str = str.replace(/%20/g, " ");
+        $('#error').html(str);
+      }
+    </script>
   </body>
 </html>

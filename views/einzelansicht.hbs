@@ -106,56 +106,53 @@
         </div>
         {{/each}}
       </div>
-
-      <script src="/js/lib/moment.js"></script>
-      <script>
-        var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
-        $('#time').html(formattedTime);
-
-        //Tooltips initialisieren
-        $(function () {
-          $('[data-toggle="tooltip"]').tooltip()
-        });
-
-        if({{crowncap.tried}} === true){
-          $('#triedtrue').show();
-          $('#triedfalse').hide();
-        }else{
-          $('#triedtrue').hide();
-          $('#triedfalse').show();
-        }
-
-        if({{crowncap.special}} === true){
-          $('#special').show();
-        }
-
-        if('{{crowncap.typeOfDrink}}' == "Bier"){
-          $('#typeOfDrinkBeer').show();
-        }else if('{{crowncap.typeOfDrink}}' == "Mixgetränk"){
-          $('#typeOfDrinkMix').show();
-        }else if('{{crowncap.typeOfDrink}}' == "Softdrink"){
-          $('#typeOfDrinkSoftdrink').show();
-        }else if('{{crowncap.typeOfDrink}}' == "Anderes"){
-          $('#typeOfDrinkAnderes').show();
-        }
-
-        var tags = '{{crowncap.tags}}'
-        var splittedString = tags.split(",");
-        for(var i=0; i<splittedString.length; i++){
-          var element = splittedString[i].trim();
-          $('#tags').append('<a href="/sammlung?q=' + element + '"><span class="label label-primary" style="font-weight: normal">' + element + '</span></a> ')
-        }
-
-        if({{loggedIn}}){
-          $('#editbutton').show();
-          $('#aufbewahrungsort').show();
-          $('#doppelte').show();
-        }
-
-      </script>
-
-
     </div>
+    {{> importscript}}
+    <script src="/js/lib/moment.js"></script>
+    <script>
+      var formattedTime = moment({{crowncap.addedAt}}).format('DD.MM.YYYY');
+      $('#time').html(formattedTime);
 
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+
+      if({{crowncap.tried}} === true){
+        $('#triedtrue').show();
+        $('#triedfalse').hide();
+      }else{
+        $('#triedtrue').hide();
+        $('#triedfalse').show();
+      }
+
+      if({{crowncap.special}} === true){
+        $('#special').show();
+      }
+
+      if('{{crowncap.typeOfDrink}}' == "Bier"){
+        $('#typeOfDrinkBeer').show();
+      }else if('{{crowncap.typeOfDrink}}' == "Mixgetränk"){
+        $('#typeOfDrinkMix').show();
+      }else if('{{crowncap.typeOfDrink}}' == "Softdrink"){
+        $('#typeOfDrinkSoftdrink').show();
+      }else if('{{crowncap.typeOfDrink}}' == "Anderes"){
+        $('#typeOfDrinkAnderes').show();
+      }
+
+      var tags = '{{crowncap.tags}}'
+      var splittedString = tags.split(",");
+      for(var i=0; i<splittedString.length; i++){
+        var element = splittedString[i].trim();
+        $('#tags').append('<a href="/sammlung?q=' + element + '"><span class="label label-primary" style="font-weight: normal">' + element + '</span></a> ')
+      }
+
+      if({{loggedIn}}){
+        $('#editbutton').show();
+        $('#aufbewahrungsort').show();
+        $('#doppelte').show();
+      }
+
+    </script>
   </body>
 </html>
