@@ -160,6 +160,14 @@ app.get('/logout', (req, res) => {
   }
 });
 
+app.get('/datenschutz', (req, res) => {
+  res.render('datenschutz.hbs');
+});
+
+app.get('/impressum', (req, res) => {
+  res.render('impressum.hbs');
+});
+
 /*
   Kronkorken
 */
