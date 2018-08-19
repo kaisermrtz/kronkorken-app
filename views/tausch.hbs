@@ -123,6 +123,8 @@
         </div>
         {{/each}}
       </div>
+      <h2>Informationen</h2>
+        <p>Anzahl: <span id="overallCount">0</span></p>
       <h2>Auswahlwerkzeuge</h2>
         <p>Es wurden <span id="selectedCount">0</span> Kronkorken ausgewählt.</p>
         <button class="btn btn-default" id="selectAll">Alle auswählen</button>
@@ -147,6 +149,8 @@
       //Global Variables
       var allCrownCaps = JSON.parse('{{{crowncapIds}}}');
       var selectedCC = [];
+
+      $('#overallCount').html(allCrownCaps.length);
 
       //Eventhandler
       $('.selectable').click(function() {
