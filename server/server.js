@@ -279,6 +279,9 @@ app.get('/doppelte', async (req, res) => {
       crowncapsDE,
       crowncapsNotDE,
       crowncapsSpecial,
+      crowncapsDECount: crowncapsDE.length,
+      crowncapsNotDECount: crowncapsNotDE.length,
+      crowncapsSpecialCount: crowncapsSpecial.length,
       loggedIn: isLoggedIn(req)
     });
   }catch(e){
