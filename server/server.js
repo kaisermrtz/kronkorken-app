@@ -509,6 +509,25 @@ app.get('/trade', requiresLogin, async (req, res) => {
   });
 });
 
+//GET /traderequest
+app.get('/traderequest', async (req, res) => {
+  var query = JSON.parse(req.query.tradecc);
+  var objectIDArray = [];
+  query.forEach((element) => {
+    objectIDArray.push(mongoose.Types.ObjectId(element));
+  });
+  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }});
+  addCountryCode(crowncaps);
+
+  //rendern
+  res.render('tradedCaps.hbs', {
+    pageTitle: 'Traded Caps',
+    crowncaps,
+    crowncapIds: JSON.stringify(query),
+    loggedIn: isLoggedIn(req)
+  });
+});
+
 //POST /trade/add
 app.post('/trade/add', requiresLogin, async (req, res) => {
   var body = JSON.parse(req.body.idarray);
