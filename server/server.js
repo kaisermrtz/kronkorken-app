@@ -134,12 +134,20 @@ app.post('/register', async (req, res) => {
   }
 });
 
-//POST /login
-app.post('/login', async (req, res) => {
+//GET /login
+app.get('/login', async (req, res) => {
+  res.render('login.hbs', {
+    pageTitle: 'Kronkorken Login',
+    loggedIn: isLoggedIn(req)
+  })
+})
+
+//POST /logginIn
+app.post('/logginIn', async (req, res) => {
   try{
     var user = await User.authenticate(req.body.email, req.body.password);
     req.session.userId = user._id;
-    res.redirect(req.headers.referer);
+    res.redirect('/dashboard');
   }catch(e){
     //res.status(404).send(e);
     res.redirect('/');
@@ -263,8 +271,8 @@ app.get('/sammlung', async (req, res) => {
   }
 });
 
-//GET /doppelte
-app.get('/doppelte', async (req, res) => {
+//GET /new-trade
+app.get('/new-trade', async (req, res) => {
   try{
     var crowncapsDE = await CrownCap.find({quantity: {$gt: 0}, country: 'Deutschland', special: false}).sort({brand: 'asc', name: 'asc'});
     var crowncapsNotDE = await CrownCap.find({quantity: {$gt: 0}, country: {$not: /Deutschland/}, special: false}).sort({brand: 'asc', name: 'asc'});
@@ -274,7 +282,7 @@ app.get('/doppelte', async (req, res) => {
     addCountryCode(crowncapsSpecial);
 
     //rendern
-    res.render('doppelte.hbs', {
+    res.render('newTrade.hbs', {
       pageTitle: 'Kronkorken Doppelte',
       crowncapsDE,
       crowncapsNotDE,
@@ -552,9 +560,6 @@ app.post('/trade/sub', requiresLogin, async (req, res) => {
       var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: -1}});
       oldArray.push(old);
     }
-    // if(oldArray.length == body.length){
-    //   console.log("Erfolgreich");
-    // }
   }
 });
 
@@ -562,6 +567,11 @@ app.post('/trade/sub', requiresLogin, async (req, res) => {
 app.get('/train', requiresLogin, async (req, res) => {
   res.redirect('/dashboard?success=true');
   trainModel();
+});
+
+//Alle anderen Umleiten zu /
+app.get('*', (req, res) => {
+    res.redirect('/');
 });
 
 app.listen(port, () => {

@@ -6,105 +6,11 @@
 
     {{> import}}
     <script src="/js/lib/clipboard.min.js"></script>
+    <link rel="stylesheet" href="/css/sammlung.css">
     <style>
-      @media (max-width: 767px){
-        .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
-      }
-
-      @media (min-width: 768px) and (max-width: 991px){
-        .row.auto-clear .col-sm-4:nth-child(3n+1){clear:left;}
-      }
-
-      @media (min-width: 992px) and (max-width: 1199px){
-        .row.auto-clear .col-md-3:nth-child(4n+1){clear:left;}
-      }
-
-      @media (min-width: 1200px){
-        .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
-      }
-
       textarea {
         resize: none;
       }
-
-      .sammlung{
-          margin: 5px;
-          height: 100%;
-          padding-bottom: 5px;
-      }
-
-      .sammlungrow{
-          margin: 5px;
-      }
-      .sammlungrow a{
-        color: #000000;
-        text-decoration: none;
-      }
-
-      .sammlungrow div{
-          margin-bottom: 5px;
-      }
-
-      .ccdata {
-
-        /* Automatische Silbentrennung */
-        -moz-hyphens: auto;
-        -o-hyphens: auto;
-        -webkit-hyphens: auto;
-        -ms-hyphens: auto;
-        hyphens: auto;
-      }
-
-      .ccimage{
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        margin-bottom: 5px;
-      }
-
-      .ccbrand{
-        font-weight: bold;
-        font-size: 12px;
-        margin-bottom: 5px;
-        text-align: center;
-      }
-
-      .ccname{
-        font-size: 12px;
-        margin-bottom: 5px;
-        text-align: left;
-      }
-
-      .ccquantity{
-        font-size: 14px;
-        text-align: right;
-      }
-
-      .cccountry{
-        font-size: 12px;
-        margin-bottom: 5px;
-        text-align: right;
-      }
-
-      .flag{
-        position: absolute;
-        right: 0px;
-      }
-
-      #nextPage p{
-        text-align: center;
-        font-size: 12px;
-      }
-
-      #nextPage {
-        margin-top: 50px;
-        margin-bottom: 50px;
-      }
-
-      .dropdown-menu{
-        height:200px;overflow-y:scroll;
-      }
-
     </style>
   </head>
   <body>

@@ -9,6 +9,7 @@
       background-repeat: no-repeat;
       width: 65px;
   }
+
 </style>
 
 <nav class="navbar navbar-default navbar-fixed-top" id="navbar">
@@ -29,32 +30,52 @@
       <div class="login-group">
         <ul class="nav navbar-nav">
             <li><a class="active" href="/">Home</a></li>
-            <li><a href="/sammlung" >Sammlung</a></li>
+            <li><a href="/sammlung" >Collection</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Trade <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="/new-trade">New Trade</a></li>
+                <li><a href="#">History</a></li>
+              </ul>
+            </li>
         </ul>
       </div>
       <div class="logout-group" hidden>
         <ul class="nav navbar-nav">
             <li><a class="active" href="/">Home</a></li>
             <li><a href="/dashboard">Dashboard</a></li>
-            <li><a href="/sammlung" >Sammlung</a></li>
-            <li><a href="/doppelte" >Doppelte</a></li>
+            <li><a href="/sammlung" >Collection</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                Trade <span class="caret"></span>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a href="/new-trade">New Trade</a></li>
+                <li><a href="#">History</a></li>
+              </ul>
+            </li>
         </ul>
       </div>
+
       <ul class="nav navbar-nav navbar-right">
-        <form id="login-form" method="post" action="/login" class="navbar-form navbar-left" role="search">
-          <div class="login-group">
-            <div class="form-group">
-              <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control" required>
-              <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control" required>
-            </div>
-            <button type="submit" id="login-button" class="btn btn-success">Login</button>
+        <form class="navbar-form navbar-left" role="search" action='/sammlung' method="get">
+          <div class="form-group">
+            <input type="text" name="q" placeholder="Kronkorken Suche" class="form-control" autocomplete="off">
           </div>
-          <div class="logout-group" hidden>
+          <button type="submit" class="btn btn-primary"><img src="/img/icons/lupe-64.png" height="15px"></button>
+        </form>
+          <div class="logout-group navbar-left navbar-form" hidden>
             <div class="form-group">
               <a href="/logout" class="btn btn-danger">Logout</a>
             </div>
           </div>
-        </form>
+          <div class="login-group navbar-left navbar-form" hidden>
+            <div class="form-group">
+              <a href="/login" class="btn btn-warning">Login</a>
+            </div>
+          </div>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->

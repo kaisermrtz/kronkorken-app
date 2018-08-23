@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+        body {
+          height: 100%;
+          background-image: url(/img/login-bg.jpg);
+          background-repeat: no-repeat;
+          background-attachment: fixed;
+          background-position: center;
+          background-size: cover;
+        }
+
+        .login-container {
+          margin-top: 50px;
+          margin-left: auto;
+          margin-right: auto;
+          width: 60%;
+          padding: 20px;
+          text-align: center;
+          background-color: white;
+        }
+
+        @media (max-width: 767px){
+          .login-container {
+            width: 90%;
+          }
+        }
+
+        #login-button {
+          width: 100%;
+        }
+    </style>
+  </head>
+  <body class="bg">
+    {{> header}}
+    <div class="bg">
+      <div class="container">
+        <div class="login-container">
+          <h3>Admin Login</h3>
+          <form id="login-form" method="post" action="/logginIn" role="search">
+              <div class="form-group">
+                <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control" required>
+              </div>
+              <div class="form-group">
+                <button type="submit" id="login-button" class="btn btn-success">Login</button>
+              </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    {{> importscript}}
+    <script></script>
+  </body>
+</html>
