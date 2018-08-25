@@ -5,7 +5,6 @@ var requiresLogin = (req, res, next) => {
     return next();
   }else{
     res.redirect('/');
-    return next();
   }
 };
 module.exports = {requiresLogin};
