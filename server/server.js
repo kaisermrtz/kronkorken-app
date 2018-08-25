@@ -423,16 +423,27 @@ app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     crownCapData['tried'] = (req.body.tried == 'on');
     crownCapData['special'] = (req.body.special == 'on');
 
+    //Entfernen der tradeTransaction wenn diese auf "" gesetzt wurde
+    if(crownCapData._tradeTransaction == ""){
+      var newCrownCap = await CrownCap.findOneAndUpdate({
+        '_id': req.body.id
+      }, {$unset: {'_tradeTransaction': ''}}, {new: true});
+      crownCapData = _.omit(crownCapData, '_tradeTransaction');
+    }
+
     //Updates in die Datenbank laden
     var newCrownCap = await CrownCap.findOneAndUpdate({
       _id: req.body.id
     }, {$set: crownCapData}, {new: true});
+
+
 
     if(!newCrownCap){
       res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
     }
     res.redirect(`/sammlung?q=brandname%3D${newCrownCap.brand}`);
   }catch(e){
+    console.log(e);
     res.redirect(`/sammlung/${req.body.id}/edit/?success=false`);
   }
 });
