@@ -142,7 +142,7 @@
 
       $(".gesendete-form").each(function( index ){
         var data = $(this).serialize();
-        if(data != "tradecc="){
+        if(data != "tradecc=" && data != "tradecc=%5B%5D"){
           $(this).show();
         }
       });
