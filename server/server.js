@@ -14,6 +14,8 @@ const cloudinary = require('cloudinary');
 var {mongoose} = require('./db/mongoose');
 var {User} = require('./models/user');
 var {CrownCap} = require('./models/crowncap');
+var {TradePartner} = require('./models/tradePartner');
+var {TradeTransaction} = require('./models/tradeTransaction');
 var {requiresLogin} = require('./middleware/requiresLogin');
 var {countryCodeArray, addCountryCode} = require('./util/countryCodeArray');
 var {trainModel, getSimilarDocuments, importModel} = require('./util/contentBasedRecommender');
@@ -334,6 +336,12 @@ app.get('/sammlung/:id', async (req, res) => {
     }
 
     var crowncap = await CrownCap.findById(id);
+    if (crowncap._tradeTransaction) {
+      var transaction = await TradeTransaction.findById(crowncap._tradeTransaction);
+      var partner = await TradePartner.findById(transaction._tradePartner);
+    }else{
+      var partner = {};
+    }
 
     if(!crowncap){
       return res.redirect('/sammlung');
@@ -345,11 +353,13 @@ app.get('/sammlung/:id', async (req, res) => {
     res.render('einzelansicht.hbs', {
       pageTitle: 'Kronkorken',
       crowncap,
+      partner,
       loggedIn: isLoggedIn(req),
       similarCrownCaps
     });
     //res.send({crowncap});
   }catch(e){
+    console.log(e);
     res.redirect('/sammlung');
   }
 });
@@ -364,6 +374,23 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     return res.redirect('/sammlung');
   }
 
+  try {
+    var transactions = await TradeTransaction.aggregate([{
+      $lookup: {
+        from: "tradepartners", // collection name in db
+        localField: "_tradePartner",
+        foreignField: "_id",
+        as: "tradePartner"
+      }
+    }]).sort({date: -1});
+    for(var i=0;i<transactions.length;i++){
+      transactions[i].tradePartner = transactions[i].tradePartner[0].name;
+    }
+  }catch(e){
+    console.log(e);
+    var transactions = [];
+  }
+
   try{
     var crowncap = await CrownCap.findById(id);
 
@@ -374,6 +401,7 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
     res.render('einzelansichtedit.hbs', {
       pageTitle: 'Kronkorken Bearbeiten',
       crowncap,
+      transactions,
       loggedIn: isLoggedIn(req)
     });
     //res.send({crowncap});
@@ -386,9 +414,9 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
   try{
     if(req.body.oldCloudinaryImageId === req.body.cloudinaryImageId){
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', '_tradeTransaction']);
     }else{
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', 'image', 'cloudinaryImageId']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', 'image', 'cloudinaryImageId', '_tradeTransaction']);
       //Altes Bild löschen
       var returnValue = await cloudinaryAsyncDelete(req.body.oldCloudinaryImageId);
     }
@@ -460,9 +488,27 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
 });
 
 //GET /add
-app.get('/add', requiresLogin, (req, res) => {
+app.get('/add', requiresLogin, async (req, res) => {
+  try {
+    var transactions = await TradeTransaction.aggregate([{
+      $lookup: {
+        from: "tradepartners", // collection name in db
+        localField: "_tradePartner",
+        foreignField: "_id",
+        as: "tradePartner"
+      }
+    }]).sort({date: -1});
+    for(var i=0;i<transactions.length;i++){
+      transactions[i].tradePartner = transactions[i].tradePartner[0].name;
+    }
+  }catch(e){
+    console.log(e);
+    var transactions = [];
+  }
+
   res.render('add.hbs', {
     pageTitle: 'Kronkorken Hinzufügen',
+    transactions,
     loggedIn: isLoggedIn(req)
   });
 });
@@ -481,7 +527,7 @@ function cloudinaryAsyncDelete(imageid){
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId', '_tradeTransaction']);
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
@@ -517,9 +563,177 @@ app.get('/trade', requiresLogin, async (req, res) => {
   });
 });
 
+//GET /history
+app.get('/history', async (req, res) => {
+  try {
+    var partners = await TradePartner.find();
+    var transactions = await TradeTransaction.aggregate([{
+      $lookup: {
+        from: "tradepartners", // collection name in db
+        localField: "_tradePartner",
+        foreignField: "_id",
+        as: "tradePartner"
+      }
+    }]).sort({date: -1});
+    for(var i=0;i<transactions.length;i++){
+      transactions[i].tradePartner = transactions[i].tradePartner[0].name;
+
+      var crowncaps = await CrownCap.find({_tradeTransaction: transactions[i]._id});
+
+      var idarray = [];
+      for(var j=0;j<crowncaps.length; j++){
+        idarray.push(crowncaps[j]._id + "");
+      }
+      transactions[i].receivedCapsJSON = JSON.stringify(idarray);
+    }
+
+
+    addCountryCode(partners);
+  }catch(e){
+    console.log(e);
+    var partners = [];
+    var transactions = [];
+  }
+
+  res.render('tradeHistory.hbs', {
+    pageTitle: 'Kronkorken Tauschpartner',
+    partners,
+    transactions,
+    loggedIn: isLoggedIn(req)
+  });
+});
+
+//GET /history/addPartner
+app.get('/history/addPartner', requiresLogin, async (req, res) => {
+  res.render('addTradePartner.hbs', {
+    pageTitle: 'Kronkorken Tauschpartner',
+    loggedIn: isLoggedIn(req)
+  });
+});
+
+//POST /history/addPartner
+app.post('/history/addPartner', requiresLogin, async(req, res) => {
+  var partnerData = _.pick(req.body, ['name', 'country', 'email', 'website']);
+
+  try{
+    var partner = new TradePartner(partnerData);
+    //Speichern in der Datenbank
+    await partner.save();
+    res.redirect('/history');
+  }catch(e){
+    console.log(e);
+    res.redirect('/history/addPartner?success=false');
+  }
+});
+
+//GET /history/addTransaction
+app.get('/history/addTransaction', requiresLogin, async (req, res) => {
+
+  try {
+    var partners = await TradePartner.find();
+  }catch(e){
+    console.log(e);
+    var partners = [];
+  }
+
+  res.render('addTradeTransaction.hbs', {
+    pageTitle: 'Kronkorken Tauschtransaktion',
+    partners,
+    loggedIn: isLoggedIn(req)
+  });
+});
+
+//POST /history/addTransaction
+app.post('/history/addTransaction', requiresLogin, async (req, res) => {
+  try{
+    var transactionData = _.pick(req.body, ['_tradePartner', 'sendCapsJSON']);
+    transactionData['tried'] = (req.body.blind == 'on');
+    transactionData['date'] = Date.parse(req.body.date);
+    transactionData['_addedBy'] = req.session.userId;
+    if(transactionData['sendCapsJSON'] != ''){
+      var ccarray = JSON.parse(transactionData.sendCapsJSON);
+      var count = ccarray.length;
+      transactionData['count'] = count;
+    }
+
+    var transaction = new TradeTransaction(transactionData);
+    //Speichern in der Datenbank
+    await transaction.save();
+
+    res.redirect('/history');
+  }catch(e){
+    console.log(e);
+    res.redirect('/history/addTransaction?success=false');
+  }
+});
+
+//POST /history/delete/transaction
+app.post('/history/delete/transaction', requiresLogin, async (req, res) => {
+  var id = req.body.id;
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.redirect(`/history?success=false`);
+  }
+
+  try{
+    var crowncaps = await CrownCap.find({_tradeTransaction: id});
+    for(var i=0; i<crowncaps.length;i++){
+      var newCrownCap = await CrownCap.findOneAndUpdate({
+        '_id': crowncaps[i]._id
+      }, {$unset: {'_tradeTransaction': ''}}, {new: true});
+    }
+
+    var transaction = await TradeTransaction.findOneAndRemove({_id: id});
+
+    if(!transaction){
+      return res.redirect(`/history?success=false`);
+    }
+    res.redirect('/history?success=true');
+  }catch(e){
+    console.log(e);
+    return res.redirect(`/history?success=false`);
+  }
+});
+
+//POST /history/delete/partner
+app.post('/history/delete/partner', requiresLogin, async (req, res) => {
+  var id = req.body.id;
+  //Validate Id using isValid
+  if(!ObjectID.isValid(id)){
+    return res.redirect(`/history?success=false`);
+  }
+
+  try{
+    var partner = await TradePartner.findOneAndRemove({_id: id});
+    if(!partner){
+      return res.redirect(`/history?success=false`);
+    }
+    var transactions = await TradeTransaction.find({_tradePartner: id})
+
+    for(var j=0; j<transactions.length;j++){
+      var crowncaps = await CrownCap.find({_tradeTransaction: transactions[j]._id});
+      for(var i=0; i<crowncaps.length;i++){
+        var newCrownCap = await CrownCap.findOneAndUpdate({
+          '_id': crowncaps[i]._id
+        }, {$unset: {'_tradeTransaction': ''}}, {new: true});
+      }
+    }
+
+    transactions = await TradeTransaction.find({_tradePartner: id}).remove();
+    res.redirect('/history?success=true');
+  }catch(e){
+    return res.redirect(`/history?success=false`);
+  }
+});
+
 //GET /traderequest
 app.get('/traderequest', async (req, res) => {
-  var query = JSON.parse(req.query.tradecc);
+  if(req.query.tradecc){
+    var query = JSON.parse(req.query.tradecc);
+  }else {
+    var query = [];
+  }
+
   var objectIDArray = [];
   query.forEach((element) => {
     objectIDArray.push(mongoose.Types.ObjectId(element));

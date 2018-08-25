@@ -6,7 +6,6 @@
     {{> import}}
     <link rel="stylesheet" href="/css/sammlung.css">
     <style>
-
         .jumbotron{
             background-repeat: no-repeat;
             background-size: cover;
@@ -136,7 +135,7 @@
 
       //Farbe
       var color = Chart.helpers.color;
-      function getRandomColor(){
+      function getRandomColor(index){
         var colorArray = [
           color(window.chartColors.blue),
           color(window.chartColors.red),
@@ -146,7 +145,10 @@
           color(window.chartColors.purple),
           color(window.chartColors.grey)
         ];
-        var randomVal = Math.floor(Math.random() * 7);
+        var randomVal = index;
+        if(index == undefined){
+          var randomVal = Math.floor(Math.random() * 7);
+        }
         return colorArray[randomVal];
       }
 
@@ -157,7 +159,7 @@
       for(var i=0; i<countryCountFirst5.length; i++){
         var dataset = {
           label: 'A',
-          backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+          backgroundColor: getRandomColor(i).alpha(0.5).rgbString(),
           borderColor: window.chartColors.blue,
           borderWidth: 1,
           data: [
@@ -212,7 +214,7 @@
       for(var i=0; i<brandCount.length; i++){
         var dataset = {
           label: 'A',
-          backgroundColor: getRandomColor().alpha(0.5).rgbString(),
+          backgroundColor: getRandomColor(i).alpha(0.5).rgbString(),
           borderColor: window.chartColors.blue,
           borderWidth: 1,
           data: [
@@ -243,7 +245,7 @@
       };
       for(var i=0; i<typeCount.length; i++){
         typePieChartData.datasets[0].data[i] = typeCount[i].count;
-        var myColor = getRandomColor().alpha(0.5).rgbString();
+        var myColor = getRandomColor(i).alpha(0.5).rgbString();
         typePieChartData.datasets[0].backgroundColor[i] = myColor;
         typePieChartData.datasets[0].borderColor[i] = myColor;
         typePieChartData.labels[i] = typeCount[i]._id;

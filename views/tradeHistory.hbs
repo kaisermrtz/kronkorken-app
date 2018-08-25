@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <div class="container">
+      <h1>Bisherige Tauschpartner</h1>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Website</th>
+            <th>Land</th>
+            <th class="adminOnly" hidden>Löschen</th>
+          </tr>
+          {{#each partners}}
+          <tr>
+            <td>{{name}}</td>
+            <td><a href="mailto:{{email}}">{{email}}</a></td>
+            <td><a href="{{website}}" target="_blank" rel="noopener noreferrer">{{website}}</a></td>
+            <td>
+              <a href="#" data-toggle="tooltip" data-placement="top" title="{{country}}">
+                <img class="img-responsive flags" src="http://www.countryflags.io/{{countryCode}}/flat/24.png">
+              </a>
+            </td>
+            <td class="adminOnly" hidden>
+              <a href="" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal-partner" onclick="insertPartnerIDToDeleteModal('{{_id}}')">Löschen</a>
+            </td>
+          </tr>
+          {{/each}}
+        </table>
+      </div>
+
+
+      <h1>Transaktionen</h1>
+      <div class="table-responsive">
+        <table class="table table-striped table-hover">
+          <tr>
+            <th>Datum</th>
+            <th>Tauschpartner</th>
+            <th>Bekommene</th>
+            <th>Gesendete</th>
+            <th>Anzahl</th>
+            <th class="adminOnly" hidden>Löschen</th>
+          </tr>
+          {{#each transactions}}
+          <tr>
+            <td><span class="date">{{date}}</span></td>
+            <td>{{tradePartner}}</td>
+            <td>
+              <form action='/traderequest' method="get" class="gesendete-form" hidden>
+                <input hidden type="text" name="tradecc" placeholder="Suchen" value="{{receivedCapsJSON}}">
+                <button class="btn btn-primary">Anzeigen</button>
+              </form>
+          </td>
+            <td>
+              <form action='/traderequest' method="get" class="gesendete-form" hidden>
+                <input hidden type="text" name="tradecc" placeholder="Suchen" value="{{sendCapsJSON}}">
+                <button class="btn btn-primary">Anzeigen</button>
+              </form>
+            <td>{{count}}</td>
+            <td class="adminOnly" hidden>
+              <a href="" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal-transaction" onclick="insertTransactionIDToDeleteModal('{{_id}}')">Löschen</a>
+            </td>
+          </tr>
+          {{/each}}
+        </table>
+      </div>
+
+      <div class="adminOnly" hidden>
+        <h3>Hinzufügen</h3>
+        <a href="/history/addPartner" class="btn btn-primary">Tauschpartner hinzufügen</a>
+        <a href="/history/addTransaction" class="btn btn-primary">Transaktion hinzufügen</a>
+      </div>
+    </div>
+
+    <div class="modal fade" id="deletemodal-transaction">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Transaktion löschen?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Willst du diese Transaction wirklich aus der Datenbank entfernen?</p>
+          </div>
+          <div class="modal-footer">
+            <form class="form-inline" method="post" action="/history/delete/transaction">
+              <input type="text" name="id" id="transaction-id-input" hidden>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+              <button class="btn btn-danger">Transaktion löschen</button>
+            </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    <div class="modal fade" id="deletemodal-partner">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Schließen"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title">Tauschpartner löschen?</h4>
+          </div>
+          <div class="modal-body">
+            <p>Willst du diesen Tauschpartner wirklich aus der Datenbank entfernen?</p>
+          </div>
+          <div class="modal-footer">
+            <form class="form-inline" method="post" action="/history/delete/partner">
+              <input type="text" name="id" id="partner-id-input" hidden>
+              <button type="button" class="btn btn-default" data-dismiss="modal">Schließen</button>
+              <button class="btn btn-danger">Tauschpartner löschen</button>
+            </form>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+
+    {{> importscript}}
+    <script src="/js/lib/moment.js"></script>
+    <script>
+      //Tooltips initialisieren
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+      });
+
+      $(".date").each(function( index ) {
+        var text = $(this).text();
+        var int = parseInt(text);
+        var formattedTime = moment(int).format('DD.MM.YYYY');
+
+        $(this).text(formattedTime);
+      });
+
+      $(".gesendete-form").each(function( index ){
+        var data = $(this).serialize();
+        if(data != "tradecc="){
+          $(this).show();
+        }
+      });
+
+      if({{loggedIn}}){
+        $('.adminOnly').show();
+      }
+
+      function insertTransactionIDToDeleteModal(id){
+        $('#transaction-id-input').val(id);
+      }
+
+      function insertPartnerIDToDeleteModal(id){
+        $('#partner-id-input').val(id);
+      }
+    </script>
+  </body>
+</html>

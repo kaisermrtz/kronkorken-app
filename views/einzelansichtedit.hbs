@@ -68,6 +68,15 @@
           <input type="number" name="quantity" value="{{crowncap.quantity}}" class="form-control">
         </div>
         <div class="form-group">
+          <label for="name">Aus Tausch:</label>
+          <select class="form-control" name="_tradeTransaction" id="transactionSelect">
+            <option value="" selected>Nicht aus Tausch</option>
+            {{#each transactions}}
+              <option value="{{_id}}" class="date">{{tradePartner}}-{{date}}</option>
+            {{/each}}
+          </select>
+        </div>
+        <div class="form-group">
           <label>
             <input type="checkbox" name="tried" id="triedinput"> Selbst ausprobiert?
           </label>
@@ -77,7 +86,8 @@
             <input type="checkbox" name="special" id="specialinput"> Spezial Kronkorken?
           </label>
         </div>
-        <button class="btn btn-default">Änderungen speichern</button><a href="" style="margin-left: 15px" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal">Kronkorken löschen</a>
+        <button class="btn btn-default">Änderungen speichern</button>
+        <a href="" style="margin-left: 15px" class="btn btn-danger" data-toggle="modal" data-target="#deletemodal">Kronkorken löschen</a>
       </form>
       <div class="modal fade" id="deletemodal">
         <div class="modal-dialog">
@@ -101,6 +111,7 @@
       </div><!-- /.modal -->
     </div>
     {{> importscript}}
+    <script src="/js/lib/moment.js"></script>
     <script>
       var query = getUrlVars();
 
@@ -111,6 +122,19 @@
         $('#erfolg').hide();
         $('#error').show();
       }
+
+      $('.date').each(function( index ) {
+        var text = $(this).text();
+        var splittedText = text.split('-');
+
+        var int = parseInt(splittedText[1]);
+        var formattedTime = moment(int).format('DD.MM.YYYY');
+
+        $(this).text(splittedText[0] + "-" + formattedTime);
+      });
+
+      var fromTransaction = "{{crowncap._tradeTransaction}}";
+      $('#transactionSelect').val(fromTransaction);
     </script>
     <script>
       $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })

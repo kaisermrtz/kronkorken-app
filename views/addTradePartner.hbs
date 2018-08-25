@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{pageTitle}}</title>
+
+    {{> import}}
+    <style>
+    </style>
+  </head>
+  <body>
+    {{> header}}
+    <div class="container">
+      <h1>Tauschpartner hinzufügen</h1>
+      <div id="error" class="alert alert-danger" role="alert" hidden>Fehler im Formular</div>
+      <form method="post">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" name="name" class="form-control" placeholder="Name" />
+        </div>
+        <div class="form-group">
+          <label for="land">Land</label>
+          <input type="text" name="country" class="form-control" placeholder="Land" />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" name="email" class="form-control" placeholder="E-Mail" />
+        </div>
+        <div class="form-group">
+          <label for="website">Website</label>
+          <input type="text" name="website" class="form-control" placeholder="Website" />
+        </div>
+        <button class="btn btn-default">Hinzufügen</button>
+      </form>
+    </div>
+
+    {{> importscript}}
+    <script>
+      var query = getUrlVars();
+
+      if(query.success == "false"){
+        $('#error').show();
+      }
+    </script>
+  </body>
+</html>

@@ -115,6 +115,15 @@
               <input type="number" name="quantity" placeholder="Anzahl der Doppelten" class="form-control" autocomplete="off">
             </div>
             <div class="form-group">
+              <label for="name">Aus Tausch:</label>
+              <select class="form-control" name="_tradeTransaction">
+                <option value="" selected>Nicht aus Tausch</option>
+                {{#each transactions}}
+                  <option value="{{_id}}" class="date">{{tradePartner}}-{{date}}</option>
+                {{/each}}
+              </select>
+            </div>
+            <div class="form-group">
               <label>
                 <input type="checkbox" name="tried"> Selbst ausprobiert?
               </label>
@@ -130,6 +139,7 @@
       </div>
     </div>
     {{> importscript}}
+    <script src="/js/lib/moment.js"></script>
     <script>
       var query = getUrlVars();
 
@@ -140,6 +150,16 @@
         $('#erfolg').hide();
         $('#error').show();
       }
+
+      $('.date').each(function( index ) {
+        var text = $(this).text();
+        var splittedText = text.split('-');
+
+        var int = parseInt(splittedText[1]);
+        var formattedTime = moment(int).format('DD.MM.YYYY');
+
+        $(this).text(splittedText[0] + "-" + formattedTime);
+      });
     </script>
     <script>
       $('.cloudinary-fileupload').unsigned_cloudinary_upload("ur5prnpz", { cloud_name: 'deewjrv8h', tags: 'browser_uploads' },{ multiple: false })

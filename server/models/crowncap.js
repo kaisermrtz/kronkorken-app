@@ -65,6 +65,9 @@ var CrownCap = mongoose.model('CrownCap', {
   },
   quantity: {
     type: Number
+  },
+  _tradeTransaction: {
+    type: mongoose.Schema.Types.ObjectId
   }
 });
 

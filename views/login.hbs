@@ -36,26 +36,24 @@
         }
     </style>
   </head>
-  <body class="bg">
+  <body>
     {{> header}}
-    <div class="bg">
-      <div class="container">
-        <div class="login-container">
-          <h3>Admin Login</h3>
-          <form id="login-form" method="post" action="/logginIn" role="search">
-              <div class="form-group">
-                <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control" required>
-              </div>
-              <div class="form-group">
-                <button type="submit" id="login-button" class="btn btn-success">Login</button>
-              </div>
-          </form>
-        </div>
-
+    <div class="container">
+      <div class="login-container">
+        <h3>Admin Login</h3>
+        <form id="login-form" method="post" action="/logginIn" role="search">
+            <div class="form-group">
+              <input type="email" id="emailLogin" name="email" placeholder="Email-Adresse" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <input type="password" id="passwordLogin" name="password" placeholder="Passwort" class="form-control" required>
+            </div>
+            <div class="form-group">
+              <button type="submit" id="login-button" class="btn btn-success">Login</button>
+            </div>
+        </form>
       </div>
+
     </div>
 
     {{> importscript}}

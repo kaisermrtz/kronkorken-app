@@ -82,6 +82,7 @@
               <p id="aufbewahrungsort" hidden>Aufbewahrungsort: <a href="/sammlung?q=location%3D{{crowncap.location}}">{{crowncap.location}}</a></p>
               <p id="doppelte" hidden>Anzahl der Doppelten: {{crowncap.quantity}}</p>
               <p>Hinzugefügt am: <span id="time"></span></p>
+              <p id="fromTrade" hidden>Aus Tausch mit: <a href="/history">{{partner.name}}</a></p>
           </div>
       </div>
       <br><br><br><br>
@@ -128,6 +129,10 @@
 
       if({{crowncap.special}} === true){
         $('#special').show();
+      }
+
+      if("{{partner.name}}" != ""){
+        $('#fromTrade').show();
       }
 
       if('{{crowncap.typeOfDrink}}' == "Bier"){
