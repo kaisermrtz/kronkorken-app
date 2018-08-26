@@ -192,7 +192,8 @@ app.get('/sammlung', async (req, res) => {
     {country: new RegExp(req.query.q, 'i')},
     {typeOfDrink: req.query.q},
     {tags: new RegExp(req.query.q, 'i')},
-    {location: new RegExp(req.query.q, 'i')}
+    {location: new RegExp(req.query.q, 'i')},
+    {nonLatinInscription: new RegExp(req.query.q, 'i')}
   ];
 
   //spezielle Filtermöglichkeiten für Pro User
@@ -270,6 +271,22 @@ app.get('/sammlung', async (req, res) => {
     });
   }catch(e){
     res.status(400).send(e);
+  }
+});
+
+//GET /advanced-search
+app.get('/advanced-search', async (req, res) => {
+  try{
+    var crowncaps = await CrownCap.find({"nonLatinInscription": {"$exists" : true, "$ne" : ""}}).sort({"nonLatinInscription": 'asc'});
+
+    res.render('advancedSearch.hbs', {
+      pageTitle: 'Kronkorken Suche',
+      crowncaps,
+      loggedIn: isLoggedIn(req),
+    });
+  }catch(e){
+    console.log(e);
+    res.redirect('/advanced-search?success=false');
   }
 });
 
@@ -414,9 +431,9 @@ app.get('/sammlung/:id/edit', requiresLogin, async (req, res) => {
 app.post('/sammlung/:id/edit', requiresLogin, async (req, res) => {
   try{
     if(req.body.oldCloudinaryImageId === req.body.cloudinaryImageId){
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', '_tradeTransaction']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', '_tradeTransaction', 'nonLatinInscription']);
     }else{
-      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', 'image', 'cloudinaryImageId', '_tradeTransaction']);
+      var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags', 'location', 'quantity', 'image', 'cloudinaryImageId', '_tradeTransaction', 'nonLatinInscription']);
       //Altes Bild löschen
       var returnValue = await cloudinaryAsyncDelete(req.body.oldCloudinaryImageId);
     }
@@ -538,7 +555,7 @@ function cloudinaryAsyncDelete(imageid){
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId', 'nonLatinInscription']);
   if(req.body._tradeTransaction != ""){
     crownCapData['_tradeTransaction'] = req.body._tradeTransaction;
   }

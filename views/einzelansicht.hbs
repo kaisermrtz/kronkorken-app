@@ -83,6 +83,7 @@
               <p id="doppelte" hidden>Anzahl der Doppelten: {{crowncap.quantity}}</p>
               <p>Hinzugefügt am: <span id="time"></span></p>
               <p id="fromTrade" hidden>Aus Tausch mit: <a href="/history">{{partner.name}}</a></p>
+              <p id="nonLatinInscription" hidden>Nicht lateinische Aufschrift: {{crowncap.nonLatinInscription}}</p>
           </div>
       </div>
       <br><br><br><br>
@@ -133,6 +134,10 @@
 
       if("{{partner.name}}" != ""){
         $('#fromTrade').show();
+      }
+
+      if("{{crowncap.nonLatinInscription}}" != ""){
+        $('#nonLatinInscription').show();
       }
 
       if('{{crowncap.typeOfDrink}}' == "Bier"){

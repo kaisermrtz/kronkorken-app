@@ -68,6 +68,10 @@ var CrownCap = mongoose.model('CrownCap', {
   },
   _tradeTransaction: {
     type: mongoose.Schema.Types.ObjectId
+  },
+  nonLatinInscription: {
+    type: String,
+    trim: true
   }
 });
 
