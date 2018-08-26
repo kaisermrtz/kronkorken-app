@@ -538,7 +538,10 @@ function cloudinaryAsyncDelete(imageid){
 //POST /add
 app.post('/add', requiresLogin, async (req, res) => {
   //Objekt zum speichern erzeugen
-  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId', '_tradeTransaction']);
+  var crownCapData = _.pick(req.body, ['name', 'brand', 'country', 'typeOfDrink', 'tags','location', 'quantity', 'image', 'cloudinaryImageId']);
+  if(req.body._tradeTransaction != ""){
+    crownCapData['_tradeTransaction'] = req.body._tradeTransaction;
+  }
   crownCapData['addedAt'] = new Date().getTime();
   crownCapData['_addedBy'] = req.session.userId;
   crownCapData['tried'] = (req.body.tried == 'on');
