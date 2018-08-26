@@ -278,10 +278,16 @@ app.get('/sammlung', async (req, res) => {
 app.get('/advanced-search', async (req, res) => {
   try{
     var crowncaps = await CrownCap.find({"nonLatinInscription": {"$exists" : true, "$ne" : ""}}).sort({"nonLatinInscription": 'asc'});
+    var nonLatinInscriptions = [];
+    crowncaps.forEach((element) => {
+      nonLatinInscriptions.push(_.pick(element, ["nonLatinInscription"]));
+    });
+
+    nonLatinInscriptions = _.uniqBy(nonLatinInscriptions, 'nonLatinInscription');
 
     res.render('advancedSearch.hbs', {
       pageTitle: 'Kronkorken Suche',
-      crowncaps,
+      nonLatinInscriptions,
       loggedIn: isLoggedIn(req),
     });
   }catch(e){
