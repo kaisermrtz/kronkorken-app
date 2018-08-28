@@ -11,16 +11,31 @@
       textarea {
         resize: none;
       }
+
+      .fixed {
+        position: fixed;
+        bottom: 5px;
+        right: -3px;
+        z-index: 1;
+      }
+
+
     </style>
   </head>
   <body>
     {{> header}}
+
     <div class="container">
       <h1>Trading</h1>
       <p>This page shows my crowncaps for trading. The pictures show the crowncaps in my collection and not the ones for trading. Still the overall quality of the caps is very good. Just select as many as you want and send me an email with your selection</p>
       <p>I am also listed on <a href="http://www.crowncaps.info">CC.I</a> with the id #811.</p>
       <h2>How it works</h2>
-      <p>Just click on the crowncaps to add them to your selection. You can see your selection at the <a href="#selectedCount">bottom of this page</a>.</p>
+      <p>Just click on the crowncaps to add them to your selection. You can see your selection at the <a href="#selectedCaps">bottom of this page</a>.</p>
+      <div class="fixed panel panel-primary ">
+        <div class="panel-heading">
+          <a href="#selectedCaps" style="color: white;">Selection: </a><span class="selectedCount badge">0</span>
+        </div>
+      </div>
       <h2>Germany</h2>
       <p>{{crowncapsDECount}} different crowncaps avaiable.</p>
       <div class="row auto-clear sammlungrow">
@@ -109,8 +124,8 @@
         </div>
         {{/each}}
       </div>
-      <h2>selected crowncaps</h2>
-      <p id="selectedCount">You selected 0 crowncaps.</p>
+      <h2 id="selectedCaps">selected crowncaps</h2>
+      <p>You selected <span class="selectedCount">0</span> crowncaps.</p>
       <p>To remove a crowncap of your selection just click on them.</p>
       <div class="selectedcc row auto-clear sammlungrow">
       </div>
@@ -153,7 +168,7 @@
           var objectToRemove = $('.deselectable[data-id="' + id + '"]');
           $(objectToRemove).remove();
         }
-        $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
+        $('.selectedCount').html(selectedCC.length);
         $('#selectedids').val(JSON.stringify(selectedCC));
         $('.' + id).css('-webkit-filter', 'opacity(1)');
         $('.' + id).css('filter', 'opacity(1)');
@@ -165,7 +180,7 @@
         if(!selectedCC.includes(id)){
           $('.selectedcc').append('<div class="col-lg-1 col-md-2 col-sm-3 col-xs-4 deselectable" data-id="'+id+'"><img src="http://res.cloudinary.com/deewjrv8h/image/upload/c_thumb,h_150,w_150/v1523299669/' + imageId + '" class="img-responsive img-rounded"></div>');
           selectedCC.push(id);
-          $('#selectedCount').html('You selected ' + selectedCC.length + ' crowncaps.');
+          $('.selectedCount').html(selectedCC.length);
           $('#selectedids').val(JSON.stringify(selectedCC));
           $('.' + id).css('-webkit-filter', 'opacity(.2)');
           $('.' + id).css('filter', 'opacity(.2)');
