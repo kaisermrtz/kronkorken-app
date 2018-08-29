@@ -581,24 +581,9 @@ app.post('/add', requiresLogin, async (req, res) => {
   }
 });
 
-//GET /trade
-app.get('/trade', requiresLogin, async (req, res) => {
-  var query = JSON.parse(req.query.tradecc);
-  var objectIDArray = [];
-  query.forEach((element) => {
-    objectIDArray.push(mongoose.Types.ObjectId(element));
-  });
-  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }});
-  addCountryCode(crowncaps);
-
-  //rendern
-  res.render('tausch.hbs', {
-    pageTitle: 'Tauschanfrage',
-    crowncaps,
-    crowncapIds: JSON.stringify(query),
-    loggedIn: isLoggedIn(req)
-  });
-});
+/*
+  Trade
+**/
 
 //GET /history
 app.get('/history', async (req, res) => {
@@ -775,12 +760,38 @@ app.get('/traderequest', async (req, res) => {
   query.forEach((element) => {
     objectIDArray.push(mongoose.Types.ObjectId(element));
   });
-  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }});
+  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
   addCountryCode(crowncaps);
+
+  var countryCountArray = await CrownCap.aggregate([
+    { $match: { '_id': { $in: objectIDArray}}},
+    { $group: { _id: '$country'}}
+  ]);
 
   //rendern
   res.render('tradedCaps.hbs', {
     pageTitle: 'Traded Caps',
+    crowncaps,
+    crowncapsLength: crowncaps.length,
+    countries: countryCountArray.length,
+    crowncapIds: JSON.stringify(query),
+    loggedIn: isLoggedIn(req)
+  });
+});
+
+//GET /trade
+app.get('/trade', requiresLogin, async (req, res) => {
+  var query = JSON.parse(req.query.tradecc);
+  var objectIDArray = [];
+  query.forEach((element) => {
+    objectIDArray.push(mongoose.Types.ObjectId(element));
+  });
+  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
+  addCountryCode(crowncaps);
+
+  //rendern
+  res.render('tausch.hbs', {
+    pageTitle: 'Tauschanfrage',
     crowncaps,
     crowncapIds: JSON.stringify(query),
     loggedIn: isLoggedIn(req)
