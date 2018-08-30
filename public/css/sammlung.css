@@ -1,4 +1,5 @@
 @media (max-width: 767px){
+  /* .hidden ~ .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;} */
   .row.auto-clear .col-xs-6:nth-child(2n+1){clear:left;}
 }
 
@@ -12,6 +13,10 @@
 
 @media (min-width: 1200px){
   .row.auto-clear .col-lg-2:nth-child(6n+1){clear:left;}
+}
+
+.hidden{
+  display: none;
 }
 
 .sammlung{

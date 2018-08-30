@@ -750,52 +750,56 @@ app.post('/history/delete/partner', requiresLogin, async (req, res) => {
 
 //GET /traderequest
 app.get('/traderequest', async (req, res) => {
-  if(req.query.tradecc){
+  try{
     var query = JSON.parse(req.query.tradecc);
-  }else {
-    var query = [];
+
+    var objectIDArray = [];
+    query.forEach((element) => {
+      objectIDArray.push(mongoose.Types.ObjectId(element));
+    });
+    var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
+    addCountryCode(crowncaps);
+
+    var countryCountArray = await CrownCap.aggregate([
+      { $match: { '_id': { $in: objectIDArray}}},
+      { $group: { _id: '$country'}}
+    ]);
+
+    //rendern
+    res.render('tradedCaps.hbs', {
+      pageTitle: 'Traded Caps',
+      crowncaps,
+      crowncapsLength: crowncaps.length,
+      countries: countryCountArray.length,
+      crowncapIds: JSON.stringify(query),
+      loggedIn: isLoggedIn(req)
+    });
+  }catch(e){
+    res.redirect(req.header('Referer'));
   }
-
-  var objectIDArray = [];
-  query.forEach((element) => {
-    objectIDArray.push(mongoose.Types.ObjectId(element));
-  });
-  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
-  addCountryCode(crowncaps);
-
-  var countryCountArray = await CrownCap.aggregate([
-    { $match: { '_id': { $in: objectIDArray}}},
-    { $group: { _id: '$country'}}
-  ]);
-
-  //rendern
-  res.render('tradedCaps.hbs', {
-    pageTitle: 'Traded Caps',
-    crowncaps,
-    crowncapsLength: crowncaps.length,
-    countries: countryCountArray.length,
-    crowncapIds: JSON.stringify(query),
-    loggedIn: isLoggedIn(req)
-  });
 });
 
 //GET /trade
 app.get('/trade', requiresLogin, async (req, res) => {
-  var query = JSON.parse(req.query.tradecc);
-  var objectIDArray = [];
-  query.forEach((element) => {
-    objectIDArray.push(mongoose.Types.ObjectId(element));
-  });
-  var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
-  addCountryCode(crowncaps);
+  try{
+    var query = JSON.parse(req.query.tradecc);
+    var objectIDArray = [];
+    query.forEach((element) => {
+      objectIDArray.push(mongoose.Types.ObjectId(element));
+    });
+    var crowncaps = await CrownCap.find({'_id': { $in: objectIDArray }}).sort({"country": 1, "brand": 1, "name": 1});
+    addCountryCode(crowncaps);
 
-  //rendern
-  res.render('tausch.hbs', {
-    pageTitle: 'Tauschanfrage',
-    crowncaps,
-    crowncapIds: JSON.stringify(query),
-    loggedIn: isLoggedIn(req)
-  });
+    //rendern
+    res.render('tausch.hbs', {
+      pageTitle: 'Tauschanfrage',
+      crowncaps,
+      crowncapIds: JSON.stringify(query),
+      loggedIn: isLoggedIn(req)
+    });
+  }catch(e){
+    res.redirect(req.header('Referer'));
+  }
 });
 
 //POST /trade/add
@@ -807,9 +811,9 @@ app.post('/trade/add', requiresLogin, async (req, res) => {
       var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: 1}});
       oldArray.push(old);
     }
-    // if(oldArray.length == body.length){
-    //   console.log("Erfolgreich");
-    // }
+    if(oldArray.length == body.length){
+      res.redirect(req.header('Referer'));
+    }
   }
 });
 
@@ -821,6 +825,9 @@ app.post('/trade/sub', requiresLogin, async (req, res) => {
     for(var i=0; i<body.length; i++){
       var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: -1}});
       oldArray.push(old);
+    }
+    if(oldArray.length == body.length){
+      res.redirect(req.header('Referer'));
     }
   }
 });

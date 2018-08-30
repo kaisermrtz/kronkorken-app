@@ -25,7 +25,9 @@
     <div class="container">
       <h1>Erweiterte Suche</h1>
       <div class="table-responsive">
-        <table class="table table-hover">
+        <input id="input" type="text" class="form-control" placeholder="Suche" autocomplete="off">
+        <br />
+        <table id="table" class="table table-hover">
           <tr>
             <th>Nicht-lateinische Aufschrift</th>
           </tr>
@@ -48,7 +50,14 @@
         var href = $(this).attr('href');
         var encodedHREF = '/sammlung?q=' + encodeURIComponent(href);
         $(this).attr('href', encodedHREF);
-      })
+      });
+
+      $("#input").on("keyup", function() {
+        var value = $(this).val().toLowerCase();
+        $("#table tr").filter(function() {
+          $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+      });
     </script>
   </body>
 </html>
