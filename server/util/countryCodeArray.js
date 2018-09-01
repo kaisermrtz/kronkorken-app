@@ -125,7 +125,7 @@ var countryCodeArray = [
   },
   {
     country: 'Finnland',
-    countryCode: 'fl'
+    countryCode: 'fi'
   },
   {
     country: 'Großbritannien',
