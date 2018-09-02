@@ -28,8 +28,7 @@ var TradePartner = mongoose.model('TradePartner', {
   },
   website: {
     type: String,
-    trim: true,
-    unique: true
+    trim: true
   }
 });
 
