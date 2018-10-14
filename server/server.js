@@ -102,7 +102,7 @@ app.get('/', async (req, res) => {
     loggedIn: isLoggedIn(req),
     recentlyAdded,
     countryCount: JSON.stringify(countryCountArray),
-    historyCountArray: JSON.stringify(historyCountArray.slice(-6)),
+    historyCountArray: JSON.stringify(historyCountArray),
     randomCrownCaps,
     count,
     countries,
