@@ -806,13 +806,14 @@ app.get('/trade', requiresLogin, async (req, res) => {
 app.post('/trade/add', requiresLogin, async (req, res) => {
   var body = JSON.parse(req.body.idarray);
   if(body.length > 0){
-    var oldArray = [];
-    for(var i=0; i<body.length; i++){
-      var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: 1}});
-      oldArray.push(old);
-    }
-    if(oldArray.length == body.length){
-      res.redirect(req.header('Referer'));
+    let arr = body.map(ele => new mongoose.Types.ObjectId(ele));
+    var q = CrownCap.find({_id: {
+      $in: arr
+    }});
+    try {
+      var a = await q.updateMany({$inc: {quantity: 1}});
+    }catch(e){
+      res.status(400).send(e);
     }
   }
 });
@@ -821,13 +822,14 @@ app.post('/trade/add', requiresLogin, async (req, res) => {
 app.post('/trade/sub', requiresLogin, async (req, res) => {
   var body = JSON.parse(req.body.idarray);
   if(body.length > 0){
-    var oldArray = [];
-    for(var i=0; i<body.length; i++){
-      var old = await CrownCap.findOneAndUpdate({_id: mongoose.Types.ObjectId(body[i])}, {$inc: {quantity: -1}});
-      oldArray.push(old);
-    }
-    if(oldArray.length == body.length){
-      res.redirect(req.header('Referer'));
+    let arr = body.map(ele => new mongoose.Types.ObjectId(ele));
+    var q = CrownCap.find({_id: {
+      $in: arr
+    }});
+    try {
+      var a = await q.updateMany({$inc: {quantity: -1}});
+    }catch(e){
+      res.status(400).send(e);
     }
   }
 });
