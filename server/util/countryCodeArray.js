@@ -1,3 +1,4 @@
+//For countryflags.io
 var countryCodeArray = [
   {
     country: 'Deutschland',
@@ -382,6 +383,14 @@ var countryCodeArray = [
   {
     country: 'Litauen',
     countryCode: 'lt'
+  },
+  {
+    country: 'Georgien',
+    countryCode: 'ge'
+  },
+  {
+    country: 'Iran',
+    countryCode: 'ir'
   }
 ];
 
