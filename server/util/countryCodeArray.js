@@ -1,6 +1,5 @@
 //For countryflags.io
-var countryCodeArray = [
-  {
+var countryCodeArray = [{
     country: 'Deutschland',
     countryCode: 'de'
   },
@@ -395,16 +394,16 @@ var countryCodeArray = [
 ];
 
 //Utility Function
-function addCountryCode(crowncaps){
+function addCountryCode(crowncaps) {
   //Countrycodes hinzufügen
   crowncaps.forEach((element) => {
-    for(var i=0; i<countryCodeArray.length; i++){
-      if(element.country){
-        if(countryCodeArray[i].country == element.country){
+    for (var i = 0; i < countryCodeArray.length; i++) {
+      if (element.country) {
+        if (countryCodeArray[i].country == element.country) {
           element.countryCode = countryCodeArray[i].countryCode;
         }
-      }else if(element._id){
-        if(countryCodeArray[i].country == element._id){
+      } else if (element._id) {
+        if (countryCodeArray[i].country == element._id) {
           element.countryCode = countryCodeArray[i].countryCode;
         }
       }
@@ -412,4 +411,7 @@ function addCountryCode(crowncaps){
   });
 }
 
-module.exports = {countryCodeArray, addCountryCode};
+module.exports = {
+  countryCodeArray,
+  addCountryCode
+};

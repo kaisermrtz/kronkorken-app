@@ -75,4 +75,6 @@ var CrownCap = mongoose.model('CrownCap', {
   }
 });
 
-module.exports = {CrownCap};
+module.exports = {
+  CrownCap
+};

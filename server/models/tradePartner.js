@@ -32,4 +32,6 @@ var TradePartner = mongoose.model('TradePartner', {
   }
 });
 
-module.exports = {TradePartner};
+module.exports = {
+  TradePartner
+};

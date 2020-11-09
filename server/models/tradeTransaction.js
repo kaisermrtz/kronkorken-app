@@ -26,4 +26,6 @@ var TradeTransaction = mongoose.model('TradeTransaction', {
   }
 });
 
-module.exports = {TradeTransaction};
+module.exports = {
+  TradeTransaction
+};

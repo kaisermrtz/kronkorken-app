@@ -9,4 +9,6 @@ var RecommenderModel = mongoose.model('Recommender-Model', {
   }
 });
 
-module.exports = {RecommenderModel};
+module.exports = {
+  RecommenderModel
+};
