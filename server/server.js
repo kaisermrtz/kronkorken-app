@@ -73,7 +73,8 @@ app.get('/', async (req, res) => {
     })
     recentlyAdded = crowncaps.slice(0, 6)
 
-    var count = await CrownCap.count({})
+    var count = await CrownCap.countDocuments()
+
     var countryCountArray = await CrownCap.aggregate([
       {
         $group: {
@@ -335,7 +336,7 @@ app.get('/sammlung', async (req, res) => {
           .skip((req.query.page - 1) * itemsPerPage)
           .limit(itemsPerPage)
       }
-      var count = await CrownCap.find().and(optionsArray).count()
+      var count = await CrownCap.find().and(optionsArray).countDocuments()
     } else {
       //Wenn keine Seite angegeben
       if (req.query.page < 1) {
@@ -367,7 +368,7 @@ app.get('/sammlung', async (req, res) => {
           brand: 'asc',
           name: 'asc',
         })
-        .count()
+        .countDocuments()
     }
 
     addCountryCode(crowncaps)
@@ -713,7 +714,7 @@ app.get('/dashboard', requiresLogin, async (req, res) => {
     })
     recentlyAdded = crowncaps.slice(0, 18)
 
-    var count = await CrownCap.count({})
+    var count = await CrownCap.countDocuments()
     var countryCountArray = await CrownCap.aggregate([
       {
         $group: {
